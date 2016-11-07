@@ -1,18 +1,29 @@
 package model;
 
+import org.apache.log4j.Logger;
+
 public class Administrator {
 	
+	private static Logger logger = Logger.getLogger(Administrator.class);
 	
-	private static Administrator administrator;
+	private static Administrator instance;
 	private Sheet sheet;
 	
 	private Administrator(Sheet sheet){
 		this.sheet=sheet;
 	}
 	
-	public Administrator createAdministrator(Sheet sheet){
-		administrator = new Administrator(sheet);
-		return administrator;
+	public static Administrator getInstance(Sheet sheet) {
+		if (null == instance) {
+			synchronized (Administrator.class) {
+				if (null == instance) {
+					instance = new Administrator(sheet);
+					logger.info("create new Administrator");
+				}
+			}
+		}
+		logger.info("return Administrator");
+		return instance;
 	}
 	
 	
