@@ -1,4 +1,4 @@
-package model;
+package model.entity;
 
 public class Enrollee {
 	private long id;

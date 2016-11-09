@@ -1,4 +1,4 @@
-package model;
+package model.entity;
 
 import org.apache.log4j.Logger;
 
