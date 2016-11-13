@@ -17,9 +17,9 @@ public class RequestHelper {
 
 	private RequestHelper() {
 	
-		/*
+		
 		commands.put("login", new LoginCommand());
-		commands.put("user_page", new UserPageCommand());
+		/*commands.put("user_page", new UserPageCommand());
 		commands.put("user_edit_page", new UserEditPageCommand());
 		commands.put("rating_enrollee", new RatingEnrolleeCommand());
 		commands.put("submit_application", new SubmitApplicationCommand());
