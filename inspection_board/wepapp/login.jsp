@@ -23,7 +23,7 @@ a {
 </head>
 <body>
 	<h3>
-		Here you can log in.
+		Here you can log in
 	</h3>
 
 	<form action="LoginServlet" method="post">

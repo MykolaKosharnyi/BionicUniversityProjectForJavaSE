@@ -1,12 +1,13 @@
 package model.entity;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 public class Sheet {//Ведомость
 	private static Sheet instance;
-	private Map<Department, Enrollee> sheet;
+	private Map<Department, List<Enrollee>> sheet;
 	
 	private static Logger logger = Logger.getLogger(Sheet.class);
 	
