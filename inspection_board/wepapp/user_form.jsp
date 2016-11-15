@@ -38,7 +38,7 @@ a {
 	</c:if>
 
 	<c:if test="${!empty user}">
-		<c:url var="addAction" value="/edit_user"></c:url>
+		<c:url var="addAction" value="/user_edit"></c:url>
 	</c:if>
 
 	<form action="${addAction}" method="post">
