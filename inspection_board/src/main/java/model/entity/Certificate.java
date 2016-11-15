@@ -21,23 +21,32 @@ public class Certificate {//аттестат
 	 * delete subject
 	 */
 	
-	public boolean addSubject(Subject subject, Integer value){
-		boolean contain = itemsWithEstimates.containsKey(subject);
-		
-		if(!contain)
-			itemsWithEstimates.put(subject, value);
-		
-		return contain;
+//	public boolean addSubject(Subject subject, Integer value){
+//		boolean contain = itemsWithEstimates.containsKey(subject);
+//		
+//		if(!contain)
+//			itemsWithEstimates.put(subject, value);
+//		
+//		return contain;
+//	}
+//	
+//	public void changeSubjectValue(Subject subject, Integer value){
+//		boolean contain = itemsWithEstimates.containsKey(subject);
+//		
+//		if(contain)
+//			itemsWithEstimates.put(subject, value);
+//	}
+//	
+//	public Integer deleteSubject(Subject subject){
+//		return itemsWithEstimates.remove(subject);
+//	}
+
+	public Map<Subject, Integer> getItemsWithEstimates() {
+		return itemsWithEstimates;
+	}
+
+	public void setItemsWithEstimates(Map<Subject, Integer> itemsWithEstimates) {
+		this.itemsWithEstimates = itemsWithEstimates;
 	}
 	
-	public void changeSubjectValue(Subject subject, Integer value){
-		boolean contain = itemsWithEstimates.containsKey(subject);
-		
-		if(contain)
-			itemsWithEstimates.put(subject, value);
-	}
-	
-	public Integer deleteSubject(Subject subject){
-		return itemsWithEstimates.remove(subject);
-	}
 }

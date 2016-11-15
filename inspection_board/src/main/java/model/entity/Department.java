@@ -9,11 +9,10 @@ public class Department {
 	
 	private List<Subject> necessaryItems;
 
-	public Department(long id, String nameDepartment, int maxAmountStudent, List<Subject> necessaryItems) {
+	public Department(long id, String nameDepartment, int maxAmountStudent) {
 		this.id = id;
 		this.nameDepartment = nameDepartment;
 		this.maxAmountStudent = maxAmountStudent;
-		this.necessaryItems = necessaryItems;
 	}
 	
 	public Department() {}

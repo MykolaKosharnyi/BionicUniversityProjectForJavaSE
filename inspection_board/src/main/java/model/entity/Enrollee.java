@@ -1,17 +1,31 @@
 package model.entity;
 
-public class Enrollee {
+import java.util.Date;
+
+public class Enrollee {//Вступник
 	private long id;
 	private String firstName;
 	private String secondName;
 	private String email;
 	private String phone;
 	private String password;
+	private Date dateRegistration;
 	
-	private Certificate certificate = new Certificate();
+	private Certificate certificate = new Certificate();//аттестат
 
 	public Enrollee(){}
 	
+	public Enrollee(long id, String firstName, String secondName, String email, String phone, String password,
+			Date dateRegistration) {
+		this.id = id;
+		this.firstName = firstName;
+		this.secondName = secondName;
+		this.email = email;
+		this.phone = phone;
+		this.password = password;
+		this.dateRegistration = dateRegistration;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -66,6 +80,14 @@ public class Enrollee {
 
 	public void setCertificate(Certificate certificate) {
 		this.certificate = certificate;
+	}
+
+	public Date getDateRegistration() {
+		return dateRegistration;
+	}
+
+	public void setDateRegistration(Date dateRegistration) {
+		this.dateRegistration = dateRegistration;
 	}
 	
 }

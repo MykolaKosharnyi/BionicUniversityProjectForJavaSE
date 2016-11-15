@@ -5,9 +5,11 @@ import java.util.List;
 import model.entity.Enrollee;
 
 public interface EnrolleeDao {
-    void create(   Enrollee   enrollee );
-    Enrollee find( int id );
+    long create( Enrollee enrollee );
+    Enrollee find( long id );
+    Enrollee findByEmail( String email );
     List<Enrollee> findAll();
     void update(Enrollee enrollee);
-    void delete (int id);
+    void delete (long id);
+    boolean checkLogin(String email, String password);
 }

@@ -14,7 +14,8 @@ import model.entity.Enrollee;
 public class JDBCEnrolleeDao implements EnrolleeDao {
 
 	@Override
-	public void create(Enrollee enrollee) {
+	public long create(Enrollee enrollee) {
+		long result = 0;
 		try {
 			Connection cn = null;
 			try {
@@ -22,19 +23,22 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 				PreparedStatement st = null;
 				try {
 					st = cn.prepareStatement(
-							"INSERT INTO enrollee (id) values (?)",
+							"INSERT INTO enrollee (firstName, secondName, email, phone, password) values (?,?,?,?,?)",
 							Statement.RETURN_GENERATED_KEYS);
-					st.setLong( 1, enrollee.getId());
+					st.setString( 1, enrollee.getFirstName());
+					st.setString( 2, enrollee.getSecondName());
+					st.setString( 3, enrollee.getEmail());
+					st.setString( 4, enrollee.getPhone());
+					st.setString( 5, enrollee.getPassword());
 					st.executeUpdate();
 
 					ResultSet key = null;
 					try {
 						key = st.getGeneratedKeys();
-						int userId = 0;
 						if (key.next()) {
-							userId = key.getInt(1);
+							result = key.getInt(1);
 						}
-						enrollee.setId(userId);
+						enrollee.setId(result);
 					} finally {
 						if (key != null)
 							key.close();
@@ -53,11 +57,11 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		return result;
 	}
 
 	@Override
-	public Enrollee find(int id) {
+	public Enrollee find(long id) {
 		Enrollee enrollee = null;
 		try {
 			Connection cn = null;
@@ -67,12 +71,13 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 				PreparedStatement st = null;
 				try {
 					st = cn.prepareStatement("SELECT * FROM enrollee WHERE ID = ?");
-					st.setInt(1, id);
+					st.setLong(1, id);
 					ResultSet rs = null;
 					try {
 						rs = st.executeQuery();
 						if (rs.next()) {
-//							enrollee = new Enrollee(rs.getInt(1), rs.getInt(2));
+							enrollee = new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3),
+									rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7));
 						}
 					} finally {
 						if (rs != null)
@@ -110,7 +115,8 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 					try {
 						rs = st.executeQuery("SELECT * FROM enrollee ");
 						 while (rs.next()) {
-//				                enrollee.add(new Enrollee(rs.getInt(1) , rs.getInt(2)));
+				                enrollee.add(new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3),
+										rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7)));
 				            }
 					} finally {
 						if (rs != null)
@@ -142,9 +148,14 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 				cn = connection.getConnection();
 				PreparedStatement st = null;
 				try {
-// ??????			st = cn.prepareStatement("UPDATE enrollee SET (id_employee = ?) WHERE id = ?");
-					st.setLong(1, enrollee.getId());
-//					st.setInt(2, id);
+					st = cn.prepareStatement("UPDATE enrollee SET firstName = ?, secondName = ?, email = ?, phone = ?, password = ? WHERE id = ? ");
+					st.setString(1, enrollee.getFirstName());
+					st.setString(2, enrollee.getSecondName());
+					st.setString(3, enrollee.getEmail());
+					st.setString(4, enrollee.getPhone());
+					st.setString(5, enrollee.getPassword());
+					st.setLong(6, enrollee.getId());
+					
 		            st.executeUpdate();
 
 				} finally {
@@ -164,7 +175,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(long id) {
 		try {
 			Connection cn = null;
 			try {
@@ -172,7 +183,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 				PreparedStatement st = null;
 				try {
 					st = cn.prepareStatement("DELETE FROM enrollee WHERE id = ?");
-					st.setInt(1, id);
+					st.setLong(1, id);
 		            st.executeUpdate();
 
 				} finally {
@@ -188,6 +199,84 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean checkLogin(String email, String password) {
+		try {
+			Connection cn = null;
+			try {
+				JdbcConnection connection = JdbcConnection.getInstance();
+				cn = connection.getConnection();
+				PreparedStatement st = null;
+				try {
+					st = cn.prepareStatement("SELECT * FROM enrollee WHERE email = ? AND password = ?");
+					st.setString(1, email);
+					st.setString(2, password);
+					ResultSet rs = null;
+					try {
+						rs = st.executeQuery();
+
+						return rs.next();
+					} finally {
+						if (rs != null)
+							rs.close();
+							rs=null;
+					}
+				} finally {
+					if (st != null)
+						st.close();
+						st=null;
+				}
+			} finally {
+				if (cn != null)
+					cn.close();
+					cn=null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} 
+	}
+
+	@Override
+	public Enrollee findByEmail(String email) {
+		Enrollee enrollee = null;
+		try {
+			Connection cn = null;
+			try {
+				JdbcConnection connection = JdbcConnection.getInstance();
+				cn = connection.getConnection();
+				PreparedStatement st = null;
+				try {
+					st = cn.prepareStatement("SELECT * FROM enrollee WHERE email = ?");
+					st.setString(1, email);
+					ResultSet rs = null;
+					try {
+						rs = st.executeQuery();
+						if (rs.next()) {
+							enrollee = new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3),
+									rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7));
+						}
+					} finally {
+						if (rs != null)
+							rs.close();
+						rs = null;
+					}
+				} finally {
+					if (st != null)
+						st.close();
+					st = null;
+				}
+			} finally {
+				if (cn != null)
+					cn.close();
+				cn = null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return enrollee;
 	}
 
 }

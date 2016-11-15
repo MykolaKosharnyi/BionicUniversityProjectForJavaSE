@@ -1,16 +1,16 @@
 package model.entity;
 
-public enum Subject {
-	MATH("Math"), PHYSICS("Physics"), HISTORY("History"), GEOGRAPHY("Geography"), ENGLISH("English"), CHEMISTRY("Chemistry"),
-	BIOLOGY("Biology"); 
+public class Subject {
 	
+	private long id;
 	private String name;
-	
-	private Subject(String name) {
+
+	public Subject(long id, String name) {
+		this.id = id;
 		this.name = name;
 	}
-	
-	private Subject() {}
+
+	public Subject() {}
 
 	public String getName() {
 		return name;
@@ -19,6 +19,13 @@ public enum Subject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 }

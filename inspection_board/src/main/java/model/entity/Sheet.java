@@ -34,5 +34,13 @@ public class Sheet {//Ведомость
 		logger.info("return Sheet");
 		return instance;
 	}
+
+	public Map<Department, List<Enrollee>> getSheet() {
+		return sheet;
+	}
+
+	public void setSheet(Map<Department, List<Enrollee>> sheet) {
+		this.sheet = sheet;
+	}
 	
 }
