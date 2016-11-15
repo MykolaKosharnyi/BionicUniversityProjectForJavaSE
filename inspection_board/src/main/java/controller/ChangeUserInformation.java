@@ -54,7 +54,9 @@ public class ChangeUserInformation extends HttpServlet {
 		String repeatPassword = request.getParameter(PARAM_REPEAT_PASSWORD);
 		
 		if(!password.equals(repeatPassword)){
-			request.setAttribute("user", new JDBCDaoFactory().createEnrolleeDao().find(1));
+			HttpSession session = request.getSession();
+			long id = (long) session.getAttribute("userId");
+			request.setAttribute("user", new JDBCDaoFactory().createEnrolleeDao().find(id));
 		    request.setAttribute("errorMessage", "Password and repeadPassword are different!!!");
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(

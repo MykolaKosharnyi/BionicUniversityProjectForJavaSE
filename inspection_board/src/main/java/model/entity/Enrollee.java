@@ -11,7 +11,7 @@ public class Enrollee {//Вступник
 	private String password;
 	private Date dateRegistration;
 	
-	private Certificate certificate = new Certificate();//аттестат
+	private Certificate certificate;//аттестат
 
 	public Enrollee(){}
 	

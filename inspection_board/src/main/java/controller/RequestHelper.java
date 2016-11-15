@@ -19,6 +19,7 @@ public class RequestHelper {
 	
 		
 		commands.put("login", new LoginCommand());
+		commands.put("delete_user_subject", new DeleteUserSubjectCommand());
 		
 		/*commands.put("user_page", new UserPageCommand());
 		commands.put("user_edit_page", new UserEditPageCommand());

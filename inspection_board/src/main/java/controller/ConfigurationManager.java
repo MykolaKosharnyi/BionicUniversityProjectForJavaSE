@@ -21,6 +21,7 @@ public class ConfigurationManager {
 	public static final String REGISTRATION_PAGE_PATH = "REGISTRATION_PAGE_PATH";
 	public static final String ENROLLEE_HOME_PAGE = "ENROLLEE_HOME_PAGE";
 	public static final String USER_EDIT_PAGE = "USER_EDIT_PAGE";
+	public static final String CHANGE_SUBJECT_USER = "CHANGE_SUBJECT_USER";
 	
 	private static Logger logger = Logger.getLogger(ConfigurationManager.class);
 	

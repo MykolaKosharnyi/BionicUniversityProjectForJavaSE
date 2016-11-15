@@ -121,6 +121,7 @@ a {
 
 	<c:if test="${!empty user}">
 		<a href="<c:url value='/home' />">Go to home page</a>
+		<a href="<c:url value='/LogoutServlet' />">Log out</a>
 	</c:if>
 
 

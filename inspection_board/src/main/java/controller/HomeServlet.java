@@ -29,8 +29,6 @@ public class HomeServlet extends HttpServlet {
 	    RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(
 		ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE));
 	    dispatcher.forward(request, response);
-		
-		
 
     }
 	
