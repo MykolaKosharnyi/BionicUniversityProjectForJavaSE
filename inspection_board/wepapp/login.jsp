@@ -26,8 +26,9 @@ a {
 		Here you can log in
 	</h3>
 
-	<form action="LoginServlet" method="post">
-		
+	<form method="post" action="controller">
+	
+		<input type="hidden" name="command" value="login" /> 
 		<table>
 			<tr>
 				<td>E-mail:</td>
@@ -38,7 +39,16 @@ a {
 				<td>Password:</td>
 				<td><input type="password" name="password"></td>
 			</tr>
-
+			
+			<c:if test="${!empty errorMessage}">
+				<tr>
+					<td colspan="2">
+						<div
+							style="color: red; border: 1px solid red; padding: 5px; margin: 10px 0px;">${errorMessage}</div>
+					</td>
+				</tr>
+			</c:if>
+			
 			<tr>
 				<td colspan="2"><input type="submit" value="Log in"></td>
 			</tr>
