@@ -34,11 +34,11 @@ a {
 	<h3>At this page you can register your account</h3>
 
 	<c:if test="${empty user}">
-		<c:url var="addAction" value="/registration"></c:url>
+		<c:url var="addAction" value="/inspection_board/registration_post"></c:url>
 	</c:if>
 
 	<c:if test="${!empty user}">
-		<c:url var="addAction" value="/user_edit"></c:url>
+		<c:url var="addAction" value="/inspection_board/user_edit_post"></c:url>
 	</c:if>
 
 	<form action="${addAction}" method="post">
@@ -120,8 +120,8 @@ a {
 	</c:if>
 
 	<c:if test="${!empty user}">
-		<a href="<c:url value='/home' />">Go to home page</a>
-		<a href="<c:url value='/LogoutServlet' />">Log out</a>
+		<a href="<c:url value='/inspection_board/home' />">Go to home page</a>
+		<a href="<c:url value='/inspection_board/logout' />">Log out</a>
 	</c:if>
 
 

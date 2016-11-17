@@ -160,8 +160,43 @@ public class JDBCDepartmentDao implements DepartmentDao {
 
 	@Override
 	public List<Department> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Department> department = new ArrayList<Department>();
+		 
+		try {
+			Connection cn = null;
+			try {
+				cn = JdbcConnection.getInstance().getConnection();
+				Statement st = null;
+				try {
+					st = cn.createStatement();
+					ResultSet rs = null;
+					try {
+						rs = st.executeQuery("SELECT * FROM department ");
+						Department current = null;
+						 while (rs.next()) {
+							 current = new Department(rs.getLong(1), rs.getString(2), rs.getInt(3));
+							 current.setNecessaryItems(getNecessaryItems(rs.getLong(1)));
+				            department.add(current);
+				    	}
+					} finally {
+						if (rs != null)
+							rs.close();
+							rs=null;
+					}
+				} finally {
+					if (st != null)
+						st.close();
+						st=null;
+				}
+			} finally {
+				if (cn != null)
+					cn.close();
+					cn=null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return department;
 	}
 
 	@Override

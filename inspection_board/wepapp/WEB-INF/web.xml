@@ -9,7 +9,7 @@
 
 	<servlet-mapping>
 		<servlet-name>Controller</servlet-name>
-		<url-pattern>/controller</url-pattern>
+		<url-pattern>/inspection_board/*</url-pattern>
 	</servlet-mapping>
 
 	<resource-ref>

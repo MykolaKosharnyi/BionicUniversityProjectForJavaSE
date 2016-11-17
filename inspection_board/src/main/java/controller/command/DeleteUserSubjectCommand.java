@@ -1,4 +1,4 @@
-package controller;
+package controller.command;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import controller.command.Command;
+import controller.ConfigurationManager;
 import model.dao.CertificateDao;
 import model.dao.jdbc.JDBCDaoFactory;
 

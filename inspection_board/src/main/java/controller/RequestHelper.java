@@ -6,8 +6,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import controller.command.ApplicationToDepartments;
 import controller.command.Command;
+import controller.command.DeleteUserSubjectCommand;
+import controller.command.HomeCommand;
+import controller.command.LoginCommand;
+import controller.command.LoginPOSTCommand;
+import controller.command.LogoutCommand;
 import controller.command.NoCommand;
+import controller.command.RegistrationCommand;
+import controller.command.RegistrationPOSTCommand;
+import controller.command.UserEditCommand;
+import controller.command.UserEditPostCommand;
+import controller.command.UserSubjectCommand;
+import controller.command.UserSubjectPostCommand;
 
 public class RequestHelper {
 	
@@ -17,20 +29,25 @@ public class RequestHelper {
 
 	private RequestHelper() {
 	
+		commands.put("/login", new LoginCommand());
+		commands.put("/login_post", new LoginPOSTCommand());
+		commands.put("/registration", new RegistrationCommand());
+		commands.put("/registration_post", new RegistrationPOSTCommand());
+		commands.put("/user_edit", new UserEditCommand());
+		commands.put("/user_edit_post", new UserEditPostCommand());
+		commands.put("/home", new HomeCommand());
+		commands.put("/logout", new LogoutCommand());
+		commands.put("/set_application_to_departments", new ApplicationToDepartments());
+		commands.put("/add_or_change_subject", new UserSubjectCommand());
+		commands.put("/add_or_change_post_subject", new UserSubjectPostCommand());	
+		commands.put("/delete_user_subject", new DeleteUserSubjectCommand());
 		
-		commands.put("login", new LoginCommand());
-		commands.put("delete_user_subject", new DeleteUserSubjectCommand());
-		
-		/*commands.put("user_page", new UserPageCommand());
-		commands.put("user_edit_page", new UserEditPageCommand());
-		commands.put("rating_enrollee", new RatingEnrolleeCommand());
-		commands.put("submit_application", new SubmitApplicationCommand());
-		*/
 	}
 
 	public Command getCommand(HttpServletRequest request) {
 
-		String action = request.getParameter("command");
+		String action = request.getPathInfo();
+		
 		
 		Command command = commands.get(action);
 		logger.info("command = " + action);

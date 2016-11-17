@@ -1,4 +1,4 @@
-package controller;
+package controller.command;
 
 import java.io.IOException;
 
@@ -10,15 +10,16 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import controller.command.Command;
+import controller.ConfigurationManager;
+import controller.MessageManager;
 import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
 
-public class LoginCommand implements Command {
+public class LoginPOSTCommand implements Command {
 
 	private static final String PARAM_NAME_EMAIL = "email";
 	private static final String PARAM_NAME_PASSWORD = "password";
-	static Logger logger = Logger.getLogger(LoginCommand.class);
+	static Logger logger = Logger.getLogger(LoginPOSTCommand.class);
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -60,7 +61,7 @@ public class LoginCommand implements Command {
 				response.addCookie(userName);
 				
 				try {
-					page = "/home"/*ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE)*/;	
+					page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);	
 				} catch(Exception ex) {
 					request.setAttribute("errorMessage", MessageManager.getInstance().getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
 					page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
