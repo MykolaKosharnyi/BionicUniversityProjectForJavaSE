@@ -1,15 +1,11 @@
 package model.dao;
 
-import java.util.List;
 
 import model.entity.Enrollee;
 
-public interface EnrolleeDao {
-    long create( Enrollee enrollee );
-    Enrollee find( long id );
-    Enrollee findByEmail( String email );
-    List<Enrollee> findAll();
-    void update(Enrollee enrollee);
-    void delete (long id);
+public interface EnrolleeDao extends Skelet<Enrollee> {
+    
+    Enrollee findByEmail( String email );    
     boolean checkLogin(String email, String password);
+    
 }

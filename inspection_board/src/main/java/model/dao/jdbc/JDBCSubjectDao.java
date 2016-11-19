@@ -8,172 +8,102 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import model.dao.SubjectDao;
 import model.entity.Subject;
 
 public class JDBCSubjectDao implements SubjectDao {
 
-	@Override
-	public void create(Subject subject) {
-		try {
-			Connection cn = null;
-			try {
-				cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement(
-							"INSERT INTO subject (name) values (?)");
-					st.setString( 1, subject.getName());
-					st.executeUpdate();
+	static Logger logger = Logger.getLogger(JDBCSubjectDao.class);
 
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
+	@Override
+	public long create(Subject subject) {
+		// try (Connection connection = dataSource.getConnection();
+		// Statement statement = connection.createStatement()) {
+		// try (ResultSet resultSet = statement.executeQuery("some query")) {
+		// // Do stuff with the result set.
+		// }
+		// try (ResultSet resultSet = statement.executeQuery("some query")) {
+		// // Do more stuff with the second result set.
+		// }
+		// }
+		
+		long result = 0;
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("INSERT INTO subject (name) values (?)",
+						Statement.RETURN_GENERATED_KEYS);) {
+			st.setString(1, subject.getName());
+			st.executeUpdate();
+			try (ResultSet key = st.getGeneratedKeys();) {
+				if (key.next()) {
+					result = key.getInt(1);
 				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
-
+		return result;
 	}
 
 	@Override
 	public Subject find(long id) {
 		Subject subject = null;
-		try {
-			Connection cn = null;
-			try {
-				JdbcConnection connection = JdbcConnection.getInstance();
-				cn = connection.getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("SELECT * FROM subject WHERE id_subject = ?");
-					st.setLong(1, id);
-					ResultSet rs = null;
-					try {
-						rs = st.executeQuery();
-						if (rs.next()) {
-							subject = new Subject(rs.getInt(1), rs.getString(2));
-						}
-					} finally {
-						if (rs != null)
-							rs.close();
-						rs = null;
-					}
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
+
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("SELECT * FROM subject WHERE id_subject = ?");) {
+			st.setLong(1, id);
+			try (ResultSet rs = st.executeQuery();) {
+				if (rs.next()) {
+					subject = new Subject(rs.getInt(1), rs.getString(2));
 				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e1) {
+			logger.error(e1.getStackTrace());
 		}
+
 		return subject;
 	}
 
 	@Override
 	public List<Subject> findAll() {
 		List<Subject> subject = new ArrayList<Subject>();
-		 
-		try {
-			Connection cn = null;
-			try {
-				cn = JdbcConnection.getInstance().getConnection();
-				Statement st = null;
-				try {
-					st = cn.createStatement();
-					ResultSet rs = null;
-					try {
-						rs = st.executeQuery("SELECT * FROM subject ");
-						 while (rs.next()) {
-				                subject.add(new Subject(rs.getInt(1), rs.getString(2)));
-				            }
-					} finally {
-						if (rs != null)
-							rs.close();
-							rs=null;
-					}
-				} finally {
-					if (st != null)
-						st.close();
-						st=null;
+
+		try (Connection cn = JdbcConnection.getInstance().getConnection(); Statement st = cn.createStatement();) {
+			try (ResultSet rs = st.executeQuery("SELECT * FROM subject");) {
+				while (rs.next()) {
+					subject.add(new Subject(rs.getInt(1), rs.getString(2)));
 				}
-			} finally {
-				if (cn != null)
-					cn.close();
-					cn=null;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+		} catch (SQLException e1) {
+			logger.error(e1.getStackTrace());
 		}
-        return subject;
+
+		return subject;
 	}
 
 	@Override
 	public void update(Subject subject) {
-		try {
-			Connection cn = null;
-			try {
-				JdbcConnection connection = JdbcConnection.getInstance();
-				cn = connection.getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("UPDATE subject SET name = ? WHERE id_subject = ? ");
-					st.setString(1, subject.getName());
-					st.setLong(2, subject.getId());
-					
-		            st.executeUpdate();
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("UPDATE subject SET name = ? WHERE id_subject = ? ");) {
+			st.setString(1, subject.getName());
+			st.setLong(2, subject.getId());
 
-				} finally {
-					if (st != null)
-						st.close();
-						st=null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-					cn=null;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			st.executeUpdate();
+		} catch (SQLException e1) {
+			logger.error(e1.getStackTrace());
 		}
-
 	}
 
 	@Override
 	public void delete(long id) {
-		try {
-			Connection cn = null;
-			try {
-				cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("DELETE FROM subject WHERE id_subject = ?");
-					st.setLong(1, id);
-		            st.executeUpdate();
-
-				} finally {
-					if (st != null)
-						st.close();
-						st=null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-					cn=null;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("DELETE FROM subject WHERE id_subject = ?");) {
+			st.setLong(1, id);
+			st.executeUpdate();
+		} catch (SQLException e1) {
+			logger.error(e1.getStackTrace());
 		}
 
 	}

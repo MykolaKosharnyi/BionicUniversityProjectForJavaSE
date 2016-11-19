@@ -15,7 +15,8 @@ import model.entity.Subject;
 public class JDBCDepartmentDao implements DepartmentDao {
 
 	@Override
-	public void create(Department department) {
+	public long create(Department department) {
+		long result = 0;
 		try {
 			Connection cn = null;
 			try {
@@ -34,11 +35,9 @@ public class JDBCDepartmentDao implements DepartmentDao {
 					ResultSet key = null;
 					try {
 						key = st.getGeneratedKeys();
-						long userId = 0;
 						if (key.next()) {
-							userId = key.getLong(1);
+							result = key.getLong(1);
 						}
-						department.setId(userId);
 					} finally {
 						if (key != null)
 							key.close();
@@ -74,7 +73,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		return result;
 	}
 
 	@Override

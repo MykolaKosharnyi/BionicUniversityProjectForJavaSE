@@ -19,7 +19,7 @@ public class LoginCommand implements Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String page = null;
-
+		
 		try {
 			page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 		} catch (Exception ex) {
