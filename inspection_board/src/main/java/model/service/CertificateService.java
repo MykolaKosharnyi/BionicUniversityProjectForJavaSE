@@ -1,5 +1,12 @@
 package model.service;
 
-public class CertificateService {
+import model.entity.Certificate;
+import model.entity.Subject;
 
+interface CertificateService {
+	boolean addSubject( long idEnrollee, long idSubject, int scope );
+	Certificate find( long idEnrollee );
+    void updateSubject( long idEnrollee, Subject subject, int valueOfSubject );
+    void deleteEnrolleeCertificate( long idEnrollee );
+    void deleteSubject( long idEnrollee, long idSubject );
 }
