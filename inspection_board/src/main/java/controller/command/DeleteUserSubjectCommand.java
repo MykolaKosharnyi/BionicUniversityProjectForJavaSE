@@ -23,7 +23,7 @@ public class DeleteUserSubjectCommand implements Command {
 		
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
-		certificateDao.deleteSubject(id, subjectId);
+		certificateDao.delete(id, subjectId);
 
 		request.setAttribute("subjects", new JDBCDaoFactory().createSubjectDao().findAll());
 		request.setAttribute("user_subjects", certificateDao.find(id));

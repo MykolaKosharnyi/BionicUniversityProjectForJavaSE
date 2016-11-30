@@ -7,86 +7,52 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import model.dao.CertificateDao;
 import model.entity.Certificate;
 import model.entity.Subject;
 
 public class JDBCCertificateDao implements CertificateDao {
+	
+	static Logger logger = Logger.getLogger(JDBCCertificateDao.class);
 
 	@Override
-	public boolean addSubject(long idEnrollee, long idSubject, int scope) {
+	public boolean add(long idEnrollee, long idSubject, int scope) {
 		boolean result = !findRepeadSubject(idEnrollee, idSubject);
 		if (result) {
 
-			try {
-				Connection cn = null;
-				try {
-					cn = JdbcConnection.getInstance().getConnection();
-					PreparedStatement st = null;
+			try (Connection cn = JdbcConnection.getInstance().getConnection(); PreparedStatement st = cn
+					.prepareStatement("INSERT INTO certificate (id_subject, scope, id_enrollee) values (?,?,?)");) {
 
-					try {
-						st = cn.prepareStatement(
-								"INSERT INTO certificate (id_subject, scope, id_enrollee) values (?,?,?)");
-						st.setLong(1, idSubject);
-						st.setInt(2, scope);
-						st.setLong(3, idEnrollee);
-						st.executeUpdate();
+				st.setLong(1, idSubject);
+				st.setInt(2, scope);
+				st.setLong(3, idEnrollee);
+				st.executeUpdate();
 
-					} finally {
-						if (st != null)
-							st.close();
-						st = null;
-					}
-
-				} finally {
-					if (cn != null)
-						cn.close();
-					cn = null;
-				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getStackTrace());
 			}
 		}
 		return result;
 	}
 
-	private boolean findRepeadSubject(long idEnrollee, long idSubject){
+	private boolean findRepeadSubject(long idEnrollee, long idSubject) {
 		boolean result = false;
-		try {
-			Connection cn = null;
-			try {
-				JdbcConnection connection = JdbcConnection.getInstance();
-				cn = connection.getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("SELECT * FROM certificate WHERE id_enrollee = ? and id_subject = ?");
-					st.setLong(1, idEnrollee);
-					st.setLong(2, idSubject);
-					ResultSet rs = null;
-					try {
-						rs = st.executeQuery();
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn
+						.prepareStatement("SELECT * FROM certificate WHERE id_enrollee = ? and id_subject = ?");) {
 
-						if (rs.next()) {
-							result = true;
-						}
+			st.setLong(1, idEnrollee);
+			st.setLong(2, idSubject);
+			ResultSet rs = st.executeQuery();
 
-					} finally {
-						if (rs != null)
-							rs.close();
-						rs = null;
-					}
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
+			if (rs.next()) {
+				result = true;
 			}
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 		return result;
 	}
@@ -94,132 +60,66 @@ public class JDBCCertificateDao implements CertificateDao {
 	@Override
 	public Certificate find(long idEnrollee) {
 		Certificate certificate = new Certificate();
-		try {
-			Connection cn = null;
-			try {
-				JdbcConnection connection = JdbcConnection.getInstance();
-				cn = connection.getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("SELECT * FROM certificate WHERE id_enrollee = ?");
-					st.setLong(1, idEnrollee);
-					ResultSet rs = null;
-					try {
-						rs = st.executeQuery();
-						Map<Subject, Integer> itemsWithEstimates = new HashMap<>();
-						while (rs.next()) {
-							itemsWithEstimates.put(new JDBCDaoFactory().createSubjectDao().find(rs.getLong(2)),
-									rs.getInt(3));
-						}
-						certificate.setItemsWithEstimates(itemsWithEstimates);
-					} finally {
-						if (rs != null)
-							rs.close();
-						rs = null;
-					}
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("SELECT * FROM certificate WHERE id_enrollee = ?");) {
+
+			st.setLong(1, idEnrollee);
+			ResultSet rs = st.executeQuery();
+			Map<Subject, Integer> itemsWithEstimates = new HashMap<>();
+			while (rs.next()) {
+				itemsWithEstimates.put(new JDBCDaoFactory().createSubjectDao().find(rs.getLong(2)), rs.getInt(3));
 			}
+			certificate.setItemsWithEstimates(itemsWithEstimates);
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 		return certificate;
 	}
 
 	@Override
-	public void updateSubject(long idEnrollee, Subject subject, int valueOfSubject) {
-		try {
-			Connection cn = null;
-			try {
-				JdbcConnection connection = JdbcConnection.getInstance();
-				cn = connection.getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement(
-							"UPDATE certificate SET scope = ? WHERE id_enrollee = ? and id_subject = ? ");
-					st.setInt(1, valueOfSubject);
-					st.setLong(2, idEnrollee);
-					st.setLong(3, subject.getId());
+	public void update(long idEnrollee, Subject subject, int valueOfSubject) {
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement(
+						"UPDATE certificate SET scope = ? WHERE id_enrollee = ? and id_subject = ? ");) {
 
-					st.executeUpdate();
+			st.setInt(1, valueOfSubject);
+			st.setLong(2, idEnrollee);
+			st.setLong(3, subject.getId());
 
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
-			}
+			st.executeUpdate();
+
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	@Override
-	public void deleteCertificate(long idEnrollee) {
-		try {
-			Connection cn = null;
-			try {
-				cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("DELETE FROM certificate WHERE id_enrollee = ?");
-					st.setLong(1, idEnrollee);
-					st.executeUpdate();
-
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
 	}
 
 	@Override
-	public void deleteSubject(long idEnrollee, long idSubject) {
-		try {
-			Connection cn = null;
-			try {
-				cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = null;
-				try {
-					st = cn.prepareStatement("DELETE FROM certificate WHERE (id_enrollee = ? and id_subject = ?)");
-					st.setLong(1, idEnrollee);
-					st.setLong(2, idSubject);
-					st.executeUpdate();
+	public void delete(long idEnrollee) {
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn.prepareStatement("DELETE FROM certificate WHERE id_enrollee = ?");) {
 
-				} finally {
-					if (st != null)
-						st.close();
-					st = null;
-				}
-			} finally {
-				if (cn != null)
-					cn.close();
-				cn = null;
-			}
+			st.setLong(1, idEnrollee);
+			st.executeUpdate();
+
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getStackTrace());
 		}
+	}
 
+	@Override
+	public void delete(long idEnrollee, long idSubject) {
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn
+						.prepareStatement("DELETE FROM certificate WHERE (id_enrollee = ? and id_subject = ?)");) {
+
+			st.setLong(1, idEnrollee);
+			st.setLong(2, idSubject);
+			st.executeUpdate();
+
+		} catch (SQLException e) {
+			logger.error(e.getStackTrace());
+		}
 	}
 
 }

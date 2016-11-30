@@ -19,15 +19,6 @@ public class JDBCSubjectDao implements SubjectDao {
 
 	@Override
 	public long create(Subject subject) {
-		// try (Connection connection = dataSource.getConnection();
-		// Statement statement = connection.createStatement()) {
-		// try (ResultSet resultSet = statement.executeQuery("some query")) {
-		// // Do stuff with the result set.
-		// }
-		// try (ResultSet resultSet = statement.executeQuery("some query")) {
-		// // Do more stuff with the second result set.
-		// }
-		// }
 		
 		long result = 0;
 		try (Connection cn = JdbcConnection.getInstance().getConnection();

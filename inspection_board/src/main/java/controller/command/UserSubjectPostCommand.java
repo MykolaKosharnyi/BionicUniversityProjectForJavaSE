@@ -25,7 +25,7 @@ public class UserSubjectPostCommand implements Command {
 		long id = (long) session.getAttribute("userId");
 		
 		CertificateDao certificateDao = new JDBCDaoFactory().createCertificateDao();
-		certificateDao.addSubject(id, subjectId, scope);
+		certificateDao.add(id, subjectId, scope);
 		
 		request.setAttribute("subjects", new JDBCDaoFactory().createSubjectDao().findAll());
 		request.setAttribute("user_subjects", certificateDao.find(id));
