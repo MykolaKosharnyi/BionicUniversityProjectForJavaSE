@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.entity.Enrollee;
 
-interface EnrolleeService {
+public interface EnrolleeService {
 	long create(Enrollee enrollee);
 
 	Enrollee find(long id);

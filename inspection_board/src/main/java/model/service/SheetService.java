@@ -2,7 +2,7 @@ package model.service;
 
 import model.entity.Sheet;
 
-interface SheetService {
+public interface SheetService {
 	void add(long idEnrollee, long idDepartment);
 	Sheet getSheet();
 	//Sheet getSheetConcreteDepartment(long idDepartment);

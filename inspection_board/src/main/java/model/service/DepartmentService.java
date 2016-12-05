@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.entity.Department;
 
-interface DepartmentService {
+public interface DepartmentService {
 	long create(Department department);
 
 	Department find(long id);
