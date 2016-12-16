@@ -67,6 +67,16 @@ a {
 	margin: 15px 0;
 	font-weight:bold;
 }
+
+.send_application input[type=submit]{
+	margin: 0px auto;
+	position: relative;
+	display: block;
+	background: rgb(143, 216, 255) none repeat scroll 0% 0%;
+	padding: 5px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px yellow;
+}
 </style>
 </head>
 <body>
@@ -83,7 +93,13 @@ a {
 					</c:forEach>
 			</div>
 			<div class="max_enrollee"><span>Max amount student: </span>${department.maxAmountStudent}</div>
-			<div class="send_application"><button>send request to this application</button></div>
+			<div class="send_application">
+				<form action="<c:url value='/inspection_board/set_application_to_departments_post' />" method="post">
+					<input type="hidden" name="departmentId" value="${department.id}" />
+					<input type="submit" value="Send application to this department"
+						style="position: relative; top: 7px; left: 20px;">
+				</form>
+			</div>
 		</div>
 	</c:forEach>
 	
