@@ -78,9 +78,13 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	private List<Subject> getNecessaryItems(long id) {
 		List<Subject> subjects = new ArrayList<>();
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection(); Statement st = cn.createStatement();) {
-
-			ResultSet rs = st.executeQuery("SELECT DISTINCT id_department FROM department_subject; ");
+		try (Connection cn = JdbcConnection.getInstance().getConnection();
+				PreparedStatement st = cn
+						.prepareStatement("SELECT DISTINCT id_subject FROM department_subject WHERE id_department = ?; ");) {
+			st.setLong( 1, id);
+			
+			ResultSet rs = st.executeQuery();
+		
 			while (rs.next()) {
 				subjects.add(new JDBCDaoFactory().createSubjectDao().find(rs.getLong(1)));
 			}
