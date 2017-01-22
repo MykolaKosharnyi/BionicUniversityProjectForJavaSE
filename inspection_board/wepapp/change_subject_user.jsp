@@ -38,7 +38,7 @@ margin:10px 0px;
 <body>
 	<h3>At this page you can add, delete or change your subjects</h3>
 
-	<c:url var="addAction" value="/inspection_board/add_or_change_post_subject"></c:url>
+	<c:url var="addAction" value="./add_or_change_post_subject"></c:url>
 
 	<form action="${addAction}" method="post">
 		<table>
@@ -79,7 +79,7 @@ margin:10px 0px;
 					<td>${entry.value}</td>
 					<td>
 
-						<form action="<c:url value='/inspection_board/delete_user_subject' />" method="post">
+						<form action="<c:url value='./delete_user_subject' />" method="post">
 							<input type="hidden" name="subjectId" value="${entry.key.id}" /> 
 							<input type="submit" value="delete"
 								style="position: relative; top: 7px; left: 20px;">
@@ -101,8 +101,8 @@ margin:10px 0px;
 		<hr class="separate_line">
 	</c:if>
 
-	<a href="<c:url value='/inspection_board/home' />">Go to home page</a>
-		<a href="<c:url value='/inspection_board/logout' />">Log out</a>
+	<a href="<c:url value='./home' />">Go to home page</a>
+		<a href="<c:url value='./logout' />">Log out</a>
 
 </body>
 </html>

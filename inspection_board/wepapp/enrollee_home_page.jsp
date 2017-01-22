@@ -49,17 +49,17 @@ color: #affcf4;
 	
 	<table>
 		<tr>
-			<td><a href="<c:url value='/inspection_board/user_edit' />">Change personal information</a></td>
-			<td><a href="<c:url value='/inspection_board/add_or_change_subject' />">Add or change subjects</a></td>
+			<td><a href="<c:url value='./user_edit' />">Change personal information</a></td>
+			<td><a href="<c:url value='./add_or_change_subject' />">Add or change subjects</a></td>
 		</tr>
 		<tr>
-			<td><a href="<c:url value='/inspection_board/set_application_to_departments' />">Set application to departments</a></td>
-			<td><a href="<c:url value='/inspection_board/show_your_posion_in_ratings' />">Show your position in ratings</a></td>
+			<td><a href="<c:url value='./set_application_to_departments' />">Set application to departments</a></td>
+			<td><a href="<c:url value='./show_your_posion_in_ratings' />">Show your position in ratings</a></td>
 		</tr>
 
 	</table>
 	
-	 <a href="<c:url value='/inspection_board/logout' />">Log out</a>
+	 <a href="<c:url value='./logout' />">Log out</a>
 
 </body>
 </html>

@@ -26,7 +26,7 @@ a {
 		Here you can log in
 	</h3>
 
-	<form method="post" action="<c:url value='/inspection_board/login_post' />">
+	<form method="post" action="<c:url value='./login_post' />">
 	
 		<table>
 			<tr>
@@ -55,7 +55,7 @@ a {
 		
 	</form>
 
-	<a href="<c:url value='/' />">Go to home page</a><a href="<c:url value='/inspection_board/registration' />">Registration</a>
+	<a href="<c:url value='/' />">Go to home page</a><a href="<c:url value='./registration' />">Registration</a>
 
 </body>
 </html>

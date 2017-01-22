@@ -88,28 +88,33 @@ a {
 		<div class="department_block">
 			<div class="head_department">${department.nameDepartment}</div>
 			<div class="required_subjects"><span>Required subject(s):</span>
-					<c:forEach items="${department.necessaryItems}" var="subject" varStatus="status">
-						${subject.name}<c:if test="${ ! status.last}" >, </c:if>
-					</c:forEach>
+				<c:forEach items="${department.necessaryItems}" var="subject" varStatus="status">
+					${subject.name}<c:if test="${ ! status.last}" >, </c:if>
+				</c:forEach>
 			</div>
 			<div class="max_enrollee"><span>Max amount student: </span>${department.maxAmountStudent}</div>
 			<div class="send_application">
-				<form action="<c:url value='/inspection_board/set_application_to_departments_post' />" method="post">
+				<form action="<c:url value='./set_application_to_departments_post' />" method="post">
 					<input type="hidden" name="departmentId" value="${department.id}" />
 					<input type="submit" value="Send application to this department"
 						style="position: relative; top: 7px; left: 20px;">
 				</form>
 			</div>
+			
+			
+			<c:if test="${userSubjects.containsAll(department.necessaryItems)}">
+				<div>Contain!!!</div>
+			</c:if>
+	
 		</div>
+		
 	</c:forEach>
-	
-	
 	
 
 	<hr class="separate_line">
 
-	<a href="<c:url value='/inspection_board/home' />">Go to home page</a>
-	<a href="<c:url value='/inspection_board/logout' />">Log out</a>
+	<a href="<c:url value='./home' />">Go to home page</a>
+	<a href="<c:url value='./logout' />">Log out</a>
 
 </body>
 </html>

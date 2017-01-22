@@ -26,7 +26,7 @@ color: #872c1e;
 		You can leave here your an application for admission to the Faculty.
 	</h3>
 	
-	<a href="<c:url value='/inspection_board/login' />">Log in</a><a href="<c:url value='/inspection_board/registration' />">Registration</a>
+	<a href="<c:url value='./login' />">Log in</a><a href="<c:url value='./registration' />">Registration</a>
 
 </body>
 </html>
