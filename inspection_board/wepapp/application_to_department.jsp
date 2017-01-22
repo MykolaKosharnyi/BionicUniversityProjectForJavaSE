@@ -46,9 +46,20 @@ a {
 	box-shadow: 0 0 5px black;
 }
 
+.notContaintUserSubjects{
+	background:#e6e6e6;
+	border: 1px grey solid;
+	box-shadow: 0 0 1px grey;
+}
+
 .department_block:hover{
 	background: #e0effc;
 	box-shadow: 0 0 10px green;
+}
+
+.notContaintUserSubjects:hover{
+	background: #e6e6e6;
+	box-shadow: 0 0 1px grey;
 }
 
 .department_block span{
@@ -72,10 +83,11 @@ a {
 	margin: 0px auto;
 	position: relative;
 	display: block;
-	background: rgb(143, 216, 255) none repeat scroll 0% 0%;
+	background: rgb(201, 255, 150) none repeat scroll 0% 0%;
 	padding: 5px;
 	border-radius: 5px;
-	box-shadow: 0px 0px 5px yellow;
+	box-shadow: 0px 0px 2px yellow;
+	cursor: pointer;
 }
 </style>
 </head>
@@ -85,7 +97,9 @@ a {
 	
 	
 	<c:forEach items="${departments}" var="department" varStatus="loop">
-		<div class="department_block">
+		<c:set var="containtUserSubjects" value="${userSubjects.containsAll(department.necessaryItems)}"/>
+	
+		<div class="department_block <c:if test="${!containtUserSubjects}">notContaintUserSubjects</c:if>">
 			<div class="head_department">${department.nameDepartment}</div>
 			<div class="required_subjects"><span>Required subject(s):</span>
 				<c:forEach items="${department.necessaryItems}" var="subject" varStatus="status">
@@ -94,17 +108,19 @@ a {
 			</div>
 			<div class="max_enrollee"><span>Max amount student: </span>${department.maxAmountStudent}</div>
 			<div class="send_application">
-				<form action="<c:url value='./set_application_to_departments_post' />" method="post">
-					<input type="hidden" name="departmentId" value="${department.id}" />
-					<input type="submit" value="Send application to this department"
-						style="position: relative; top: 7px; left: 20px;">
-				</form>
+				<c:if test="${containtUserSubjects}">
+					<form action="<c:url value='./set_application_to_departments_post' />" method="post">
+						<input type="hidden" name="departmentId" value="${department.id}" />
+						<input type="submit" value="Send application to this department"
+							style="position: relative; top: 7px; left: 20px;">
+					</form>
+				</c:if>
+				
+				<c:if test="${!containtUserSubjects}">
+					<p style="color:red;">You don't have required subject(s) or your average scope in low.</p>
+				</c:if>
+			
 			</div>
-			
-			
-			<c:if test="${userSubjects.containsAll(department.necessaryItems)}">
-				<div>Contain!!!</div>
-			</c:if>
 	
 		</div>
 		
