@@ -1,12 +1,14 @@
 package model.service;
 
 import model.dao.CertificateDao;
-import model.dao.jdbc.JDBCDaoFactory;
+import model.dao.DaoConnection;
+import model.dao.DaoFactory;
 import model.entity.Certificate;
 import model.entity.Subject;
 
 public class CertificateService{
-	CertificateDao certificate = new JDBCDaoFactory().createCertificateDao();
+	
+	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
 	private CertificateService(){}
 	
@@ -19,23 +21,50 @@ public class CertificateService{
     }
 
 	public boolean addSubject(long idEnrollee, long idSubject, int scope) {
-		return certificate.add(idEnrollee, idSubject, scope);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			CertificateDao dao = daoFactory.createCertificateDao(connection);
+			boolean result = dao.add(idEnrollee, idSubject, scope);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public Certificate find(long idEnrollee) {
-		return certificate.find(idEnrollee);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			CertificateDao dao = daoFactory.createCertificateDao(connection);
+			Certificate result = dao.find(idEnrollee);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public void updateSubject(long idEnrollee, Subject subject, int valueOfSubject) {
-		certificate.update(idEnrollee, subject, valueOfSubject);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			CertificateDao dao = daoFactory.createCertificateDao(connection);
+			dao.update(idEnrollee, subject, valueOfSubject);
+			connection.commit();
+		}	
 	}
 
 	public void deleteEnrolleeCertificate(long idEnrollee) {
-		certificate.delete(idEnrollee);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			CertificateDao dao = daoFactory.createCertificateDao(connection);
+			dao.delete(idEnrollee);
+			connection.commit();
+		}
 	}
 
 	public void deleteSubject(long idEnrollee, long idSubject) {
-		certificate.delete(idEnrollee, idSubject);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			CertificateDao dao = daoFactory.createCertificateDao(connection);
+			dao.delete(idEnrollee, idSubject);
+			connection.commit();
+		}
 	}
 
 }

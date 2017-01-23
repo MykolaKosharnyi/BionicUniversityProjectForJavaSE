@@ -2,12 +2,13 @@ package model.service;
 
 import java.util.List;
 
+import model.dao.DaoConnection;
+import model.dao.DaoFactory;
 import model.dao.EnrolleeDao;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
 
 public class EnrolleeService{
-	EnrolleeDao enrolleeDao = new JDBCDaoFactory().createEnrolleeDao();
+	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
 	private EnrolleeService(){}
 	
@@ -20,31 +21,71 @@ public class EnrolleeService{
     }
 
 	public long create(Enrollee enrollee) {
-		return enrolleeDao.create(enrollee);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			long result = dao.create(enrollee);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public Enrollee find(long id) {
-		return enrolleeDao.find(id);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			Enrollee result = dao.find(id);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public List<Enrollee> findAll() {
-		return enrolleeDao.findAll();
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			List<Enrollee> result = dao.findAll();
+			connection.commit();
+			return result;
+		}
 	}
 
 	public void update(Enrollee enrollee) {
-		enrolleeDao.update(enrollee);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			dao.update(enrollee);
+			connection.commit();
+		}
 	}
 
 	public void delete(long id) {
-		enrolleeDao.delete(id);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			dao.delete(id);
+			connection.commit();
+		}
 	}
 
 	public Enrollee findByEmail(String email) {
-		return enrolleeDao.findByEmail(email);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			Enrollee result = dao.findByEmail(email);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public boolean checkLogin(String email, String password) {
-		return enrolleeDao.checkLogin(email, password);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			EnrolleeDao dao = daoFactory.createEnrolleeDao(connection);
+			boolean result = dao.checkLogin(email, password);
+			connection.commit();
+			return result;
+		}
 	}
 
 }

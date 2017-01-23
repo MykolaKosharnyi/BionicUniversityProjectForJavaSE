@@ -17,12 +17,17 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	
 	static Logger logger = Logger.getLogger(JDBCEnrolleeDao.class);
 
+	private Connection connection;
+	
+	JDBCEnrolleeDao(Connection connection) {
+		this.connection = connection;
+	}
+	
 	@Override
 	public long create(Enrollee enrollee) {
 		long result = 0;
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement(
+		try (PreparedStatement st = connection.prepareStatement(
 						"INSERT INTO enrollee (firstName, secondName, email, phone, password) values (?,?,?,?,?)",
 						Statement.RETURN_GENERATED_KEYS);) {
 
@@ -50,8 +55,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	public Enrollee find(long id) {
 		Enrollee enrollee = null;
 		
-		try(Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("SELECT * FROM enrollee WHERE ID = ?");){
+		try(PreparedStatement st = connection.prepareStatement("SELECT * FROM enrollee WHERE ID = ?");){
 			st.setLong(1, id);
 			
 			try(ResultSet rs = st.executeQuery();){
@@ -71,8 +75,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	public List<Enrollee> findAll() {
 		List<Enrollee> enrollee = new ArrayList<Enrollee>();
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				Statement st = cn.createStatement();
+		try (Statement st = connection.createStatement();
 				ResultSet rs = st.executeQuery("SELECT * FROM enrollee ");) {
 			
 			while (rs.next()) {
@@ -89,8 +92,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 
 	@Override
 	public void update(Enrollee enrollee) {
-		try(Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement(
+		try(PreparedStatement st = connection.prepareStatement(
 						"UPDATE enrollee SET firstName = ?, secondName = ?, email = ?, phone = ?, password = ? WHERE id = ? ")){
 			
 			st.setString(1, enrollee.getFirstName());
@@ -109,8 +111,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 
 	@Override
 	public void delete(long id) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("DELETE FROM enrollee WHERE id = ?");) {
+		try (PreparedStatement st = connection.prepareStatement("DELETE FROM enrollee WHERE id = ?");) {
 			
 			st.setLong(1, id);
 			st.executeUpdate();
@@ -122,8 +123,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 
 	@Override
 	public boolean checkLogin(String email, String password) {
-		try(Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("SELECT * FROM enrollee WHERE email = ? AND password = ?");){
+		try(PreparedStatement st = connection.prepareStatement("SELECT * FROM enrollee WHERE email = ? AND password = ?");){
 			
 			st.setString(1, email);
 			st.setString(2, password);
@@ -140,8 +140,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	public Enrollee findByEmail(String email) {
 		Enrollee enrollee = null;
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("SELECT * FROM enrollee WHERE email = ?");) {
+		try (PreparedStatement st = connection.prepareStatement("SELECT * FROM enrollee WHERE email = ?");) {
 
 			st.setString(1, email);
 			ResultSet rs = st.executeQuery();

@@ -2,12 +2,13 @@ package model.service;
 
 import java.util.List;
 
+import model.dao.DaoConnection;
+import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Department;
 
 public class DepartmentService {
-	DepartmentDao department = new JDBCDaoFactory().createDepartmentDao();
+	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
 	private DepartmentService(){}
 	
@@ -20,23 +21,51 @@ public class DepartmentService {
     }
 
 	public long create(Department department) {
-		return this.department.create(department);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
+			long result = dao.create(department);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public Department find(long id) {
-		return department.find(id);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
+			Department result = dao.find(id);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public List<Department> findAll() {
-		return department.findAll();
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
+			List<Department> result = dao.findAll();
+			connection.commit();
+			return result;
+		}
 	}
 
 	public void update(Department t) {
-		department.update(t);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
+			dao.update(t);
+			connection.commit();
+		}
 	}
 
 	public void delete(long id) {
-		department.delete(id);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
+			dao.delete(id);
+			connection.commit();
+		}
 	}
 
 }

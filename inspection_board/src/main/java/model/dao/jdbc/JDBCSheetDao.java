@@ -16,16 +16,23 @@ import model.dao.SheetDao;
 import model.entity.Department;
 import model.entity.Enrollee;
 import model.entity.Sheet;
+import model.service.DepartmentService;
+import model.service.EnrolleeService;
 
 public class JDBCSheetDao implements SheetDao {
 
 	static Logger logger = Logger.getLogger(JDBCSheetDao.class);
 	
+	private Connection connection;
+	
+	JDBCSheetDao(Connection connection) {
+		this.connection = connection;
+	}
+	
 	@Override
 	public long add(long idEnrollee, long idDepartment) {
 		long result = 0;
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement(
+		try (PreparedStatement st = connection.prepareStatement(
 						"INSERT INTO sheet (id_enrollee, id_department) values (?,?)",
 						Statement.RETURN_GENERATED_KEYS);) {
 
@@ -48,12 +55,12 @@ public class JDBCSheetDao implements SheetDao {
 	public Sheet getSheet() {
 		Sheet sheet = Sheet.getInstance();
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection(); Statement st = cn.createStatement();) {
+		try (Statement st = connection.createStatement();) {
 
 			ResultSet rs = st.executeQuery("SELECT DISTINCT id_department FROM sheet; ");
 			Map<Department, List<Enrollee>> sheetMap = new HashMap<Department, List<Enrollee>>();
 			while (rs.next()) {
-				sheetMap.put(new JDBCDaoFactory().createDepartmentDao().find(rs.getLong(1)),
+				sheetMap.put(DepartmentService.getInstance().find(rs.getLong(1)),
 						getEnrolleeByDepartmentID(rs.getLong(1)));
 			}
 
@@ -68,14 +75,13 @@ public class JDBCSheetDao implements SheetDao {
 	private List<Enrollee> getEnrolleeByDepartmentID(long id) {
 		List<Enrollee> enrollee = new ArrayList<Enrollee>();
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("SELECT id_enrollee FROM sheet where id_department = ? ");) {
+		try (PreparedStatement st = connection.prepareStatement("SELECT id_enrollee FROM sheet where id_department = ? ");) {
 
 			st.setLong(1, id);
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
-				enrollee.add(new JDBCDaoFactory().createEnrolleeDao().find(rs.getLong(1)));
+				enrollee.add(EnrolleeService.getInstance().find(rs.getLong(1)));
 			}
 
 		} catch (SQLException e) {
@@ -86,8 +92,7 @@ public class JDBCSheetDao implements SheetDao {
 	
 	@Override
 	public void deleteDepartment(long idDepartment) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("DELETE FROM sheet WHERE id_department = ?");) {
+		try (PreparedStatement st = connection.prepareStatement("DELETE FROM sheet WHERE id_department = ?");) {
 
 			st.setLong(1, idDepartment);
 			st.executeUpdate();
@@ -99,8 +104,7 @@ public class JDBCSheetDao implements SheetDao {
 
 	@Override
 	public void deleteEnrollee(long idEnrollee) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("DELETE FROM sheet WHERE id_enrollee  = ?");) {
+		try (PreparedStatement st = connection.prepareStatement("DELETE FROM sheet WHERE id_enrollee  = ?");) {
 
 			st.setLong(1, idEnrollee);
 			st.executeUpdate();
@@ -113,8 +117,7 @@ public class JDBCSheetDao implements SheetDao {
 
 	@Override
 	public void deleteEnrolleeFromDepartment(long idEnrollee, long idDepartment) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn
+		try (PreparedStatement st = connection
 						.prepareStatement("DELETE FROM sheet WHERE id_enrollee  = ? and id_department = ?");) {
 
 			st.setLong(1, idEnrollee);

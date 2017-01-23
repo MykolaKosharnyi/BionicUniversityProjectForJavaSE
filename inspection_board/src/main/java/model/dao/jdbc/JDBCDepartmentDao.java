@@ -13,18 +13,22 @@ import org.apache.log4j.Logger;
 import model.dao.DepartmentDao;
 import model.entity.Department;
 import model.entity.Subject;
+import model.service.SubjectService;
 
 public class JDBCDepartmentDao implements DepartmentDao {
 	
 	static Logger logger = Logger.getLogger(JDBCDepartmentDao.class);
+	
+	private Connection connection;
+	
+	JDBCDepartmentDao(Connection connection) {
+		this.connection = connection;
+	}
 
 	@Override
 	public long create(Department department) {
 		long result = 0;
-		
-		try(Connection cn = JdbcConnection.getInstance().getConnection()){
-			
-			try(PreparedStatement st = cn.prepareStatement("INSERT INTO department (name, max_enrollee) values (?,?)",
+			try(PreparedStatement st = connection.prepareStatement("INSERT INTO department (name, max_enrollee) values (?,?)",
 					Statement.RETURN_GENERATED_KEYS)){
 				st.setString( 1, department.getNameDepartment());
 				st.setInt( 2, department.getMaxAmountStudent());
@@ -34,22 +38,22 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				if (key.next()) {
 					result = key.getLong(1);
 				}
+			} catch (SQLException e) {
+				logger.error(e.getStackTrace());
 			}
 			
 			//for subject with contain department
 			for(Subject subject : department.getNecessaryItems()){
-				try(PreparedStatement st = cn.prepareStatement(
+				try(PreparedStatement st = connection.prepareStatement(
 						"INSERT INTO department_subject (id_department, id_subject) values (?,?)")) {
 					
 					st.setLong( 1, department.getId());
 					st.setLong( 2, subject.getId());
 					st.executeUpdate();
+				} catch (SQLException e) {
+					logger.error(e.getStackTrace());
 				} 
 			}
-			
-		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
-		}
 		
 		return result;
 	}
@@ -58,8 +62,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	public Department find(long id) {
 		Department department = null;
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn.prepareStatement("SELECT * FROM department WHERE id_department = ?");) {
+		try (PreparedStatement st = connection.prepareStatement("SELECT * FROM department WHERE id_department = ?");) {
 
 			st.setLong(1, id);
 			ResultSet rs = st.executeQuery();
@@ -78,15 +81,14 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	private List<Subject> getNecessaryItems(long id) {
 		List<Subject> subjects = new ArrayList<>();
 
-		try (Connection cn = JdbcConnection.getInstance().getConnection();
-				PreparedStatement st = cn
+		try (PreparedStatement st = connection
 						.prepareStatement("SELECT DISTINCT id_subject FROM department_subject WHERE id_department = ?; ");) {
 			st.setLong( 1, id);
 			
 			ResultSet rs = st.executeQuery();
 		
 			while (rs.next()) {
-				subjects.add(new JDBCDaoFactory().createSubjectDao().find(rs.getLong(1)));
+				subjects.add(SubjectService.getInstance().find(rs.getLong(1)));
 			}
 
 		} catch (SQLException e) {
@@ -99,7 +101,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	public List<Department> findAll() {
 		List<Department> department = new ArrayList<Department>();
 
-		try(Connection cn = JdbcConnection.getInstance().getConnection(); Statement st = cn.createStatement();) {
+		try(Statement st = connection.createStatement();) {
 
 			ResultSet rs = st.executeQuery("SELECT * FROM department ");
 			Department current = null;
@@ -117,59 +119,62 @@ public class JDBCDepartmentDao implements DepartmentDao {
 
 	@Override
 	public void update(Department department) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection()) {
 
-			try (PreparedStatement st = cn
+			try (PreparedStatement st = connection
 					.prepareStatement("UPDATE department SET name = ?, max_enrollee = ? WHERE id_department = ? ")) {
 				st.setString(1, department.getNameDepartment());
 				st.setInt(2, department.getMaxAmountStudent());
 				st.setLong(3, department.getId());
 
 				st.executeUpdate();
+			} catch (SQLException e) {
+				logger.error(e.getStackTrace());
 			}
 
 			//if changed subject in this department
 			if (department.getNecessaryItems().retainAll(getNecessaryItems(department.getId()))) {
 
 				// first delete old subject of this department
-				try (PreparedStatement st = cn
+				try (PreparedStatement st = connection
 						.prepareStatement("DELETE FROM department_subject WHERE id_department = ?")) {
 					st.setLong(1, department.getId());
 					st.executeUpdate();
+				} catch (SQLException e) {
+					logger.error(e.getStackTrace());
 				}
 
 				// add new subject of this department
 				for (Subject subject : department.getNecessaryItems()) {
-					try (PreparedStatement st = cn.prepareStatement(
+					try (PreparedStatement st = connection.prepareStatement(
 							"INSERT INTO department_subject (id_department, id_subject) values (?,?)")) {
 
 						st.setLong(1, department.getId());
 						st.setLong(2, subject.getId());
 						st.executeUpdate();
+					} catch (SQLException e) {
+						logger.error(e.getStackTrace());
 					}
 				}
 			}
-		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
-		}
 	}
 
 	@Override
 	public void delete(long id) {
-		try (Connection cn = JdbcConnection.getInstance().getConnection()) {
-			try(PreparedStatement st = cn.prepareStatement("DELETE FROM department WHERE id_department = ?")){
+		
+			try(PreparedStatement st = connection.prepareStatement("DELETE FROM department WHERE id_department = ?")){
 				st.setLong(1, id);
 				st.executeUpdate();
+			} catch (SQLException e) {
+				logger.error(e.getStackTrace());
 			}
 			
-			try(PreparedStatement st = cn.prepareStatement("DELETE FROM department_subject WHERE id_department = ?")){
+			try(PreparedStatement st = connection.prepareStatement("DELETE FROM department_subject WHERE id_department = ?")){
 				st.setLong(1, id);
 				st.executeUpdate();
+			} catch (SQLException e) {
+				logger.error(e.getStackTrace());
 			}	
 			
-		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
-		}
 	}
 
 }

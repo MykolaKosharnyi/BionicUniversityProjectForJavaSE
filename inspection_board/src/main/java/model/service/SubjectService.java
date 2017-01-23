@@ -2,12 +2,13 @@ package model.service;
 
 import java.util.List;
 
+import model.dao.DaoConnection;
+import model.dao.DaoFactory;
 import model.dao.SubjectDao;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Subject;
 
 public class SubjectService{
-	SubjectDao subjectDao = new JDBCDaoFactory().createSubjectDao();
+	private DaoFactory daoFactory = DaoFactory.getInstance();
 	
 	private SubjectService(){}
 	
@@ -20,23 +21,51 @@ public class SubjectService{
     }
 
 	public long create(Subject subject) {
-		return subjectDao.create(subject);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			SubjectDao dao = daoFactory.createSubjectDao(connection);
+			long result = dao.create(subject);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public Subject find(long id) {
-		return subjectDao.find(id);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			SubjectDao dao = daoFactory.createSubjectDao(connection);
+			Subject result = dao.find(id);
+			connection.commit();
+			return result;
+		}
 	}
 
 	public List<Subject> findAll() {
-		return subjectDao.findAll();
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			SubjectDao dao = daoFactory.createSubjectDao(connection);
+			List<Subject> result = dao.findAll();
+			connection.commit();
+			return result;
+		}
 	}
 
 	public void update(Subject subject) {
-		subjectDao.update(subject);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			SubjectDao dao = daoFactory.createSubjectDao(connection);
+			dao.update(subject);
+			connection.commit();
+		}
 	}
 
 	public void delete(long subject) {
-		subjectDao.delete(subject);
+		try( DaoConnection connection = daoFactory.getConnection() ){
+			connection.begin();
+			SubjectDao dao = daoFactory.createSubjectDao(connection);
+			dao.delete(subject);
+			connection.commit();
+		}
 	}
 
 }
