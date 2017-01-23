@@ -2,16 +2,31 @@ package model.service;
 
 import java.util.List;
 
+import model.dao.DepartmentDao;
+import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Department;
 
-public interface DepartmentService {
-	long create(Department department);
+public class DepartmentService {
+	DepartmentDao department = new JDBCDaoFactory().createDepartmentDao();
 
-	Department find(long id);
+	public long create(Department department) {
+		return this.department.create(department);
+	}
 
-	List<Department> findAll();
+	public Department find(long id) {
+		return department.find(id);
+	}
 
-	void update(Department t);
+	public List<Department> findAll() {
+		return department.findAll();
+	}
 
-	void delete(long id);
+	public void update(Department t) {
+		department.update(t);
+	}
+
+	public void delete(long id) {
+		department.delete(id);
+	}
+
 }

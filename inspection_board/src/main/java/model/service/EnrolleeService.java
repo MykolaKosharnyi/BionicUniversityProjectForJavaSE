@@ -2,20 +2,39 @@ package model.service;
 
 import java.util.List;
 
+import model.dao.EnrolleeDao;
+import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
 
-public interface EnrolleeService {
-	long create(Enrollee enrollee);
+public class EnrolleeService{
+	EnrolleeDao enrolleeDao = new JDBCDaoFactory().createEnrolleeDao();
 
-	Enrollee find(long id);
+	public long create(Enrollee enrollee) {
+		return enrolleeDao.create(enrollee);
+	}
 
-	List<Enrollee> findAll();
+	public Enrollee find(long id) {
+		return enrolleeDao.find(id);
+	}
 
-	void update(Enrollee enrollee);
+	public List<Enrollee> findAll() {
+		return enrolleeDao.findAll();
+	}
 
-	void delete(long id);
+	public void update(Enrollee enrollee) {
+		enrolleeDao.update(enrollee);
+	}
 
-	Enrollee findByEmail(String email);
+	public void delete(long id) {
+		enrolleeDao.delete(id);
+	}
 
-	boolean checkLogin(String email, String password);
+	public Enrollee findByEmail(String email) {
+		return enrolleeDao.findByEmail(email);
+	}
+
+	public boolean checkLogin(String email, String password) {
+		return enrolleeDao.checkLogin(email, password);
+	}
+
 }
