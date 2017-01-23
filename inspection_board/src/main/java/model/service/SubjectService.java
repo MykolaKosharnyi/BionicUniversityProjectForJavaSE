@@ -8,6 +8,16 @@ import model.entity.Subject;
 
 public class SubjectService{
 	SubjectDao subjectDao = new JDBCDaoFactory().createSubjectDao();
+	
+	private SubjectService(){}
+	
+	private static class Holder{
+    	static final SubjectService INSTANCE = new SubjectService(); 
+    }
+    
+    public static SubjectService getInstance(){
+    	return Holder.INSTANCE;
+    }
 
 	public long create(Subject subject) {
 		return subjectDao.create(subject);

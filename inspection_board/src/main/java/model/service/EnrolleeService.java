@@ -8,6 +8,16 @@ import model.entity.Enrollee;
 
 public class EnrolleeService{
 	EnrolleeDao enrolleeDao = new JDBCDaoFactory().createEnrolleeDao();
+	
+	private EnrolleeService(){}
+	
+	private static class Holder{
+    	static final EnrolleeService INSTANCE = new EnrolleeService(); 
+    }
+    
+    public static EnrolleeService getInstance(){
+    	return Holder.INSTANCE;
+    }
 
 	public long create(Enrollee enrollee) {
 		return enrolleeDao.create(enrollee);

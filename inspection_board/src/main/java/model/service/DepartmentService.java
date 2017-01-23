@@ -8,6 +8,16 @@ import model.entity.Department;
 
 public class DepartmentService {
 	DepartmentDao department = new JDBCDaoFactory().createDepartmentDao();
+	
+	private DepartmentService(){}
+	
+	private static class Holder{
+    	static final DepartmentService INSTANCE = new DepartmentService(); 
+    }
+    
+    public static DepartmentService getInstance(){
+    	return Holder.INSTANCE;
+    }
 
 	public long create(Department department) {
 		return this.department.create(department);

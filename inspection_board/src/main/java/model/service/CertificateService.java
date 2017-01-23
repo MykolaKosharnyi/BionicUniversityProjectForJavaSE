@@ -7,6 +7,16 @@ import model.entity.Subject;
 
 public class CertificateService{
 	CertificateDao certificate = new JDBCDaoFactory().createCertificateDao();
+	
+	private CertificateService(){}
+	
+	private static class Holder{
+    	static final CertificateService INSTANCE = new CertificateService(); 
+    }
+    
+    public static CertificateService getInstance(){
+    	return Holder.INSTANCE;
+    }
 
 	public boolean addSubject(long idEnrollee, long idSubject, int scope) {
 		return certificate.add(idEnrollee, idSubject, scope);
