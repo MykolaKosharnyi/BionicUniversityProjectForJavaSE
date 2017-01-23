@@ -8,17 +8,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import controller.ConfigurationManager;
-import model.dao.jdbc.JDBCDaoFactory;
+import model.service.CertificateService;
+import model.service.SubjectService;
 
 public class UserSubjectCommand implements Command {
 
+	CertificateService certificateService = CertificateService.getInstance();
+	SubjectService subjectService = SubjectService.getInstance();
+	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
-		request.setAttribute("subjects", new JDBCDaoFactory().createSubjectDao().findAll());
-		request.setAttribute("user_subjects",  new JDBCDaoFactory().createCertificateDao().find(id));
+		request.setAttribute("subjects", subjectService.findAll());
+		request.setAttribute("user_subjects",  certificateService.find(id));
 		
 	    return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}

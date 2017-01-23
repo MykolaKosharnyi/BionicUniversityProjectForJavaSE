@@ -12,14 +12,16 @@ import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
 import controller.MessageManager;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
+import model.service.EnrolleeService;
 
 public class LoginPOSTCommand implements Command {
 
 	private static final String PARAM_NAME_EMAIL = "email";
 	private static final String PARAM_NAME_PASSWORD = "password";
 	static Logger logger = Logger.getLogger(LoginPOSTCommand.class);
+	
+	EnrolleeService enrolleeService = EnrolleeService.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -32,8 +34,7 @@ public class LoginPOSTCommand implements Command {
 		String pass = request.getParameter(PARAM_NAME_PASSWORD);
 		logger.info("password:" + pass);
 
-		JDBCDaoFactory factory = new JDBCDaoFactory();
-		if (factory.createEnrolleeDao().checkLogin(login, pass)) {
+		if (enrolleeService.checkLogin(login, pass)) {
 
 			
 			logger.info("user is ckecking");
@@ -43,7 +44,7 @@ public class LoginPOSTCommand implements Command {
 				page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ADMIN_PAGE_PATH);
 			} else {
 				
-				Enrollee enrollee = factory.createEnrolleeDao().findByEmail(login);
+				Enrollee enrollee = enrolleeService.findByEmail(login);
 				String name = enrollee.getFirstName();
 				long idUser = enrollee.getId();
 

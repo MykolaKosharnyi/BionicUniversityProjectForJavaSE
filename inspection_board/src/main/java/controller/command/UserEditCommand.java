@@ -10,11 +10,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
-import model.dao.jdbc.JDBCDaoFactory;
+import model.service.EnrolleeService;
 
 public class UserEditCommand implements Command {
 	
 	static Logger logger = Logger.getLogger(UserEditCommand.class);
+	
+	EnrolleeService enrolleeService = EnrolleeService.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -23,7 +25,7 @@ public class UserEditCommand implements Command {
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
 		
-		request.setAttribute("user", new JDBCDaoFactory().createEnrolleeDao().find(id));
+		request.setAttribute("user", enrolleeService.find(id));
 		
 		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
 		

@@ -11,12 +11,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
+import model.service.EnrolleeService;
 
 public class RegistrationPOSTCommand implements Command {
 	
 	static Logger logger = Logger.getLogger(RegistrationPOSTCommand.class);
+	
+	EnrolleeService enrolleeService = EnrolleeService.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +46,7 @@ public class RegistrationPOSTCommand implements Command {
 		enrollee.setPassword(password);
 
         //save in database  
-		long idUser = new JDBCDaoFactory().createEnrolleeDao().create(enrollee);
+		long idUser = enrolleeService.create(enrollee);
 		
 		//log in user
 		HttpSession session = request.getSession();

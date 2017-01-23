@@ -10,12 +10,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
-import model.dao.jdbc.JDBCDaoFactory;
 import model.entity.Enrollee;
+import model.service.EnrolleeService;
 
 public class UserEditPostCommand implements Command {
 	
 	static Logger logger = Logger.getLogger(UserEditPostCommand.class);
+	
+	EnrolleeService enrolleeService = EnrolleeService.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -30,7 +32,7 @@ public class UserEditPostCommand implements Command {
 		if(!password.equals(repeatPassword)){
 			HttpSession session = request.getSession();
 			long id = (long) session.getAttribute("userId");
-			request.setAttribute("user", new JDBCDaoFactory().createEnrolleeDao().find(id));
+			request.setAttribute("user", enrolleeService.find(id));
 		    request.setAttribute("errorMessage", "Password and repeadPassword are different!!!");
 			
 			return ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
@@ -49,7 +51,7 @@ public class UserEditPostCommand implements Command {
 		enrollee.setPassword(password);
 
         //undate in database  
-		new JDBCDaoFactory().createEnrolleeDao().update(enrollee);
+		enrolleeService.update(enrollee);
 		
 		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
 	}

@@ -4,16 +4,14 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 
 import controller.command.Command;
+import controller.command.RequestHelper;
 
 public class Controller extends HttpServlet implements javax.servlet.Servlet{
 	/**
@@ -23,10 +21,6 @@ public class Controller extends HttpServlet implements javax.servlet.Servlet{
 	static Logger logger = Logger.getLogger(Controller.class);
 
 	RequestHelper requestHelper = RequestHelper.getInstance();
-
-//	public void init(){
-//		new DOMConfigurator().doConfigure("C:/Users/Íèêîëàé/Desktop/workspaceLinux/_Four_Project/src/log4j.xml", LogManager.getLoggerRepository());
-//	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {

@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import controller.ConfigurationManager;
-import model.dao.CertificateDao;
-import model.dao.jdbc.JDBCDaoFactory;
+import model.service.CertificateService;
+import model.service.SubjectService;
 
 public class UserSubjectPostCommand implements Command {
+	
+	CertificateService certificateService = CertificateService.getInstance();
+	SubjectService subjectService = SubjectService.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -24,11 +27,10 @@ public class UserSubjectPostCommand implements Command {
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
 		
-		CertificateDao certificateDao = new JDBCDaoFactory().createCertificateDao();
-		certificateDao.add(id, subjectId, scope);
+		certificateService.addSubject(id, subjectId, scope);
 		
-		request.setAttribute("subjects", new JDBCDaoFactory().createSubjectDao().findAll());
-		request.setAttribute("user_subjects", certificateDao.find(id));
+		request.setAttribute("subjects", subjectService.findAll());
+		request.setAttribute("user_subjects", certificateService.find(id));
 		
 	    return	ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}
