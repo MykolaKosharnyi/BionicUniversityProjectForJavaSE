@@ -94,8 +94,6 @@ a {
 <body>
 	<h3>At this page you can add or delete your application to the department.</h3>
 	
-	
-	
 	<c:forEach items="${departments}" var="department" varStatus="loop">
 		<c:set var="containtUserSubjects" value="${userSubjects.containsAll(department.necessaryItems)}"/>
 	

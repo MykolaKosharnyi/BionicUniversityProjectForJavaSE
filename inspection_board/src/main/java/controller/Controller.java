@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import controller.command.Command;
 import controller.command.RequestHelper;
@@ -32,6 +33,11 @@ public class Controller extends HttpServlet implements javax.servlet.Servlet{
 		processRequest(request, response);
 	}
 
+	public void init(){
+		DOMConfigurator.configure("/home/nikolay/workspace/four_project/training_autumn_four_project/inspection_board/src/main/java/log4j.xml");
+		//new DOMConfigurator().doConfigure("log4j.xml", LogManager.getLoggerRepository());
+	}
+	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		String page = null;

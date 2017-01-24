@@ -30,6 +30,7 @@ public class CharacterEncodingFilter implements Filter {
 	}
 
 	/**
+	 *  Main filter method for encoding actuation to UTF-8.
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
