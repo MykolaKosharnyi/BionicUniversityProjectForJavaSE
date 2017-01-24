@@ -38,37 +38,32 @@ public class JDBCDaoFactory extends DaoFactory{
 	
 	@Override
 	public EnrolleeDao createEnrolleeDao(DaoConnection connection) {
-		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		Connection sqlConnection = jdbcConnection.getConnection(); 	
-		return new JDBCEnrolleeDao(sqlConnection);
+		return new JDBCEnrolleeDao(sqlConnection(connection));
 	}
 
 	@Override
 	public CertificateDao createCertificateDao(DaoConnection connection) {
-		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		Connection sqlConnection = jdbcConnection.getConnection(); 
-		return new JDBCCertificateDao(sqlConnection);
+		return new JDBCCertificateDao(sqlConnection(connection));
 	}
 
 	@Override
 	public SubjectDao createSubjectDao(DaoConnection connection) {
-		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		Connection sqlConnection = jdbcConnection.getConnection(); 
-		return new JDBCSubjectDao(sqlConnection);
+		return new JDBCSubjectDao(sqlConnection(connection));
 	}
 
 	@Override
 	public DepartmentDao createDepartmentDao(DaoConnection connection) {
-		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		Connection sqlConnection = jdbcConnection.getConnection(); 
-		return new JDBCDepartmentDao(sqlConnection);
+		return new JDBCDepartmentDao(sqlConnection(connection));
 	}
 
 	@Override
 	public SheetDao createSheetDao(DaoConnection connection) {
+		return new JDBCSheetDao(sqlConnection(connection));
+	}
+	
+	private Connection sqlConnection(DaoConnection connection){
 		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		Connection sqlConnection = jdbcConnection.getConnection(); 
-		return new JDBCSheetDao(sqlConnection);
+		return jdbcConnection.getConnection(); 
 	}
 
 }

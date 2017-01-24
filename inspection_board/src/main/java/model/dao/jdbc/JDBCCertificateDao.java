@@ -120,7 +120,7 @@ public class JDBCCertificateDao implements CertificateDao {
 	 * @throws SQLException
 	 */
 	private Subject getSubjectFromResultSet(ResultSet rsSubject) throws SQLException {
-		return new Subject(rsSubject.getInt(1), rsSubject.getString(2));
+		return new Subject(rsSubject.getLong(1), rsSubject.getString(2));
 	}
 	
 	private Subject getSubjectFromListById(List<Subject> subjectList, long subjectId) {
