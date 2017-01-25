@@ -19,8 +19,6 @@ public class Certificate {//аттестат
 	 * change Subject
 	 * delete subject
 	 */
-	
-
 	public Map<Subject, Integer> getItemsWithEstimates() {
 		return itemsWithEstimates;
 	}
@@ -29,4 +27,7 @@ public class Certificate {//аттестат
 		this.itemsWithEstimates = itemsWithEstimates;
 	}
 	
+//	public boolean containsAll(java.util.ArrayList){
+//		return 
+//	}
 }

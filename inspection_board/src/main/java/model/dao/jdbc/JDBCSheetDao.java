@@ -6,18 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 import model.dao.SheetDao;
 import model.entity.Department;
 import model.entity.Enrollee;
-import model.entity.Sheet;
-import model.service.DepartmentService;
-import model.service.EnrolleeService;
 
 public class JDBCSheetDao implements SheetDao {
 
@@ -52,43 +50,66 @@ public class JDBCSheetDao implements SheetDao {
 	}
 
 	@Override
-	public Sheet getSheet() {
-		Sheet sheet = Sheet.getInstance();
+	public Map<Department, List<Enrollee>> getSheet() {
+		Map<Department, List<Enrollee>> result = new LinkedHashMap<Department, List<Enrollee>>();
 
-		try (Statement st = connection.createStatement();) {
+		try (PreparedStatement sheetStatement = connection.prepareStatement("SELECT id_department, id_enrollee FROM sheet; ");) {
 
-			ResultSet rs = st.executeQuery("SELECT DISTINCT id_department FROM sheet; ");
-			Map<Department, List<Enrollee>> sheetMap = new HashMap<Department, List<Enrollee>>();
-			while (rs.next()) {
-				sheetMap.put(DepartmentService.getInstance().find(rs.getLong(1)),
-						getEnrolleeByDepartmentID(rs.getLong(1)));
-			}
-
-			sheet.setSheet(sheetMap);
+			result = getSheetMap(sheetStatement.executeQuery());
 
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
-		return sheet;
+		return result;
 	}
-
-	private List<Enrollee> getEnrolleeByDepartmentID(long id) {
-		List<Enrollee> enrollee = new ArrayList<Enrollee>();
-
-		try (PreparedStatement st = connection.prepareStatement("SELECT id_enrollee FROM sheet where id_department = ? ");) {
-
-			st.setLong(1, id);
-			ResultSet rs = st.executeQuery();
-
-			while (rs.next()) {
-				enrollee.add(EnrolleeService.getInstance().find(rs.getLong(1)));
+	
+	private Map<Department, List<Enrollee>> getSheetMap(ResultSet sheetRS) throws SQLException{
+		Map<Department, List<Enrollee>> result = new LinkedHashMap<Department, List<Enrollee>>();
+		
+		JDBCDepartmentDao departmentDAO = new JDBCDepartmentDao(connection);
+		List<Department> departmentList = departmentDAO.findAll();
+		
+		JDBCEnrolleeDao enrolleeDAO = new JDBCEnrolleeDao(connection);
+		List<Enrollee> enrolleeList = enrolleeDAO.findAll();
+		
+		while (sheetRS.next()) {
+			
+			Department department = getDepartmentFromListById(departmentList, sheetRS.getLong(1));
+			Enrollee enrollee = getSubjectFromListById(enrolleeList, sheetRS.getLong(2));
+			
+			if(result.containsKey(department)){
+				List<Enrollee> listConcreteEnrollee = result.get(department);
+				listConcreteEnrollee.add(enrollee);
+			} else {
+				List<Enrollee> listConcreteEnrollee = new ArrayList<>();
+				listConcreteEnrollee.add(enrollee);
+				result.put(department, listConcreteEnrollee);
 			}
-
-		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
 		}
-		return enrollee;
+		return result;
 	}
+	
+	private Department getDepartmentFromListById(List<Department> departmentList, long departmentId) {
+		Department result;
+        Optional<Department> departmentOptional = departmentList.stream().filter(d -> d.getId()==departmentId).findFirst();
+        if (departmentOptional.isPresent()) {
+            result = departmentOptional.get();
+        } else {
+            throw new IllegalStateException();
+        }
+        return result;
+    }
+	
+	private Enrollee getSubjectFromListById(List<Enrollee> enrolleeList, long enrolleeId) {
+		Enrollee result;
+        Optional<Enrollee> enrolleeOptional = enrolleeList.stream().filter(d -> d.getId()==enrolleeId).findFirst();
+        if (enrolleeOptional.isPresent()) {
+            result = enrolleeOptional.get();
+        } else {
+            throw new IllegalStateException();
+        }
+        return result;
+    }
 	
 	@Override
 	public void deleteDepartment(long idDepartment) {

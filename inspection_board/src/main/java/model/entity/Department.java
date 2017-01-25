@@ -56,7 +56,6 @@ public class Department {
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + maxAmountStudent;
 		result = prime * result + ((nameDepartment == null) ? 0 : nameDepartment.hashCode());
-		result = prime * result + ((necessaryItems == null) ? 0 : necessaryItems.hashCode());
 		return result;
 	}
 
@@ -77,11 +76,6 @@ public class Department {
 			if (other.nameDepartment != null)
 				return false;
 		} else if (!nameDepartment.equals(other.nameDepartment))
-			return false;
-		if (necessaryItems == null) {
-			if (other.necessaryItems != null)
-				return false;
-		} else if (!necessaryItems.equals(other.necessaryItems))
 			return false;
 		return true;
 	}

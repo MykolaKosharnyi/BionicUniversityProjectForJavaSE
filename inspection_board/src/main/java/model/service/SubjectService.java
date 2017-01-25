@@ -60,6 +60,7 @@ public class SubjectService{
 	}
 
 	public void delete(long subject) {
+		//also need realization to delete from DEPARTMENT_SUBJECT(delete row) and CERTIFICATE(delete row)
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SubjectDao dao = daoFactory.createSubjectDao(connection);

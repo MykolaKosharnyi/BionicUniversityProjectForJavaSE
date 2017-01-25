@@ -1,16 +1,17 @@
 package model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.SheetDao;
 import model.entity.Administrator;
 import model.entity.Department;
 import model.entity.Enrollee;
-import model.entity.Sheet;
 
 public class SheetService{	
 	private DaoFactory daoFactory = DaoFactory.getInstance();
-	Administrator administrator = Administrator.getInstance();
 	
 	private SheetService(){}
 	
@@ -38,14 +39,14 @@ public class SheetService{
 			// get Department
 			Department department = DepartmentService.getInstance().find(idDepartment);
 						
-			administrator.addEnrollee(department, enrollee);
+			Administrator.getInstance().addEnrollee(department, enrollee);
 	}
 
-	public Sheet getSheet() {
+	public Map<Department, List<Enrollee>> getSheet() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-			Sheet result = dao.getSheet();
+			Map<Department, List<Enrollee>> result = dao.getSheet();
 			connection.commit();
 			return result;
 		}
@@ -94,7 +95,7 @@ public class SheetService{
 			// get Department
 			Department department = DepartmentService.getInstance().find(idDepartment);
 
-			administrator.deleteEnrollee(department, enrollee);
+			Administrator.getInstance().deleteEnrollee(department, enrollee);
 	}
 
 }
