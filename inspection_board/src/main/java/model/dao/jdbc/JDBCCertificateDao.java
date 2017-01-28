@@ -30,7 +30,7 @@ public class JDBCCertificateDao implements CertificateDao {
 	
 	private Connection connection;
 	
-	JDBCCertificateDao(Connection connection) {
+	public JDBCCertificateDao(Connection connection) {
 		this.connection = connection;
 	}
 
@@ -55,7 +55,7 @@ public class JDBCCertificateDao implements CertificateDao {
 
 	private boolean findRepeadSubject(long idEnrollee, long idSubject) {
 		boolean result = false;
-		try (PreparedStatement st = connection.prepareStatement(SELECT_REPEAD_SUBJECT);) {
+		try (PreparedStatement st = connection.prepareStatement(SELECT_REPEAD_SUBJECT)) {
 
 			st.setLong(1, idEnrollee);
 			st.setLong(2, idSubject);
@@ -75,7 +75,7 @@ public class JDBCCertificateDao implements CertificateDao {
 	public Certificate find(long idEnrollee) {
 		Certificate result = new Certificate();
 		try (PreparedStatement statementCertificate = connection.prepareStatement(SELECT_BY_ID_ENROLLEE);
-			 PreparedStatement statementSubject = connection.prepareStatement(SELECT_ALL_SUBJECT);) {			
+			 PreparedStatement statementSubject = connection.prepareStatement(SELECT_ALL_SUBJECT)) {			
 			statementCertificate.setLong(1, idEnrollee);
 			
 			try (ResultSet rsCertificate = statementCertificate.executeQuery();

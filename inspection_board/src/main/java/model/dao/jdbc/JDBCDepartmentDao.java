@@ -34,7 +34,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	
 	private Connection connection;
 	
-	JDBCDepartmentDao(Connection connection) {
+	public JDBCDepartmentDao(Connection connection) {
 		this.connection = connection;
 	}
 
@@ -128,7 +128,10 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			ResultSet rs = statementSubject.executeQuery();
 		
 			while (rs.next()) {
-				result.add(new Subject(rs.getLong(1), rs.getString(2)));				
+				result.add(new Subject.Builder()
+						.setId(rs.getLong("id"))
+						.setName(rs.getString("name"))
+						.build());			
 			}
 
 		} catch (SQLException e) {

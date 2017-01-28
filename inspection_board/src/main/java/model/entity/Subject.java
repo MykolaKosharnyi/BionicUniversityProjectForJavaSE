@@ -12,6 +12,28 @@ public class Subject {
 
 	public Subject() {}
 
+	public static class Builder{
+		private long id;
+		private String name;
+		
+		public Builder setId(long id) {
+			this.id = id;
+			return this;
+		}
+	
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Subject build(){
+			Subject subject = new Subject();
+			subject.setId(id);
+			subject.setName(name);
+			return subject;
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}

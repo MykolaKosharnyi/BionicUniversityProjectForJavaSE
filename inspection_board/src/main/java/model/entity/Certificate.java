@@ -26,8 +26,4 @@ public class Certificate {//аттестат
 	public void setItemsWithEstimates(Map<Subject, Integer> itemsWithEstimates) {
 		this.itemsWithEstimates = itemsWithEstimates;
 	}
-	
-//	public boolean containsAll(java.util.ArrayList){
-//		return 
-//	}
 }

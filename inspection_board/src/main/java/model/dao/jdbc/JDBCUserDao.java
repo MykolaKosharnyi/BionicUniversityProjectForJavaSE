@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import model.dao.UserDao;
+import model.entity.Certificate;
 import model.entity.User;
 
 public class JDBCUserDao implements UserDao {
@@ -29,7 +30,7 @@ public class JDBCUserDao implements UserDao {
 
 	private Connection connection;
 	
-	JDBCUserDao(Connection connection) {
+	public JDBCUserDao(Connection connection) {
 		this.connection = connection;
 	}
 	
@@ -37,7 +38,7 @@ public class JDBCUserDao implements UserDao {
 	public long create(User enrollee) {
 		long result = 0;
 
-		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE, Statement.RETURN_GENERATED_KEYS);) {
+		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE, Statement.RETURN_GENERATED_KEYS)) {
 
 			st.setString(1, enrollee.getFirstName());
 			st.setString(2, enrollee.getSecondName());
@@ -46,7 +47,7 @@ public class JDBCUserDao implements UserDao {
 			st.setString(5, enrollee.getPassword());
 			st.executeUpdate();
 
-			try (ResultSet key = st.getGeneratedKeys();) {
+			try (ResultSet key = st.getGeneratedKeys()) {
 				if (key.next()) {
 					result = key.getInt(1);
 				}
@@ -63,13 +64,12 @@ public class JDBCUserDao implements UserDao {
 	public User find(long id) {
 		User enrollee = null;
 		
-		try(PreparedStatement st = connection.prepareStatement(SELECT_BY_ID);){
+		try(PreparedStatement st = connection.prepareStatement(SELECT_BY_ID)){
 			st.setLong(1, id);
 			
-			try(ResultSet rs = st.executeQuery();){
+			try(ResultSet rs = st.executeQuery()){
 				if (rs.next()) {
-					enrollee = new User(rs.getInt(1), rs.getString(2), rs.getString(3),
-							rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7));
+					enrollee = getUserFromResultSet(rs);
 				}
 			}
 			
@@ -78,7 +78,26 @@ public class JDBCUserDao implements UserDao {
 		}
 		return enrollee;
 	}
+	
+	private User getUserFromResultSet(ResultSet rs) throws SQLException {
+		long idUser = rs.getLong("id");
+		User user = new User.Builder()
+		       .setId(idUser)
+		       .setFirstName(rs.getString("firstName"))
+		       .setSecondName(rs.getString("secondName"))
+		       .setEmail(rs.getString("email"))
+		       .setPhone(rs.getString("phone"))
+		       .setPassword(rs.getString("password"))
+		       .setCertificate( getCertificate(idUser) )
+		       .build();
+		return user;
+	}
 
+	private Certificate getCertificate(long id) {
+		JDBCCertificateDao certificateDao = new JDBCCertificateDao(connection);
+		return certificateDao.find(id);
+	}
+	
 	@Override
 	public List<User> findAll() {
 		List<User> enrollee = new ArrayList<User>();
@@ -87,8 +106,7 @@ public class JDBCUserDao implements UserDao {
 				ResultSet rs = st.executeQuery(SELECT_ALL);) {
 			
 			while (rs.next()) {
-				enrollee.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getDate(7)));
+				enrollee.add( getUserFromResultSet(rs) );
 			}
 
 		} catch (SQLException e) {
@@ -118,7 +136,7 @@ public class JDBCUserDao implements UserDao {
 
 	@Override
 	public void delete(long id) {
-		try (PreparedStatement st = connection.prepareStatement(DELETE_FROM_ENROLLEE);) {
+		try (PreparedStatement st = connection.prepareStatement(DELETE_FROM_ENROLLEE)) {
 			
 			st.setLong(1, id);
 			st.executeUpdate();
@@ -130,7 +148,7 @@ public class JDBCUserDao implements UserDao {
 
 	@Override
 	public boolean checkLogin(String email, String password) {
-		try(PreparedStatement st = connection.prepareStatement(CHECK_LOGIN);){
+		try(PreparedStatement st = connection.prepareStatement(CHECK_LOGIN)){
 			
 			st.setString(1, email);
 			st.setString(2, password);
@@ -147,14 +165,13 @@ public class JDBCUserDao implements UserDao {
 	public User findByEmail(String email) {
 		User enrollee = null;
 
-		try (PreparedStatement st = connection.prepareStatement(FIND_BY_EMAIL);) {
+		try (PreparedStatement st = connection.prepareStatement(FIND_BY_EMAIL)) {
 
 			st.setString(1, email);
 			ResultSet rs = st.executeQuery();
 
 			if (rs.next()) {
-				enrollee = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
-						rs.getString(5), rs.getString(6), rs.getDate(7));
+				enrollee = getUserFromResultSet(rs);
 			}
 
 		} catch (SQLException e) {

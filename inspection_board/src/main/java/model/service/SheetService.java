@@ -7,7 +7,7 @@ import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.SheetDao;
 import model.entity.Department;
-import model.entity.Enrollee;
+import model.entity.User;
 
 public class SheetService{	
 	private DaoFactory daoFactory = DaoFactory.getInstance();
@@ -34,11 +34,11 @@ public class SheetService{
 		}
 	}
 
-	public Map<Department, List<Enrollee>> getSheet() {
+	public Map<Department, List<User>> getSheet() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-			Map<Department, List<Enrollee>> result = dao.getSheet();
+			Map<Department, List<User>> result = dao.getSheet();
 			connection.commit();
 			return result;
 		}

@@ -25,7 +25,7 @@ public class JDBCSubjectDao implements SubjectDao {
 	
 	private Connection connection;
 	
-	JDBCSubjectDao(Connection connection) {
+	public JDBCSubjectDao(Connection connection) {
 		this.connection = connection;
 	}
 
@@ -55,7 +55,7 @@ public class JDBCSubjectDao implements SubjectDao {
 			st.setLong(1, id);
 			try (ResultSet rs = st.executeQuery();) {
 				if (rs.next()) {
-					subject = new Subject(rs.getLong(1), rs.getString(2));
+					subject = getSubjectFromResultSet(rs);
 				}
 			}
 		} catch (SQLException e1) {
@@ -64,15 +64,22 @@ public class JDBCSubjectDao implements SubjectDao {
 
 		return subject;
 	}
+	
+	private Subject getSubjectFromResultSet(ResultSet rs) throws SQLException {
+		return new Subject.Builder()
+				.setId(rs.getLong("id"))
+				.setName(rs.getString("name"))
+		        .build();
+	}
 
 	@Override
 	public List<Subject> findAll() {
-		List<Subject> subject = new ArrayList<Subject>();
+		List<Subject> subjectList = new ArrayList<Subject>();
 
 		try (Statement st = connection.createStatement();) {
 			try (ResultSet rs = st.executeQuery(SELECT_ALL);) {
 				while (rs.next()) {
-					subject.add(new Subject(rs.getLong(1), rs.getString(2)));
+					subjectList.add( getSubjectFromResultSet(rs) );
 				}
 			}
 
@@ -80,7 +87,7 @@ public class JDBCSubjectDao implements SubjectDao {
 			logger.error(e1.getStackTrace());
 		}
 
-		return subject;
+		return subjectList;
 	}
 
 	@Override

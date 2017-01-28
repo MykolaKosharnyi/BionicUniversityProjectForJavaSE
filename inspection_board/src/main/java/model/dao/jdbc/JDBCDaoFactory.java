@@ -10,7 +10,7 @@ import model.dao.CertificateDao;
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
-import model.dao.EnrolleeDao;
+import model.dao.UserDao;
 import model.dao.SheetDao;
 import model.dao.SubjectDao;
 
@@ -37,8 +37,8 @@ public class JDBCDaoFactory extends DaoFactory{
 	}
 	
 	@Override
-	public EnrolleeDao createEnrolleeDao(DaoConnection connection) {
-		return new JDBCEnrolleeDao(getSqlConnection(connection));
+	public UserDao createEnrolleeDao(DaoConnection connection) {
+		return new JDBCUserDao(getSqlConnection(connection));
 	}
 
 	@Override

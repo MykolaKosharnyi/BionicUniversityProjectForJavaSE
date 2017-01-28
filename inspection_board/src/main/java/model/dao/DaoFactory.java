@@ -9,7 +9,7 @@ public abstract class DaoFactory {
 	
 	public abstract DaoConnection getConnection();
 
-	public abstract EnrolleeDao createEnrolleeDao(DaoConnection connection);
+	public abstract UserDao createEnrolleeDao(DaoConnection connection);
 	public abstract CertificateDao createCertificateDao(DaoConnection connection);
 	public abstract SubjectDao createSubjectDao(DaoConnection connection);
 	public abstract DepartmentDao createDepartmentDao(DaoConnection connection);
