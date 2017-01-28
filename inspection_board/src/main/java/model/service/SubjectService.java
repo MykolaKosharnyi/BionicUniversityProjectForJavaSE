@@ -32,21 +32,15 @@ public class SubjectService{
 
 	public Subject find(long id) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			SubjectDao dao = daoFactory.createSubjectDao(connection);
-			Subject result = dao.find(id);
-			connection.commit();
-			return result;
+			return dao.find(id);
 		}
 	}
 
 	public List<Subject> findAll() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			SubjectDao dao = daoFactory.createSubjectDao(connection);
-			List<Subject> result = dao.findAll();
-			connection.commit();
-			return result;
+			return dao.findAll();
 		}
 	}
 

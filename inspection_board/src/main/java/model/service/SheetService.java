@@ -26,21 +26,15 @@ public class SheetService{
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-			
-			// safe changes to database
 			dao.add(idEnrollee, idDepartment);
-			
 			connection.commit();
 		}
 	}
 
 	public Map<Department, List<User>> getSheet() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-			Map<Department, List<User>> result = dao.getSheet();
-			connection.commit();
-			return result;
+			return dao.getSheet();
 		}
 	}
 
@@ -48,10 +42,7 @@ public class SheetService{
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-	
-			// safe changes to database
-			dao.deleteDepartment(idDepartment);
-			
+			dao.deleteDepartment(idDepartment);		
 			connection.commit();
 		}	
 	}
@@ -60,10 +51,7 @@ public class SheetService{
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-	
-			// safe changes to database
-			dao.deleteEnrollee(idEnrollee);		
-			
+			dao.deleteEnrollee(idEnrollee);					
 			connection.commit();
 		}	
 	}
@@ -72,10 +60,7 @@ public class SheetService{
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			connection.begin();
 			SheetDao dao = daoFactory.createSheetDao(connection);
-	
-			//safe changes to database
-			dao.deleteEnrolleeFromDepartment(idEnrollee, idDepartment);
-			
+			dao.deleteEnrolleeFromDepartment(idEnrollee, idDepartment);			
 			connection.commit();
 		}
 	}

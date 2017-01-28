@@ -32,21 +32,15 @@ public class UserService{
 
 	public User find(long id) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
-			User result = dao.find(id);
-			connection.commit();
-			return result;
+			return dao.find(id);
 		}
 	}
 
 	public List<User> findAll() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
-			List<User> result = dao.findAll();
-			connection.commit();
-			return result;
+			return dao.findAll();
 		}
 	}
 
@@ -70,21 +64,15 @@ public class UserService{
 
 	public User findByEmail(String email) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
-			User result = dao.findByEmail(email);
-			connection.commit();
-			return result;
+			return dao.findByEmail(email);
 		}
 	}
 
 	public boolean checkLogin(String email, String password) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
-			boolean result = dao.checkLogin(email, password);
-			connection.commit();
-			return result;
+			return dao.checkLogin(email, password);
 		}
 	}
 

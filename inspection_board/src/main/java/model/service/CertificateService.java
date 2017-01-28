@@ -32,11 +32,8 @@ public class CertificateService{
 
 	public Certificate find(long idEnrollee) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			CertificateDao dao = daoFactory.createCertificateDao(connection);
-			Certificate result = dao.find(idEnrollee);
-			connection.commit();
-			return result;
+			return dao.find(idEnrollee);
 		}
 	}
 

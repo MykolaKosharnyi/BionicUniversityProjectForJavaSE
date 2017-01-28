@@ -32,21 +32,15 @@ public class DepartmentService {
 
 	public Department find(long id) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
-			Department result = dao.find(id);
-			connection.commit();
-			return result;
+			return dao.find(id);
 		}
 	}
 
 	public List<Department> findAll() {
 		try( DaoConnection connection = daoFactory.getConnection() ){
-			connection.begin();
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
-			List<Department> result = dao.findAll();
-			connection.commit();
-			return result;
+			return dao.findAll();
 		}
 	}
 
