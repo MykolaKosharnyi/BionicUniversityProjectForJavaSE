@@ -6,7 +6,6 @@ import java.util.Map;
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.SheetDao;
-import model.entity.Administrator;
 import model.entity.Department;
 import model.entity.Enrollee;
 
@@ -33,13 +32,6 @@ public class SheetService{
 			
 			connection.commit();
 		}
-			// Change by Administrator in Sheet
-			// get Enrollee
-			Enrollee enrollee = EnrolleeService.getInstance().find(idEnrollee);		
-			// get Department
-			Department department = DepartmentService.getInstance().find(idDepartment);
-						
-			Administrator.getInstance().addEnrollee(department, enrollee);
 	}
 
 	public Map<Department, List<Enrollee>> getSheet() {
@@ -62,7 +54,6 @@ public class SheetService{
 			
 			connection.commit();
 		}	
-			// for changing by Administrator in Sheet it doesn't realized 
 	}
 
 	public void deleteEnrollee(long idEnrollee) {
@@ -75,7 +66,6 @@ public class SheetService{
 			
 			connection.commit();
 		}	
-			// for changing by Administrator in Sheet it doesn't realized 
 	}
 
 	public void deleteEnrolleeFromDepartment(long idEnrollee, long idDepartment) {
@@ -88,14 +78,6 @@ public class SheetService{
 			
 			connection.commit();
 		}
-			
-			// Change by Administrator in Sheet
-			// get Enrollee
-			Enrollee enrollee = EnrolleeService.getInstance().find(idEnrollee);
-			// get Department
-			Department department = DepartmentService.getInstance().find(idDepartment);
-
-			Administrator.getInstance().deleteEnrollee(department, enrollee);
 	}
 
 }
