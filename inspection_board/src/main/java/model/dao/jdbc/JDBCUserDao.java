@@ -10,12 +10,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import model.dao.EnrolleeDao;
-import model.entity.Enrollee;
+import model.dao.UserDao;
+import model.entity.User;
 
-public class JDBCEnrolleeDao implements EnrolleeDao {
+public class JDBCUserDao implements UserDao {
 	
-	static Logger logger = Logger.getLogger(JDBCEnrolleeDao.class);
+	static Logger logger = Logger.getLogger(JDBCUserDao.class);
 	
 	private static final String INSERT_INTO_ENROLLEE = "INSERT INTO enrollee "
 			+ "(firstName, secondName, email, phone, password) values (?,?,?,?,?)";
@@ -29,12 +29,12 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 
 	private Connection connection;
 	
-	JDBCEnrolleeDao(Connection connection) {
+	JDBCUserDao(Connection connection) {
 		this.connection = connection;
 	}
 	
 	@Override
-	public long create(Enrollee enrollee) {
+	public long create(User enrollee) {
 		long result = 0;
 
 		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE, Statement.RETURN_GENERATED_KEYS);) {
@@ -60,15 +60,15 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	}
 
 	@Override
-	public Enrollee find(long id) {
-		Enrollee enrollee = null;
+	public User find(long id) {
+		User enrollee = null;
 		
 		try(PreparedStatement st = connection.prepareStatement(SELECT_BY_ID);){
 			st.setLong(1, id);
 			
 			try(ResultSet rs = st.executeQuery();){
 				if (rs.next()) {
-					enrollee = new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3),
+					enrollee = new User(rs.getInt(1), rs.getString(2), rs.getString(3),
 							rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(7));
 				}
 			}
@@ -80,14 +80,14 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	}
 
 	@Override
-	public List<Enrollee> findAll() {
-		List<Enrollee> enrollee = new ArrayList<Enrollee>();
+	public List<User> findAll() {
+		List<User> enrollee = new ArrayList<User>();
 
 		try (Statement st = connection.createStatement();
 				ResultSet rs = st.executeQuery(SELECT_ALL);) {
 			
 			while (rs.next()) {
-				enrollee.add(new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+				enrollee.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
 						rs.getString(5), rs.getString(6), rs.getDate(7)));
 			}
 
@@ -99,7 +99,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	}
 
 	@Override
-	public void update(Enrollee enrollee) {
+	public void update(User enrollee) {
 		try(PreparedStatement st = connection.prepareStatement(UPDATE_ENROLLEE)){
 			
 			st.setString(1, enrollee.getFirstName());
@@ -144,8 +144,8 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 	}
 
 	@Override
-	public Enrollee findByEmail(String email) {
-		Enrollee enrollee = null;
+	public User findByEmail(String email) {
+		User enrollee = null;
 
 		try (PreparedStatement st = connection.prepareStatement(FIND_BY_EMAIL);) {
 
@@ -153,7 +153,7 @@ public class JDBCEnrolleeDao implements EnrolleeDao {
 			ResultSet rs = st.executeQuery();
 
 			if (rs.next()) {
-				enrollee = new Enrollee(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+				enrollee = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
 						rs.getString(5), rs.getString(6), rs.getDate(7));
 			}
 

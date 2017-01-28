@@ -2,7 +2,7 @@ package model.entity;
 
 import java.util.Date;
 
-public class Enrollee {//Вступник
+public class User {//Вступник
 	private long id;
 	private String firstName;
 	private String secondName;
@@ -13,9 +13,9 @@ public class Enrollee {//Вступник
 	
 	private Certificate certificate;//аттестат
 
-	public Enrollee(){}
+	public User(){}
 	
-	public Enrollee(long id, String firstName, String secondName, String email, String phone, String password,
+	public User(long id, String firstName, String secondName, String email, String phone, String password,
 			Date dateRegistration) {
 		this.id = id;
 		this.firstName = firstName;
