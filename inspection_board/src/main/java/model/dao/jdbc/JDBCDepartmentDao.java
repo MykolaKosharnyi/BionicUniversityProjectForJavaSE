@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -18,7 +19,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	
 	static Logger logger = Logger.getLogger(JDBCDepartmentDao.class);
 	
-	private static final String INSERT_INTO_DEPARTMENT = "INSERT INTO department (name, max_enrollee) values (?,?)";
+	private static final String INSERT_INTO_DEPARTMENT = "INSERT INTO department (name, max_enrollee) values ";
 	private static final String INSERT_INTO_DEPARTMENT_SUBJECT = "INSERT INTO department_subject (id_department, id_subject) values (?,?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM department WHERE id_department = ?";
 	private static final String SELECT_SUBJECTS = "SELECT subject.id_subject AS id_subject, subject.name AS name"
@@ -48,24 +49,45 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				ResultSet key = st.getGeneratedKeys();
 				if (key.next()) {
 					result = key.getLong(1);
+					department.setId(result);
 				}
 			} catch (SQLException e) {
 				logger.error(e.getStackTrace());
 			}
 			
-			//for subject with contain department
-			for(Subject subject : department.getNecessaryItems()){
-				try(PreparedStatement st = connection.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT)) {
-					
-					st.setLong( 1, department.getId());
-					st.setLong( 2, subject.getId());
-					st.executeUpdate();
-				} catch (SQLException e) {
-					logger.error(e.getStackTrace());
-				} 
-			}
+			saveSubjectsToDatabase(department);
 		
 		return result;
+	}
+	
+	/**
+	 * Save subject which contain department
+	 * @param department
+	 */
+	private void saveSubjectsToDatabase(Department department){
+		StringBuilder valuesToInsert = new StringBuilder();
+		
+		List<Subject> necessaryItems = department.getNecessaryItems();
+		Iterator<Subject> iterator = necessaryItems.iterator();		
+		
+		while(iterator.hasNext()){
+			Subject currentSubject = iterator.next();
+			valuesToInsert.append("(");
+			valuesToInsert.append(department.getId());
+			valuesToInsert.append(",");
+			valuesToInsert.append(currentSubject.getId());		
+			valuesToInsert.append(")");
+			
+			if(iterator.hasNext()){
+				valuesToInsert.append(", ");
+			}
+		}
+		
+		try(PreparedStatement st = connection.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT + valuesToInsert.toString())){
+			st.executeUpdate();
+		} catch (SQLException e) {
+			logger.error(e.getStackTrace());
+		} 
 	}
 
 	@Override
@@ -77,14 +99,23 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			st.setLong(1, id);
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) {
-				department = new Department(rs.getLong(1), rs.getString(2), rs.getInt(3));
-
-				department.setNecessaryItems(getNecessaryItems(id));
+				department = getDepartmentFromResultSet(rs);
 			}
 
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
+		return department;
+	}
+	
+	private Department getDepartmentFromResultSet(ResultSet rs) throws SQLException {
+		long id = rs.getLong("id");
+		Department department = new Department.Builder()
+		       .setId(id)
+		       .setNameDepartment(rs.getString("nameDepartment"))
+		       .setMaxAmountStudent(rs.getInt("maxAmountStudent"))
+		       .setNecessaryItems(getNecessaryItems(id))
+		       .build();
 		return department;
 	}
 	
@@ -115,8 +146,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			ResultSet rs = st.executeQuery(SELECT_ALL_DEPARTMENTS);
 			Department current = null;
 			while (rs.next()) {
-				current = new Department(rs.getLong(1), rs.getString(2), rs.getInt(3));
-				current.setNecessaryItems(getNecessaryItems(rs.getLong(1)));
+				current = getDepartmentFromResultSet(rs);
 				department.add(current);
 			}
 
@@ -149,18 +179,9 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				} catch (SQLException e) {
 					logger.error(e.getStackTrace());
 				}
+				
+				saveSubjectsToDatabase(department);
 
-				// add new subject of this department
-				for (Subject subject : department.getNecessaryItems()) {
-					try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT)) {
-
-						st.setLong(1, department.getId());
-						st.setLong(2, subject.getId());
-						st.executeUpdate();
-					} catch (SQLException e) {
-						logger.error(e.getStackTrace());
-					}
-				}
 			}
 	}
 

@@ -16,6 +16,46 @@ public class Department {
 	}
 	
 	public Department() {}
+	
+	public static class Builder{
+		private long id;
+		private String nameDepartment;
+		private int maxAmountStudent;		
+		private List<Subject> necessaryItems;
+		
+		public Builder setId(long id) {
+			this.id = id;
+			return this;
+		}
+
+		
+		public Builder setNameDepartment(String nameDepartment) {
+			this.nameDepartment = nameDepartment;
+			return this;
+		}
+
+
+		public Builder setMaxAmountStudent(int maxAmountStudent) {
+			this.maxAmountStudent = maxAmountStudent;
+			return this;
+		}
+
+
+		public Builder setNecessaryItems(List<Subject> necessaryItems) {
+			this.necessaryItems = necessaryItems;
+			return this;
+		}
+
+
+		public Department build(){
+			Department department = new Department();
+			department.setId(id);
+			department.setNameDepartment(nameDepartment);
+			department.setMaxAmountStudent(maxAmountStudent);
+			department.setNecessaryItems(necessaryItems);
+			return department;
+		}
+	}
 
 	public long getId() {
 		return id;

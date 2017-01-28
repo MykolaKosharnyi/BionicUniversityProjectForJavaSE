@@ -38,30 +38,30 @@ public class JDBCDaoFactory extends DaoFactory{
 	
 	@Override
 	public EnrolleeDao createEnrolleeDao(DaoConnection connection) {
-		return new JDBCEnrolleeDao(sqlConnection(connection));
+		return new JDBCEnrolleeDao(getSqlConnection(connection));
 	}
 
 	@Override
 	public CertificateDao createCertificateDao(DaoConnection connection) {
-		return new JDBCCertificateDao(sqlConnection(connection));
+		return new JDBCCertificateDao(getSqlConnection(connection));
 	}
 
 	@Override
 	public SubjectDao createSubjectDao(DaoConnection connection) {
-		return new JDBCSubjectDao(sqlConnection(connection));
+		return new JDBCSubjectDao(getSqlConnection(connection));
 	}
 
 	@Override
 	public DepartmentDao createDepartmentDao(DaoConnection connection) {
-		return new JDBCDepartmentDao(sqlConnection(connection));
+		return new JDBCDepartmentDao(getSqlConnection(connection));
 	}
 
 	@Override
 	public SheetDao createSheetDao(DaoConnection connection) {
-		return new JDBCSheetDao(sqlConnection(connection));
+		return new JDBCSheetDao(getSqlConnection(connection));
 	}
 	
-	private Connection sqlConnection(DaoConnection connection){
+	private Connection getSqlConnection(DaoConnection connection){
 		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
 		return jdbcConnection.getConnection(); 
 	}
