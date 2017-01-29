@@ -1,6 +1,7 @@
 package controller.command;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,14 +11,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
-import model.entity.Enrollee;
-import model.service.EnrolleeService;
+import model.entity.User;
+import model.service.UserService;
 
 public class UserEditPostCommand implements Command {
 	
 	static Logger logger = Logger.getLogger(UserEditPostCommand.class);
 	
-	EnrolleeService enrolleeService = EnrolleeService.getInstance();
+	UserService enrolleeService = UserService.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -32,26 +33,25 @@ public class UserEditPostCommand implements Command {
 		if(!password.equals(repeatPassword)){
 			HttpSession session = request.getSession();
 			long id = (long) session.getAttribute("userId");
-			request.setAttribute("user", enrolleeService.find(id));
+			Optional<User> optionalUser = enrolleeService.find(id);
+			request.setAttribute("user", optionalUser.get());
 		    request.setAttribute("errorMessage", "Password and repeadPassword are different!!!");
 			
 			return ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
-		}
-		
-		
-		Enrollee enrollee = new Enrollee();
+		}	
 		
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
-		enrollee.setId(id);
-		enrollee.setFirstName(firstName);
-		enrollee.setSecondName(secondName);
-		enrollee.setEmail(email);
-		enrollee.setPhone(phone);
-		enrollee.setPassword(password);
 
         //undate in database  
-		enrolleeService.update(enrollee);
+		enrolleeService.update(new User.Builder()
+				.setId(id)
+				.setFirstName(firstName)
+				.setSecondName(secondName)
+				.setEmail(email)
+				.setPhone(phone)
+				.setPassword(password)
+				.build());
 		
 		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
 	}

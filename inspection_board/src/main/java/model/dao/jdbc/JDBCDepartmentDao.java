@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
@@ -91,32 +92,32 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	}
 
 	@Override
-	public Department find(long id) {
-		Department department = null;
+	public Optional<Department> find(long id) {
+		Optional<Department> result = Optional.empty();
 
 		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ID);) {
 
 			st.setLong(1, id);
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) {
-				department = getDepartmentFromResultSet(rs);
+				Department department = getDepartmentFromResultSet(rs);
+				result = Optional.of(department);
 			}
 
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
-		return department;
+		return result;
 	}
 	
 	private Department getDepartmentFromResultSet(ResultSet rs) throws SQLException {
-		long id = rs.getLong("id");
-		Department department = new Department.Builder()
-		       .setId(id)
-		       .setNameDepartment(rs.getString("nameDepartment"))
-		       .setMaxAmountStudent(rs.getInt("maxAmountStudent"))
-		       .setNecessaryItems(getNecessaryItems(id))
-		       .build();
-		return department;
+		long id = rs.getLong("id_department");
+		return new Department.Builder()
+			       .setId(id)
+			       .setNameDepartment(rs.getString("name"))
+			       .setMaxAmountStudent(rs.getInt("max_enrollee"))
+			       .setNecessaryItems(getNecessaryItems(id))
+			       .build();
 	}
 	
 	private List<Subject> getNecessaryItems(long id) {
@@ -129,7 +130,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 		
 			while (rs.next()) {
 				result.add(new Subject.Builder()
-						.setId(rs.getLong("id"))
+						.setId(rs.getLong("id_subject"))
 						.setName(rs.getString("name"))
 						.build());			
 			}
@@ -142,15 +143,13 @@ public class JDBCDepartmentDao implements DepartmentDao {
 
 	@Override
 	public List<Department> findAll() {
-		List<Department> department = new ArrayList<Department>();
+		List<Department> department = new ArrayList<>();
 
 		try(Statement st = connection.createStatement();) {
 
 			ResultSet rs = st.executeQuery(SELECT_ALL_DEPARTMENTS);
-			Department current = null;
 			while (rs.next()) {
-				current = getDepartmentFromResultSet(rs);
-				department.add(current);
+				department.add( getDepartmentFromResultSet(rs) );
 			}
 
 		} catch (SQLException e) {

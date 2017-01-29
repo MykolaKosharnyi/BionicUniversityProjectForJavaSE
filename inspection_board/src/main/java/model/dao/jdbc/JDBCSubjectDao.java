@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
@@ -48,26 +49,27 @@ public class JDBCSubjectDao implements SubjectDao {
 	}
 
 	@Override
-	public Subject find(long id) {
-		Subject subject = null;
+	public Optional<Subject> find(long id) {
+		Optional<Subject> result = Optional.empty();
 
 		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ID);) {
 			st.setLong(1, id);
 			try (ResultSet rs = st.executeQuery();) {
 				if (rs.next()) {
-					subject = getSubjectFromResultSet(rs);
+					Subject subject = getSubjectFromResultSet(rs);
+					result = Optional.of(subject);
 				}
 			}
 		} catch (SQLException e1) {
 			logger.error(e1.getStackTrace());
 		}
 
-		return subject;
+		return result;
 	}
 	
 	private Subject getSubjectFromResultSet(ResultSet rs) throws SQLException {
 		return new Subject.Builder()
-				.setId(rs.getLong("id"))
+				.setId(rs.getLong("id_subject"))
 				.setName(rs.getString("name"))
 		        .build();
 	}

@@ -1,6 +1,7 @@
 package model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
@@ -30,7 +31,7 @@ public class DepartmentService {
 		}
 	}
 
-	public Department find(long id) {
+	public Optional<Department> find(long id) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			return dao.find(id);

@@ -74,8 +74,8 @@ public class JDBCSheetDao implements SheetDao {
 		
 		while (sheetRS.next()) {
 			
-			Department department = getDepartmentFromListById(departmentList, sheetRS.getLong(1));
-			User enrollee = getSubjectFromListById(enrolleeList, sheetRS.getLong(2));
+			Department department = getDepartmentFromListById(departmentList, sheetRS.getLong("id_department"));
+			User enrollee = getUserFromListById(enrolleeList, sheetRS.getLong("id_enrollee"));
 			
 			if(result.containsKey(department)){
 				List<User> listConcreteEnrollee = result.get(department);
@@ -100,7 +100,7 @@ public class JDBCSheetDao implements SheetDao {
         return result;
     }
 	
-	private User getSubjectFromListById(List<User> enrolleeList, long enrolleeId) {
+	private User getUserFromListById(List<User> enrolleeList, long enrolleeId) {
 		User result;
         Optional<User> enrolleeOptional = enrolleeList.stream().filter(d -> d.getId()==enrolleeId).findFirst();
         if (enrolleeOptional.isPresent()) {

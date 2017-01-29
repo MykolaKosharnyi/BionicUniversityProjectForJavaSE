@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
@@ -61,22 +62,23 @@ public class JDBCUserDao implements UserDao {
 	}
 
 	@Override
-	public User find(long id) {
-		User enrollee = null;
+	public Optional<User> find(long id) {
+		Optional<User> result = Optional.empty();
 		
 		try(PreparedStatement st = connection.prepareStatement(SELECT_BY_ID)){
 			st.setLong(1, id);
 			
 			try(ResultSet rs = st.executeQuery()){
 				if (rs.next()) {
-					enrollee = getUserFromResultSet(rs);
+					User user = getUserFromResultSet(rs);
+					result = Optional.of(user);
 				}
 			}
 			
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
-		return enrollee;
+		return result;
 	}
 	
 	private User getUserFromResultSet(ResultSet rs) throws SQLException {
@@ -162,8 +164,8 @@ public class JDBCUserDao implements UserDao {
 	}
 
 	@Override
-	public User findByEmail(String email) {
-		User enrollee = null;
+	public Optional<User> findByEmail(String email) {
+		Optional<User> result = Optional.empty();
 
 		try (PreparedStatement st = connection.prepareStatement(FIND_BY_EMAIL)) {
 
@@ -171,14 +173,15 @@ public class JDBCUserDao implements UserDao {
 			ResultSet rs = st.executeQuery();
 
 			if (rs.next()) {
-				enrollee = getUserFromResultSet(rs);
+				User user = getUserFromResultSet(rs);
+				result = Optional.of(user);
 			}
 
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
 
-		return enrollee;
+		return result;
 	}
 
 }

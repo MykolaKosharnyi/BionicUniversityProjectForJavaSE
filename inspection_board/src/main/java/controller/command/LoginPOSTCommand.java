@@ -1,6 +1,7 @@
 package controller.command;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -12,8 +13,8 @@ import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
 import controller.MessageManager;
-import model.entity.Enrollee;
-import model.service.EnrolleeService;
+import model.entity.User;
+import model.service.UserService;
 
 public class LoginPOSTCommand implements Command {
 
@@ -21,7 +22,7 @@ public class LoginPOSTCommand implements Command {
 	private static final String PARAM_NAME_PASSWORD = "password";
 	static Logger logger = Logger.getLogger(LoginPOSTCommand.class);
 	
-	EnrolleeService enrolleeService = EnrolleeService.getInstance();
+	UserService enrolleeService = UserService.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -40,13 +41,12 @@ public class LoginPOSTCommand implements Command {
 			logger.info("user is ckecking");
 			if ("admin".equals(login)) {
 
-				
 				page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ADMIN_PAGE_PATH);
 			} else {
 				
-				Enrollee enrollee = enrolleeService.findByEmail(login);
-				String name = enrollee.getFirstName();
-				long idUser = enrollee.getId();
+				Optional<User> optionalUser = enrolleeService.findByEmail(login);				
+				String name = optionalUser.get().getFirstName();
+				long idUser = optionalUser.get().getId();
 
 				HttpSession session = request.getSession();
 				logger.info("user's name is" + name);

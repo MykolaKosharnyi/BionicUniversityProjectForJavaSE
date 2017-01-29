@@ -1,6 +1,7 @@
 package model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
@@ -30,7 +31,7 @@ public class UserService{
 		}
 	}
 
-	public User find(long id) {
+	public Optional<User> find(long id) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
 			return dao.find(id);
@@ -62,7 +63,7 @@ public class UserService{
 		}
 	}
 
-	public User findByEmail(String email) {
+	public Optional<User> findByEmail(String email) {
 		try( DaoConnection connection = daoFactory.getConnection() ){
 			UserDao dao = daoFactory.createEnrolleeDao(connection);
 			return dao.findByEmail(email);
