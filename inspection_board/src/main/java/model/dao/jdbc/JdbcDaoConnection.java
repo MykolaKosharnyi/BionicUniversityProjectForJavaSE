@@ -9,14 +9,14 @@ public class JdbcDaoConnection implements DaoConnection {
 
 	private Connection connection;
 	private boolean inTransaction = false;
-	
+
 	JdbcDaoConnection(Connection connection) {
 		this.connection = connection;
 	}
 
 	@Override
 	public void close() {
-		if(inTransaction) {
+		if (inTransaction) {
 			rollback();
 		}
 		try {
@@ -59,5 +59,5 @@ public class JdbcDaoConnection implements DaoConnection {
 	Connection getConnection() {
 		return connection;
 	}
-	
+
 }

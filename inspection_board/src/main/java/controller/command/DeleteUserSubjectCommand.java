@@ -15,20 +15,20 @@ public class DeleteUserSubjectCommand implements Command {
 
 	CertificateService certificateService = CertificateService.getInstance();
 	SubjectService subjectService = SubjectService.getInstance();
-	
+
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		long subjectId = Long.parseLong(request.getParameter("subjectId"));
-		
-		//undate in database 
+
+		// undate in database
 		HttpSession session = request.getSession();
 		long userId = (long) session.getAttribute("userId");
 		certificateService.deleteSubject(userId, subjectId);
 
 		request.setAttribute("subjects", subjectService.findAll());
 		request.setAttribute("user_subjects", certificateService.find(userId));
-		
+
 		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}
 

@@ -6,7 +6,7 @@ public class Department {
 	private long id;
 	private String nameDepartment;
 	private int maxAmountStudent;
-	
+
 	private List<Subject> necessaryItems;
 
 	public Department(long id, String nameDepartment, int maxAmountStudent) {
@@ -14,40 +14,37 @@ public class Department {
 		this.nameDepartment = nameDepartment;
 		this.maxAmountStudent = maxAmountStudent;
 	}
-	
-	public Department() {}
-	
-	public static class Builder{
+
+	public Department() {
+	}
+
+	public static class Builder {
 		private long id;
 		private String nameDepartment;
-		private int maxAmountStudent;		
+		private int maxAmountStudent;
 		private List<Subject> necessaryItems;
-		
+
 		public Builder setId(long id) {
 			this.id = id;
 			return this;
 		}
 
-		
 		public Builder setNameDepartment(String nameDepartment) {
 			this.nameDepartment = nameDepartment;
 			return this;
 		}
-
 
 		public Builder setMaxAmountStudent(int maxAmountStudent) {
 			this.maxAmountStudent = maxAmountStudent;
 			return this;
 		}
 
-
 		public Builder setNecessaryItems(List<Subject> necessaryItems) {
 			this.necessaryItems = necessaryItems;
 			return this;
 		}
 
-
-		public Department build(){
+		public Department build() {
 			Department department = new Department();
 			department.setId(id);
 			department.setNameDepartment(nameDepartment);
@@ -125,6 +122,5 @@ public class Department {
 		return "Department [id=" + id + ", nameDepartment=" + nameDepartment + ", maxAmountStudent=" + maxAmountStudent
 				+ ", necessaryItems=" + necessaryItems + "]";
 	}
-	
-	
+
 }

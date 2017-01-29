@@ -15,12 +15,12 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter("/*")
 public class CharacterEncodingFilter implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public CharacterEncodingFilter() {
+	/**
+	 * Default constructor.
+	 */
+	public CharacterEncodingFilter() {
 
-    }
+	}
 
 	/**
 	 * @see Filter#destroy()
@@ -30,10 +30,12 @@ public class CharacterEncodingFilter implements Filter {
 	}
 
 	/**
-	 *  Main filter method for encoding actuation to UTF-8.
+	 * Main filter method for encoding actuation to UTF-8.
+	 * 
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
@@ -44,7 +46,7 @@ public class CharacterEncodingFilter implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		
+
 	}
 
 }

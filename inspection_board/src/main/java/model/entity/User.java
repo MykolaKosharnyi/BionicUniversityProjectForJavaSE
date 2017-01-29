@@ -1,17 +1,18 @@
 package model.entity;
 
-public class User {//Вступник
+public class User {// Вступник
 	private long id;
 	private String firstName;
 	private String secondName;
 	private String email;
 	private String phone;
 	private String password;
-	
-	private Certificate certificate;//аттестат
 
-	public User(){}
-	
+	private Certificate certificate;// аттестат
+
+	public User() {
+	}
+
 	public User(long id, String firstName, String secondName, String email, String phone, String password) {
 		this.id = id;
 		this.firstName = firstName;
@@ -20,8 +21,8 @@ public class User {//Вступник
 		this.phone = phone;
 		this.password = password;
 	}
-	
-	public static class Builder{
+
+	public static class Builder {
 		private long id;
 		private String firstName;
 		private String secondName;
@@ -29,7 +30,7 @@ public class User {//Вступник
 		private String phone;
 		private String password;
 		private Certificate certificate;
-		
+
 		public Builder setId(long id) {
 			this.id = id;
 			return this;
@@ -65,7 +66,7 @@ public class User {//Вступник
 			return this;
 		}
 
-		public User build(){
+		public User build() {
 			User user = new User();
 			user.setId(id);
 			user.setFirstName(firstName);
@@ -133,5 +134,5 @@ public class User {//Вступник
 	public void setCertificate(Certificate certificate) {
 		this.certificate = certificate;
 	}
-	
+
 }

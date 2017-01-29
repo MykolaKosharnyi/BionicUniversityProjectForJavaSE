@@ -1,7 +1,7 @@
 package model.entity;
 
 public class Subject {
-	
+
 	private long id;
 	private String name;
 
@@ -10,30 +10,31 @@ public class Subject {
 		this.name = name;
 	}
 
-	public Subject() {}
+	public Subject() {
+	}
 
-	public static class Builder{
+	public static class Builder {
 		private long id;
 		private String name;
-		
+
 		public Builder setId(long id) {
 			this.id = id;
 			return this;
 		}
-	
+
 		public Builder setName(String name) {
 			this.name = name;
 			return this;
 		}
 
-		public Subject build(){
+		public Subject build() {
 			Subject subject = new Subject();
 			subject.setId(id);
 			subject.setName(name);
 			return subject;
 		}
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -71,5 +72,5 @@ public class Subject {
 			return false;
 		return true;
 	}
-	
+
 }

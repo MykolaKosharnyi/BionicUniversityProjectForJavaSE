@@ -24,42 +24,47 @@ a {
 }
 
 table {
-margin-bottom: 40px;
+	margin-bottom: 40px;
 }
 
 table a {
-display: block;
-background: #affcf4;
-display: block;
-color: #7b5c12;
-padding: 20px;
-margin: 5px;
+	display: block;
+	background: #affcf4;
+	display: block;
+	color: #7b5c12;
+	padding: 20px;
+	margin: 5px;
 }
 
 table a:hover {
-display: block;
-background:#7b5c12 ;
-display: block;
-color: #affcf4;
+	display: block;
+	background: #7b5c12;
+	display: block;
+	color: #affcf4;
 }
 </style>
 </head>
 <body>
-	<h3>At this page you can change your personal information, add subject to your certificate, add application to departments.</h3>
-	
+	<h3>At this page you can change your personal information, add
+		subject to your certificate, add application to departments.</h3>
+
 	<table>
 		<tr>
-			<td><a href="<c:url value='./user_edit' />">Change personal information</a></td>
-			<td><a href="<c:url value='./add_or_change_subject' />">Add or change subjects</a></td>
+			<td><a href="<c:url value='./user_edit' />">Change personal
+					information</a></td>
+			<td><a href="<c:url value='./add_or_change_subject' />">Add
+					or change subjects</a></td>
 		</tr>
 		<tr>
-			<td><a href="<c:url value='./set_application_to_departments' />">Set application to departments</a></td>
-			<td><a href="<c:url value='./show_your_posion_in_ratings' />">Show your position in ratings</a></td>
+			<td><a href="<c:url value='./set_application_to_departments' />">Set
+					application to departments</a></td>
+			<td><a href="<c:url value='./show_your_posion_in_ratings' />">Show
+					your position in ratings</a></td>
 		</tr>
 
 	</table>
-	
-	 <a href="<c:url value='./logout' />">Log out</a>
+
+	<a href="<c:url value='./logout' />">Log out</a>
 
 </body>
 </html>

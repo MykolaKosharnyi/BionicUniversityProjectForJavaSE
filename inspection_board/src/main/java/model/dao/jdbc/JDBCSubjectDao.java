@@ -17,24 +17,25 @@ import model.entity.Subject;
 public class JDBCSubjectDao implements SubjectDao {
 
 	static Logger logger = Logger.getLogger(JDBCSubjectDao.class);
-	
+
 	private static final String INSERT_INTO_SUBJECT = "INSERT INTO subject (name) values (?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM subject WHERE id_subject = ?";
 	private static final String SELECT_ALL = "SELECT * FROM subject";
 	private static final String UPDATE_SUBJECT = "UPDATE subject SET name = ? WHERE id_subject = ? ";
 	private static final String DELETE_SUBJECT = "DELETE FROM subject WHERE id_subject = ?";
-	
+
 	private Connection connection;
-	
+
 	public JDBCSubjectDao(Connection connection) {
 		this.connection = connection;
 	}
 
 	@Override
 	public long create(Subject subject) {
-		
+
 		long result = 0;
-		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_SUBJECT, Statement.RETURN_GENERATED_KEYS);) {
+		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_SUBJECT,
+				Statement.RETURN_GENERATED_KEYS);) {
 			st.setString(1, subject.getName());
 			st.executeUpdate();
 			try (ResultSet key = st.getGeneratedKeys();) {
@@ -66,12 +67,9 @@ public class JDBCSubjectDao implements SubjectDao {
 
 		return result;
 	}
-	
+
 	private Subject getSubjectFromResultSet(ResultSet rs) throws SQLException {
-		return new Subject.Builder()
-				.setId(rs.getLong("id_subject"))
-				.setName(rs.getString("name"))
-		        .build();
+		return new Subject.Builder().setId(rs.getLong("id_subject")).setName(rs.getString("name")).build();
 	}
 
 	@Override
@@ -81,7 +79,7 @@ public class JDBCSubjectDao implements SubjectDao {
 		try (Statement st = connection.createStatement();) {
 			try (ResultSet rs = st.executeQuery(SELECT_ALL);) {
 				while (rs.next()) {
-					subjectList.add( getSubjectFromResultSet(rs) );
+					subjectList.add(getSubjectFromResultSet(rs));
 				}
 			}
 

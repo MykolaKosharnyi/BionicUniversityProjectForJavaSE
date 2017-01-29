@@ -14,28 +14,28 @@ import model.dao.UserDao;
 import model.dao.SheetDao;
 import model.dao.SubjectDao;
 
-public class JDBCDaoFactory extends DaoFactory{
-	
+public class JDBCDaoFactory extends DaoFactory {
+
 	private DataSource dataSource;
-	
-    public JDBCDaoFactory() {
-        try{
-            InitialContext ic = new InitialContext();
-            dataSource = (DataSource) ic.lookup("java:comp/env/jdbc/MySQLDB");   
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
-    }
+
+	public JDBCDaoFactory() {
+		try {
+			InitialContext ic = new InitialContext();
+			dataSource = (DataSource) ic.lookup("java:comp/env/jdbc/MySQLDB");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	public DaoConnection getConnection() {
-			try {
-				return new JdbcDaoConnection( dataSource.getConnection() );
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+		try {
+			return new JdbcDaoConnection(dataSource.getConnection());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
+
 	@Override
 	public UserDao createEnrolleeDao(DaoConnection connection) {
 		return new JDBCUserDao(getSqlConnection(connection));
@@ -60,10 +60,10 @@ public class JDBCDaoFactory extends DaoFactory{
 	public SheetDao createSheetDao(DaoConnection connection) {
 		return new JDBCSheetDao(getSqlConnection(connection));
 	}
-	
-	private Connection getSqlConnection(DaoConnection connection){
+
+	private Connection getSqlConnection(DaoConnection connection) {
 		JdbcDaoConnection jdbcConnection = (JdbcDaoConnection) connection;
-		return jdbcConnection.getConnection(); 
+		return jdbcConnection.getConnection();
 	}
 
 }

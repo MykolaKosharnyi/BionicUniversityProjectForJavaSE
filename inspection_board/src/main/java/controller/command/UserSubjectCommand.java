@@ -15,16 +15,16 @@ public class UserSubjectCommand implements Command {
 
 	CertificateService certificateService = CertificateService.getInstance();
 	SubjectService subjectService = SubjectService.getInstance();
-	
+
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		long id = (long) session.getAttribute("userId");
 		request.setAttribute("subjects", subjectService.findAll());
-		request.setAttribute("user_subjects",  certificateService.find(id));
-		
-	    return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
+		request.setAttribute("user_subjects", certificateService.find(id));
+
+		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}
 
 }

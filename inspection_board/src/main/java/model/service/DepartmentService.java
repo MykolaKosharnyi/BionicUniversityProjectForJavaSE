@@ -10,19 +10,20 @@ import model.entity.Department;
 
 public class DepartmentService {
 	private DaoFactory daoFactory = DaoFactory.getInstance();
-	
-	private DepartmentService(){}
-	
-	private static class Holder{
-    	static final DepartmentService INSTANCE = new DepartmentService(); 
-    }
-    
-    public static DepartmentService getInstance(){
-    	return Holder.INSTANCE;
-    }
+
+	private DepartmentService() {
+	}
+
+	private static class Holder {
+		static final DepartmentService INSTANCE = new DepartmentService();
+	}
+
+	public static DepartmentService getInstance() {
+		return Holder.INSTANCE;
+	}
 
 	public long create(Department department) {
-		try( DaoConnection connection = daoFactory.getConnection() ){
+		try (DaoConnection connection = daoFactory.getConnection()) {
 			connection.begin();
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			long result = dao.create(department);
@@ -32,21 +33,21 @@ public class DepartmentService {
 	}
 
 	public Optional<Department> find(long id) {
-		try( DaoConnection connection = daoFactory.getConnection() ){
+		try (DaoConnection connection = daoFactory.getConnection()) {
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			return dao.find(id);
 		}
 	}
 
 	public List<Department> findAll() {
-		try( DaoConnection connection = daoFactory.getConnection() ){
+		try (DaoConnection connection = daoFactory.getConnection()) {
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			return dao.findAll();
 		}
 	}
 
 	public void update(Department t) {
-		try( DaoConnection connection = daoFactory.getConnection() ){
+		try (DaoConnection connection = daoFactory.getConnection()) {
 			connection.begin();
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			dao.update(t);
@@ -55,7 +56,7 @@ public class DepartmentService {
 	}
 
 	public void delete(long id) {
-		try( DaoConnection connection = daoFactory.getConnection() ){
+		try (DaoConnection connection = daoFactory.getConnection()) {
 			connection.begin();
 			DepartmentDao dao = daoFactory.createDepartmentDao(connection);
 			dao.delete(id);

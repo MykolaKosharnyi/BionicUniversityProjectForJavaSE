@@ -14,12 +14,12 @@ public class LogoutCommand implements Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		//invalidate the session if exists
+
+		// invalidate the session if exists
 		HttpSession session = request.getSession(false);
-        if(session != null){
-            session.invalidate();
-        }
+		if (session != null) {
+			session.invalidate();
+		}
 		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 	}
 

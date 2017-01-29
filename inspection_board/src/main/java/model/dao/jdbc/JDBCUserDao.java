@@ -16,9 +16,9 @@ import model.entity.Certificate;
 import model.entity.User;
 
 public class JDBCUserDao implements UserDao {
-	
+
 	static Logger logger = Logger.getLogger(JDBCUserDao.class);
-	
+
 	private static final String INSERT_INTO_ENROLLEE = "INSERT INTO enrollee "
 			+ "(firstName, secondName, email, phone, password) values (?,?,?,?,?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM enrollee WHERE ID = ?";
@@ -30,16 +30,17 @@ public class JDBCUserDao implements UserDao {
 	private static final String FIND_BY_EMAIL = "SELECT * FROM enrollee WHERE email = ?";
 
 	private Connection connection;
-	
+
 	public JDBCUserDao(Connection connection) {
 		this.connection = connection;
 	}
-	
+
 	@Override
 	public long create(User enrollee) {
 		long result = 0;
 
-		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE, Statement.RETURN_GENERATED_KEYS)) {
+		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE,
+				Statement.RETURN_GENERATED_KEYS)) {
 
 			st.setString(1, enrollee.getFirstName());
 			st.setString(2, enrollee.getSecondName());
@@ -64,34 +65,29 @@ public class JDBCUserDao implements UserDao {
 	@Override
 	public Optional<User> find(long id) {
 		Optional<User> result = Optional.empty();
-		
-		try(PreparedStatement st = connection.prepareStatement(SELECT_BY_ID)){
+
+		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ID)) {
 			st.setLong(1, id);
-			
-			try(ResultSet rs = st.executeQuery()){
+
+			try (ResultSet rs = st.executeQuery()) {
 				if (rs.next()) {
 					User user = getUserFromResultSet(rs);
 					result = Optional.of(user);
 				}
 			}
-			
+
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
 		return result;
 	}
-	
+
 	private User getUserFromResultSet(ResultSet rs) throws SQLException {
 		long idUser = rs.getLong("id");
-		User user = new User.Builder()
-		       .setId(idUser)
-		       .setFirstName(rs.getString("firstName"))
-		       .setSecondName(rs.getString("secondName"))
-		       .setEmail(rs.getString("email"))
-		       .setPhone(rs.getString("phone"))
-		       .setPassword(rs.getString("password"))
-		       .setCertificate( getCertificate(idUser) )
-		       .build();
+		User user = new User.Builder().setId(idUser).setFirstName(rs.getString("firstName"))
+				.setSecondName(rs.getString("secondName")).setEmail(rs.getString("email"))
+				.setPhone(rs.getString("phone")).setPassword(rs.getString("password"))
+				.setCertificate(getCertificate(idUser)).build();
 		return user;
 	}
 
@@ -99,38 +95,37 @@ public class JDBCUserDao implements UserDao {
 		JDBCCertificateDao certificateDao = new JDBCCertificateDao(connection);
 		return certificateDao.find(id);
 	}
-	
+
 	@Override
 	public List<User> findAll() {
 		List<User> enrollee = new ArrayList<User>();
 
-		try (Statement st = connection.createStatement();
-				ResultSet rs = st.executeQuery(SELECT_ALL);) {
-			
+		try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(SELECT_ALL);) {
+
 			while (rs.next()) {
-				enrollee.add( getUserFromResultSet(rs) );
+				enrollee.add(getUserFromResultSet(rs));
 			}
 
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
-		
-        return enrollee;
+
+		return enrollee;
 	}
 
 	@Override
 	public void update(User enrollee) {
-		try(PreparedStatement st = connection.prepareStatement(UPDATE_ENROLLEE)){
-			
+		try (PreparedStatement st = connection.prepareStatement(UPDATE_ENROLLEE)) {
+
 			st.setString(1, enrollee.getFirstName());
 			st.setString(2, enrollee.getSecondName());
 			st.setString(3, enrollee.getEmail());
 			st.setString(4, enrollee.getPhone());
 			st.setString(5, enrollee.getPassword());
 			st.setLong(6, enrollee.getId());
-			
-            st.executeUpdate();
-            
+
+			st.executeUpdate();
+
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
@@ -139,10 +134,10 @@ public class JDBCUserDao implements UserDao {
 	@Override
 	public void delete(long id) {
 		try (PreparedStatement st = connection.prepareStatement(DELETE_FROM_ENROLLEE)) {
-			
+
 			st.setLong(1, id);
 			st.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 		}
@@ -150,13 +145,13 @@ public class JDBCUserDao implements UserDao {
 
 	@Override
 	public boolean checkLogin(String email, String password) {
-		try(PreparedStatement st = connection.prepareStatement(CHECK_LOGIN)){
-			
+		try (PreparedStatement st = connection.prepareStatement(CHECK_LOGIN)) {
+
 			st.setString(1, email);
 			st.setString(2, password);
-			
+
 			return st.executeQuery().next();
-			
+
 		} catch (SQLException e) {
 			logger.error(e.getStackTrace());
 			return false;

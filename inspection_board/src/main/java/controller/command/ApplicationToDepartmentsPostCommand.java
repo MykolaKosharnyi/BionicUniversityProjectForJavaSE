@@ -16,17 +16,18 @@ public class ApplicationToDepartmentsPostCommand implements Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		//get the enrollee id
+
+		// get the enrollee id
 		HttpSession session = request.getSession();
 		long enrolleeId = (long) session.getAttribute("userId");
-		
-		//get the department id
+
+		// get the department id
 		int departmentId = Integer.parseInt(request.getParameter("departmentId"));
-		
+
 		sheetService.add(enrolleeId, departmentId);
-		
-		return "redirect:" + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
+
+		return "redirect:" + ConfigurationManager.getInstance()
+				.getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
 	}
 
 }

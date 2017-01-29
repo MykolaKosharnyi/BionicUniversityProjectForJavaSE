@@ -12,7 +12,7 @@ import controller.ConfigurationManager;
 import controller.MessageManager;
 
 public class RegistrationCommand implements Command {
-	
+
 	static Logger logger = Logger.getLogger(RegistrationCommand.class);
 
 	@Override

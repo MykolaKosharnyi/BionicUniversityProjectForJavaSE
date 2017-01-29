@@ -17,9 +17,9 @@ import model.entity.Certificate;
 import model.entity.Subject;
 
 public class JDBCCertificateDao implements CertificateDao {
-	
+
 	static Logger logger = Logger.getLogger(JDBCCertificateDao.class);
-	
+
 	private static final String INSERT_CERTIFICATE = "INSERT INTO certificate (id_subject, scope, id_enrollee) values (?,?,?)";
 	private static final String SELECT_REPEAD_SUBJECT = "SELECT * FROM certificate WHERE id_enrollee = ? and id_subject = ?";
 	private static final String SELECT_BY_ID_ENROLLEE = "SELECT * FROM certificate WHERE id_enrollee = ?";
@@ -27,9 +27,9 @@ public class JDBCCertificateDao implements CertificateDao {
 	private static final String UPDATE_CERTIFICATE = "UPDATE certificate SET scope = ? WHERE id_enrollee = ? and id_subject = ? ";
 	private static final String DELETE_BY_ENROLLE = "DELETE FROM certificate WHERE id_enrollee = ?";
 	private static final String DELETE_BY_ENROLLE_AND_SYBJECT = "DELETE FROM certificate WHERE (id_enrollee = ? and id_subject = ?)";
-	
+
 	private Connection connection;
-	
+
 	public JDBCCertificateDao(Connection connection) {
 		this.connection = connection;
 	}
@@ -70,14 +70,14 @@ public class JDBCCertificateDao implements CertificateDao {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Certificate find(long idEnrollee) {
 		Certificate result = new Certificate();
 		try (PreparedStatement statementCertificate = connection.prepareStatement(SELECT_BY_ID_ENROLLEE);
-			 PreparedStatement statementSubject = connection.prepareStatement(SELECT_ALL_SUBJECT)) {			
+				PreparedStatement statementSubject = connection.prepareStatement(SELECT_ALL_SUBJECT)) {
 			statementCertificate.setLong(1, idEnrollee);
-			
+
 			try (ResultSet rsCertificate = statementCertificate.executeQuery();
 					ResultSet rsSubject = statementSubject.executeQuery()) {
 
@@ -88,9 +88,10 @@ public class JDBCCertificateDao implements CertificateDao {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Create Certificate from ResultSet rsCertificate and ResultSet rsSubject
+	 * 
 	 * @param rsCertificate
 	 * @param rsSubject
 	 * @return
@@ -99,22 +100,24 @@ public class JDBCCertificateDao implements CertificateDao {
 	private Certificate parseResultSets(ResultSet rsCertificate, ResultSet rsSubject) throws SQLException {
 		Certificate result = new Certificate();
 		Map<Subject, Integer> itemsWithEstimates = new LinkedHashMap<>();
-		
+
 		List<Subject> subjectList = new ArrayList<Subject>();
 		while (rsSubject.next()) {
 			subjectList.add(getSubjectFromResultSet(rsSubject));
 		}
-		
+
 		while (rsCertificate.next()) {
-			itemsWithEstimates.put(getSubjectFromListById(subjectList, rsCertificate.getLong(2)), rsCertificate.getInt(3));
+			itemsWithEstimates.put(getSubjectFromListById(subjectList, rsCertificate.getLong(2)),
+					rsCertificate.getInt(3));
 		}
-		
+
 		result.setItemsWithEstimates(itemsWithEstimates);
 		return result;
 	}
-	
+
 	/**
-	 *  Create Subject from ResultSet
+	 * Create Subject from ResultSet
+	 * 
 	 * @param rsSubject
 	 * @return
 	 * @throws SQLException
@@ -122,17 +125,17 @@ public class JDBCCertificateDao implements CertificateDao {
 	private Subject getSubjectFromResultSet(ResultSet rsSubject) throws SQLException {
 		return new Subject(rsSubject.getLong(1), rsSubject.getString(2));
 	}
-	
+
 	private Subject getSubjectFromListById(List<Subject> subjectList, long subjectId) {
 		Subject result;
-        Optional<Subject> orderOptional = subjectList.stream().filter(o -> o.getId() == subjectId).findFirst();
-        if (orderOptional.isPresent()) {
-            result = orderOptional.get();
-        } else {
-            throw new IllegalStateException();
-        }
-        return result;
-    }
+		Optional<Subject> orderOptional = subjectList.stream().filter(o -> o.getId() == subjectId).findFirst();
+		if (orderOptional.isPresent()) {
+			result = orderOptional.get();
+		} else {
+			throw new IllegalStateException();
+		}
+		return result;
+	}
 
 	@Override
 	public void update(long idEnrollee, Subject subject, int valueOfSubject) {
