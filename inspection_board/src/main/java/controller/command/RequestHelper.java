@@ -24,6 +24,9 @@ public class RequestHelper {
 		commands.put("/logout", new LogoutCommand());
 		commands.put("/set_application_to_departments", new ApplicationToDepartments());
 		commands.put("/set_application_to_departments_post", new ApplicationToDepartmentsPostCommand());
+		commands.put("/delete_application_to_departments_post", new DeleteApplicationToDepartmentsPostCommand());
+		
+		
 		commands.put("/add_or_change_subject", new UserSubjectCommand());
 		commands.put("/add_or_change_post_subject", new UserSubjectPostCommand());	
 		commands.put("/delete_user_subject", new DeleteUserSubjectCommand());

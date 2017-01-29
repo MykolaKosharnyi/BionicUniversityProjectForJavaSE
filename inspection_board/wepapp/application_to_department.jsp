@@ -13,7 +13,8 @@ body {
 }
 
 h3 {
-	margin: 50px 0;
+	margin: 50px auto;
+	text-align: center;
 }
 
 a {
@@ -39,10 +40,10 @@ a {
 	display: block;
 	width: 50%;
 	border: 1px green solid;
-	margin: 20px;
+	margin: 20px auto;
 	padding: 5px;
 	border-radius: 5px;
-	background: aliceblue;
+	background: #caffb3;
 	box-shadow: 0 0 5px black;
 }
 
@@ -52,14 +53,22 @@ a {
 	box-shadow: 0 0 1px grey;
 }
 
+.userSendAppToDepartment{
+	background:#9cd1ff;
+}
+
 .department_block:hover{
-	background: #e0effc;
+	background: #a9fb85;
 	box-shadow: 0 0 10px green;
 }
 
 .notContaintUserSubjects:hover{
 	background: #e6e6e6;
 	box-shadow: 0 0 1px grey;
+}
+
+.userSendAppToDepartment:hover{
+	background:#3ca3fe;
 }
 
 .department_block span{
@@ -89,15 +98,21 @@ a {
 	box-shadow: 0px 0px 2px yellow;
 	cursor: pointer;
 }
+
+.userSendAppToDepartment input[type=submit]{
+	background: white;
+}
 </style>
 </head>
 <body>
-	<h3>At this page you can add or delete your application to the department.</h3>
+	<h3>At this page you can add or delete your application to the department</h3>
 	
 	<c:forEach items="${departments}" var="department" varStatus="loop">
 		<c:set var="containtUserSubjects" value="${userSubjects.containsAll(department.necessaryItems)}"/>
+		<c:set var="containtUserDepartment" value="${userDepartments.contains(department)}"/>
 	
-		<div class="department_block <c:if test="${!containtUserSubjects}">notContaintUserSubjects</c:if>">
+		<div class="department_block <c:if test="${!containtUserSubjects}">notContaintUserSubjects</c:if>
+		<c:if test="${containtUserDepartment}">userSendAppToDepartment</c:if>">
 			<div class="head_department">${department.nameDepartment}</div>
 			<div class="required_subjects"><span>Required subject(s):</span>
 				<c:forEach items="${department.necessaryItems}" var="subject" varStatus="status">
@@ -107,11 +122,21 @@ a {
 			<div class="max_enrollee"><span>Max amount student: </span>${department.maxAmountStudent}</div>
 			<div class="send_application">
 				<c:if test="${containtUserSubjects}">
-					<form action="<c:url value='./set_application_to_departments_post' />" method="post">
-						<input type="hidden" name="departmentId" value="${department.id}" />
-						<input type="submit" value="Send application to this department"
-							style="position: relative; top: 7px; left: 20px;">
-					</form>
+					<c:if test="${containtUserDepartment}">
+						<form action="<c:url value='./delete_application_to_departments_post' />" method="post">
+							<input type="hidden" name="departmentId" value="${department.id}" />
+							<input type="submit" value="Remove application to this department"
+								style="position: relative; top: 7px; left: 20px; color: blue;">
+						</form>
+					</c:if>
+					
+					<c:if test="${!containtUserDepartment}">
+						<form action="<c:url value='./set_application_to_departments_post' />" method="post">
+							<input type="hidden" name="departmentId" value="${department.id}" />
+							<input type="submit" value="Send application to this department"
+								style="position: relative; top: 7px; left: 20px;">
+						</form>
+					</c:if>
 				</c:if>
 				
 				<c:if test="${!containtUserSubjects}">
