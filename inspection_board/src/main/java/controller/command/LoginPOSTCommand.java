@@ -83,7 +83,7 @@ public class LoginPOSTCommand implements Command {
 			}
 		}
 
-		return page;
+		return FORWARD + page;
 	}
 
 }

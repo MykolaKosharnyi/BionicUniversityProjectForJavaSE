@@ -30,7 +30,7 @@ public class UserEditCommand implements Command {
 		Optional<User> optionalUser = enrolleeService.find(id);
 		request.setAttribute("user", optionalUser.get());
 
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
 
 	}
 

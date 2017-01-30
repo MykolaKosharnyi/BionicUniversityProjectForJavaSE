@@ -32,7 +32,7 @@ public class UserSubjectPostCommand implements Command {
 		request.setAttribute("subjects", subjectService.findAll());
 		request.setAttribute("user_subjects", certificateService.find(id));
 
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}
 
 }

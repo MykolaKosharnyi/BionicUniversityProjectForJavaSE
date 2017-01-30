@@ -20,7 +20,7 @@ public class LogoutCommand implements Command {
 		if (session != null) {
 			session.invalidate();
 		}
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 	}
 
 }

@@ -14,7 +14,7 @@ public class HomeCommand implements Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
 	}
 
 }

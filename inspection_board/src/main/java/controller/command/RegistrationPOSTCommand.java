@@ -59,7 +59,7 @@ public class RegistrationPOSTCommand implements Command {
 		userName.setMaxAge(30 * 60);
 		response.addCookie(userName);
 
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
 	}
 
 }

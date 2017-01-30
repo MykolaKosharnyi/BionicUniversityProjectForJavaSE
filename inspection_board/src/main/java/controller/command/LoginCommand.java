@@ -29,7 +29,7 @@ public class LoginCommand implements Command {
 			logger.error(MessageManager.getInstance().getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
 		}
 
-		return page;
+		return FORWARD + page;
 	}
 
 }

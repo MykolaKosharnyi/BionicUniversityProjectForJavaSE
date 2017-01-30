@@ -62,6 +62,6 @@ public class ApplicationToDepartments implements Command {
 
 		request.setAttribute("userDepartments", departmentList);
 
-		return ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
 	}
 }

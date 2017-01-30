@@ -5,9 +5,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import controller.ConfigurationManager;
+import controller.HttpUtils;
 import model.service.SheetService;
 
 public class DeleteApplicationToDepartmentsPostCommand implements Command {
@@ -17,17 +17,18 @@ public class DeleteApplicationToDepartmentsPostCommand implements Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// get the enrollee id
-		HttpSession session = request.getSession();
-		long enrolleeId = (long) session.getAttribute("userId");
+		sheetService.deleteEnrolleeFromDepartment( getUserId(request), getDepartmentId(request) );
 
-		// get the department id
-		int departmentId = Integer.parseInt(request.getParameter("departmentId"));
-
-		sheetService.deleteEnrolleeFromDepartment(enrolleeId, departmentId);
-
-		return "/redirect:" + ConfigurationManager.getInstance()
-				.getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
+		return REDIRECT + "set_application_to_departments"
+				/*ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE*/;
+	}
+	
+	private long getUserId(HttpServletRequest request){
+		return HttpUtils.getUserIdFromSession(request);
+	}
+	
+	private long getDepartmentId(HttpServletRequest request){
+		return HttpUtils.getDepartmentIdFromSession(request);
 	}
 
 }
