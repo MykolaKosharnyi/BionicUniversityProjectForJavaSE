@@ -8,27 +8,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
-import model.service.SheetService;
+import model.service.CertificateService;
 
-public class DeleteApplicationToDepartmentsPostCommand implements Command {
-	SheetService sheetService = SheetService.getInstance();
+public class UserDeleteSubject implements Command {
+	CertificateService certificateService = CertificateService.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		certificateService.deleteSubject( getUserId(request), getSubjectId(request) );
 
-		sheetService.deleteEnrolleeFromDepartment( getUserId(request), getDepartmentId(request) );
-
-		return REDIRECT + "set_application_to_departments"
-				/*ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE*/;
+		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_SUBJECTS_PATH);
 	}
 	
 	private long getUserId(HttpServletRequest request){
 		return HttpUtils.getUserIdFromSession(request);
 	}
 	
-	private long getDepartmentId(HttpServletRequest request){
-		return HttpUtils.getDepartmentIdFromSession(request);
+	private long getSubjectId(HttpServletRequest request){
+		return HttpUtils.getSubjectIdFromSession(request);
 	}
 
 }

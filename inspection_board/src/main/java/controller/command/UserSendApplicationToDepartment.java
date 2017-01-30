@@ -10,18 +10,16 @@ import controller.ConfigurationManager;
 import controller.HttpUtils;
 import model.service.SheetService;
 
-public class ApplicationToDepartmentsPostCommand implements Command {
+public class UserSendApplicationToDepartment implements Command {
 	SheetService sheetService = SheetService.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		sheetService.add( getUserId(request), getDepartmentId(request) );
-
-		return REDIRECT + "set_application_to_departments"
-		/*ConfigurationManager.getInstance()
-				.getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE)*/;
+		
+		return REDIRECT + 
+			ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}
 
 	private long getUserId(HttpServletRequest request){
