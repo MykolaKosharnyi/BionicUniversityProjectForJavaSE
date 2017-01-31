@@ -3,6 +3,9 @@
 <html>
 <head>
 
+<!-- INCLUDE HEAD OF PAGE -->
+<jsp:include page="/WEB-INF/views/head.jsp" />
+
 <c:if test="${empty user}">
 	<title>Registration page</title>
 </c:if>
@@ -11,27 +14,9 @@
 	<title>Change user information</title>
 </c:if>
 
-<style>
-body {
-	width: 900px;
-	margin: 0 auto;
-}
-
-h3 {
-	margin: 50px 0;
-}
-
-a {
-	background: greenyellow;
-	border-radius: 5px;
-	padding: 5px;
-	margin: 0 10px;
-	color: #872c1e;
-}
-</style>
 </head>
 <body>
-	<h3>At this page you can register your account</h3>
+	<h3  class="text-center">At this page you can register your account</h3>
 
 	<c:if test="${empty user}">
 		<c:url var="addAction" value="./registration_post"></c:url>
@@ -42,88 +27,72 @@ a {
 	</c:if>
 
 	<form action="${addAction}" method="post">
-		<table>
-			<tr>
-				<td>First name:</td>
-				<td><input type="text" required name="firstname"
-					<c:if test="${!empty user}">value="${user.firstName}"</c:if>
-					autofocus="autofocus"></td>
-			</tr>
-			<tr>
-				<td>Second name:</td>
-				<td><input type="text" required name="secondname"
-					<c:if test="${!empty user}">value="${user.secondName}"</c:if>></td>
-			</tr>
-			<tr>
-				<td>E-mail:</td>
-				<td><input type="email" required name="email"
-					<c:if test="${!empty user}">value="${user.email}"</c:if>></td>
-			</tr>
-			<tr>
-				<td>Phone number:</td>
-				<td><input type="number" required name="phone"
-					<c:if test="${!empty user}">value="${user.phone}"</c:if>></td>
-			</tr>
-			<tr>
-				<td colspan="2"><hr
-						style="border: 0; height: 1px; background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);"></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type="password" required name="password"
-					<c:if test="${!empty user}">value="${user.password}"</c:if>></td>
-			</tr>
-			<tr>
-				<td>Repeat password:</td>
-				<td><input type="password" required name="repeat_password"
-					<c:if test="${!empty user}">value="${user.password}"</c:if>></td>
-			</tr>
+		<div class="form-group">
+			<label for="firstName">First name</label> <input
+				<c:if test="${!empty user}">value="${user.firstName}"</c:if> required
+				type="text" class="form-control" name="firstname" id="firstName"
+				placeholder="..." autofocus="autofocus">
+		</div>
+		
+		<div class="form-group">
+			<label for="secondName">Second name</label> <input
+				<c:if test="${!empty user}">value="${user.secondName}"</c:if> required
+				type="text" class="form-control" name="secondname" id="secondName"
+				placeholder="...">
+		</div>
+		
+		<div class="form-group">
+			<label for="inputEmail">Email address</label> <input
+				<c:if test="${!empty user}">value="${user.email}"</c:if> required
+				type="email" class="form-control" name="email" id="inputEmail"
+				placeholder="Email">
+		</div>
+	
+		<div class="form-group">
+			<label for="inputPhone">Phone number</label> <input
+				<c:if test="${!empty user}">value="${user.phone}"</c:if> required
+				type="number" class="form-control" name="phone" id="inputPhone"
+				placeholder="Email">
+		</div>
+	
+		<hr class="beauty_line">
+		
+		<div class="form-group">
+			<label for="inputPassword">Password</label> <input
+				<c:if test="${!empty user}">value="${user.password}"</c:if> required
+				type="password" class="form-control" name="password" id="inputPassword"
+				placeholder="Password">
+		</div>
+		
+		<div class="form-group">
+			<label for="inputPasswordRepeat">Repeat password</label> <input
+				<c:if test="${!empty user}">value="${user.password}"</c:if> required
+				type="password" class="form-control" name="repeat_password" id="inputPasswordRepeat"
+				placeholder="Password">
+		</div>
+		
+		<c:if test="${!empty errorMessage}">
+			<div style="color: red; border: 1px solid red; padding: 5px; margin: 10px 0px;">${errorMessage}</div>					
+		</c:if>
 
-			<c:if test="${!empty errorMessage}">
-				<tr>
-					<td colspan="2">
-						<div
-							style="color: red; border: 1px solid red; padding: 5px; margin: 10px 0px;">${errorMessage}</div>
-					</td>
-				</tr>
-			</c:if>
+		<c:if test="${empty user}">
+			<input class="btn btn-default" type="submit" value="Register new account">
+		</c:if>
 
+		<c:if test="${!empty user}">
+			<input class="btn btn-default" type="submit" value="Change personal information">
+		</c:if>
 
-			<tr>
-				<td></td>
-				<td></td>
-			</tr>
-
-			<c:if test="${empty user}">
-				<tr>
-					<td colspan="2"><input type="submit"
-						value="Register new account"></td>
-				</tr>
-			</c:if>
-
-			<c:if test="${!empty user}">
-				<tr>
-					<td colspan="2"><input type="submit"
-						value="Change personal information"></td>
-				</tr>
-			</c:if>
-
-			<tr>
-				<td colspan="2"><hr class="hr_end_block"></td>
-			</tr>
-		</table>
+		<c:if test="${empty user}">
+			<a class="btn btn-primary" href="<c:url value='/' />">Go to welcome page</a>
+		</c:if>
+	
+		<c:if test="${!empty user}">
+			<a class="btn btn-primary" href="<c:url value='./home' />">Go to home page</a>
+			<a class="btn btn-primary" href="<c:url value='./logout' />">Log out</a>
+		</c:if>
 
 	</form>
-
-	<c:if test="${empty user}">
-		<a href="<c:url value='/' />">Go to welcome page</a>
-	</c:if>
-
-	<c:if test="${!empty user}">
-		<a href="<c:url value='./home' />">Go to home page</a>
-		<a href="<c:url value='./logout' />">Log out</a>
-	</c:if>
-
 
 </body>
 </html>
