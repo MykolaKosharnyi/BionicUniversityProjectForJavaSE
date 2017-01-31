@@ -14,6 +14,7 @@ import java.util.Optional;
 import model.dao.SheetDao;
 import model.dao.exception.DaoException;
 import model.entity.Department;
+import model.entity.Sheet;
 import model.entity.User;
 
 public class JDBCSheetDao implements SheetDao {
@@ -60,19 +61,21 @@ public class JDBCSheetDao implements SheetDao {
 	}
 
 	@Override
-	public Map<Department, List<User>> getSheet() {
-		Map<Department, List<User>> result = new LinkedHashMap<Department, List<User>>();
+	public Sheet getSheet() {
+		Sheet result = new Sheet();
+		Map<Department, List<User>> table = new LinkedHashMap<Department, List<User>>();
 
 		try (PreparedStatement sheetStatement = connection.prepareStatement(SELECT_BY_ID)) {
-			result = getSheetMap(sheetStatement.executeQuery());
+			table = getSheetTable(sheetStatement.executeQuery());
 		} catch (SQLException e) {
 			String message = String.format(EXCEPTION_MSG_GET_SHEET);
             throw new DaoException(message, e);
 		}
+		result.setTable(table);
 		return result;
 	}
 
-	private Map<Department, List<User>> getSheetMap(ResultSet sheetRS) throws SQLException {
+	private Map<Department, List<User>> getSheetTable(ResultSet sheetRS) throws SQLException {
 		Map<Department, List<User>> result = new LinkedHashMap<Department, List<User>>();
 
 		JDBCDepartmentDao departmentDAO = new JDBCDepartmentDao(connection);

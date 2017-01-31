@@ -1,13 +1,9 @@
 package model.service;
 
-import java.util.List;
-import java.util.Map;
-
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.SheetDao;
-import model.entity.Department;
-import model.entity.User;
+import model.entity.Sheet;
 
 public class SheetService {
 	private DaoFactory daoFactory = DaoFactory.getInstance();
@@ -32,7 +28,7 @@ public class SheetService {
 		}
 	}
 
-	public Map<Department, List<User>> getSheet() {
+	public Sheet getSheet() {
 		try (DaoConnection connection = daoFactory.getConnection()) {
 			SheetDao dao = daoFactory.createSheetDao(connection);
 			return dao.getSheet();
