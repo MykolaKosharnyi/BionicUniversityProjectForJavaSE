@@ -1,6 +1,9 @@
 package model.entity;
 
-public class User {// Вступник
+import java.io.Serializable;
+
+public class User implements Serializable {// Вступник
+	private static final long serialVersionUID = 1482272761478193542L;
 	private long id;
 	private String firstName;
 	private String secondName;
@@ -9,6 +12,28 @@ public class User {// Вступник
 	private String password;
 
 	private Certificate certificate;// аттестат
+	
+	/**
+     * Only {@code active} users can sign into the system.
+     */
+    private Status status;
+    /**
+     * Role define specific system functionality available to a user.
+     */
+    private Role role;
+
+    public enum Status {
+        ACTIVE, BLOCKED
+    }
+
+    public enum Role {
+        ADMIN, ENROLLEE;
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
 
 	public User() {
 	}
@@ -133,6 +158,36 @@ public class User {// Вступник
 
 	public void setCertificate(Certificate certificate) {
 		this.certificate = certificate;
+	}
+	
+	public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public boolean hasRole(Role role) {
+        return this.role.equals(role);
+    }
+
+    public boolean hasRole(String role) {
+        return hasRole(Role.valueOf(role.toUpperCase()));
+    }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", secondName=" + secondName + ", email=" + email
+				+ ", phone=" + phone + ", certificate=" + certificate + ", status=" + status + ", role=" + role + "]";
 	}
 
 }

@@ -42,4 +42,9 @@ public class Sheet {// Ведомость
 		sheet.put(department, enrollees);
 	}
 
+	@Override
+	public String toString() {
+		return "Sheet [sheet=" + sheet + "]";
+	}
+
 }

@@ -9,21 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 import model.dao.SubjectDao;
+import model.dao.exception.DaoException;
 import model.entity.Subject;
 
 public class JDBCSubjectDao implements SubjectDao {
-
-	static Logger logger = Logger.getLogger(JDBCSubjectDao.class);
-
 	private static final String INSERT_INTO_SUBJECT = "INSERT INTO subject (name) values (?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM subject WHERE id_subject = ?";
 	private static final String SELECT_ALL = "SELECT * FROM subject";
 	private static final String UPDATE_SUBJECT = "UPDATE subject SET name = ? WHERE id_subject = ? ";
 	private static final String DELETE_SUBJECT = "DELETE FROM subject WHERE id_subject = ?";
-
+	private static final String EXCEPTION_MSG_CREATE_NEW_SUBJECT =
+            "Exception during writing new subject to database, subject = %s";
+	private static final String EXCEPTION_MSG_FIND_SUBJECT_BY_ID = 
+			"Exception during finding subject by id = %d";
+	private static final String EXCEPTION_MSG_FIND_ALL_SUBJECTS = 
+			"Exception during finding all subjects";
+	private static final String EXCEPTION_MSG_UPDATE_SUBJECT = 
+			"Exception during update subject = %s";
+	private static final String EXCEPTION_MSG_DELETE_SUBJECT = 
+			"Exception during deleting subject, id = %d";
+	
 	private Connection connection;
 
 	public JDBCSubjectDao(Connection connection) {
@@ -44,7 +50,8 @@ public class JDBCSubjectDao implements SubjectDao {
 				}
 			}
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_CREATE_NEW_SUBJECT, subject);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -61,10 +68,10 @@ public class JDBCSubjectDao implements SubjectDao {
 					result = Optional.of(subject);
 				}
 			}
-		} catch (SQLException e1) {
-			logger.error(e1.getStackTrace());
+		} catch (SQLException e) {
+			String message = String.format(EXCEPTION_MSG_FIND_SUBJECT_BY_ID, id);
+            throw new DaoException(message, e);
 		}
-
 		return result;
 	}
 
@@ -83,8 +90,9 @@ public class JDBCSubjectDao implements SubjectDao {
 				}
 			}
 
-		} catch (SQLException e1) {
-			logger.error(e1.getStackTrace());
+		} catch (SQLException e) {
+			String message = String.format(EXCEPTION_MSG_FIND_ALL_SUBJECTS);
+            throw new DaoException(message, e);
 		}
 
 		return subjectList;
@@ -97,8 +105,9 @@ public class JDBCSubjectDao implements SubjectDao {
 			st.setLong(2, subject.getId());
 
 			st.executeUpdate();
-		} catch (SQLException e1) {
-			logger.error(e1.getStackTrace());
+		} catch (SQLException e) {
+			String message = String.format(EXCEPTION_MSG_UPDATE_SUBJECT, subject);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -107,8 +116,9 @@ public class JDBCSubjectDao implements SubjectDao {
 		try (PreparedStatement st = connection.prepareStatement(DELETE_SUBJECT);) {
 			st.setLong(1, id);
 			st.executeUpdate();
-		} catch (SQLException e1) {
-			logger.error(e1.getStackTrace());
+		} catch (SQLException e) {
+			String message = String.format(EXCEPTION_MSG_DELETE_SUBJECT, id);
+            throw new DaoException(message, e);
 		}
 	}
 

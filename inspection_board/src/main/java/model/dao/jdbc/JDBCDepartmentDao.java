@@ -10,16 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 import model.dao.DepartmentDao;
+import model.dao.exception.DaoException;
 import model.entity.Department;
 import model.entity.Subject;
 
 public class JDBCDepartmentDao implements DepartmentDao {
-
-	static Logger logger = Logger.getLogger(JDBCDepartmentDao.class);
-
 	private static final String INSERT_INTO_DEPARTMENT = "INSERT INTO department (name, max_enrollee) values ";
 	private static final String INSERT_INTO_DEPARTMENT_SUBJECT = "INSERT INTO department_subject (id_department, id_subject) values (?,?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM department WHERE id_department = ?";
@@ -30,7 +26,25 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	private static final String UPDATE_ALL_DEPARTMENT = "UPDATE department SET name = ?, max_enrollee = ? WHERE id_department = ?";
 	private static final String DELETE_FROM_DEPARTMENT_SUBJECT = "DELETE FROM department_subject WHERE id_department = ?";
 	private static final String DELETE_FROM_DEPARTMENT = "DELETE FROM department WHERE id_department = ?";
-
+	private static final String EXCEPTION_MSG_CREATE_NEW_DEPARTMENT =
+            "Exception during writing new department to database, department = %s";
+	private static final String EXCEPTION_MSG_SAVE_SUBJECTS = 
+			"Exception during savind subjects of department = %s";
+	private static final String EXCEPTION_MSG_FIND_SUBJECT = 
+			"Exception during finding subject from department_subject by department_id = %d";
+	private static final String EXCEPTION_MSG_GET_NECESSARY_ITEMS = 
+			"Exception during getting necessary items, id = %d";
+	private static final String EXCEPTION_MSG_FIND_ALL_DEPARTMENTS = 
+			"Exception during getting all departments from database";
+	private static final String EXCEPTION_MSG_UPDATE_DEPARTMENT = 
+			"Exception during updating department, %s";
+	private static final String EXCEPTION_MSG_UPDATE_DEPARTMENT_IN_SUBJECT = 
+			"Exception during updating department, %s, while deleting old subjects";
+	private static final String EXCEPTION_MSG_DELETE_DEPARTMENT = 
+			"Exception during deleting department with id = %d";
+	private static final String EXCEPTION_MSG_DELETE_SUBJECTS_FROM_DEPARTMENT = 
+			"Exception during deleting subjects from department with id = %d";
+	
 	private Connection connection;
 
 	public JDBCDepartmentDao(Connection connection) {
@@ -52,7 +66,8 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				department.setId(result);
 			}
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_CREATE_NEW_DEPARTMENT, department);
+            throw new DaoException(message, e);
 		}
 
 		saveSubjectsToDatabase(department);
@@ -88,7 +103,8 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT + valuesToInsert.toString())) {
 			st.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_SAVE_SUBJECTS, department);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -96,7 +112,7 @@ public class JDBCDepartmentDao implements DepartmentDao {
 	public Optional<Department> find(long id) {
 		Optional<Department> result = Optional.empty();
 
-		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ID);) {
+		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ID)) {
 
 			st.setLong(1, id);
 			ResultSet rs = st.executeQuery();
@@ -106,15 +122,19 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_SUBJECT, id);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
 
 	private Department getDepartmentFromResultSet(ResultSet rs) throws SQLException {
 		long id = rs.getLong("id_department");
-		return new Department.Builder().setId(id).setNameDepartment(rs.getString("name"))
-				.setMaxAmountStudent(rs.getInt("max_enrollee")).setNecessaryItems(getNecessaryItems(id)).build();
+		return new Department.Builder()
+				.setId(id)
+				.setNameDepartment(rs.getString("name"))
+				.setMaxAmountStudent(rs.getInt("max_enrollee"))
+				.setNecessaryItems(getNecessaryItems(id)).build();
 	}
 
 	private List<Subject> getNecessaryItems(long id) {
@@ -126,20 +146,28 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			ResultSet rs = statementSubject.executeQuery();
 
 			while (rs.next()) {
-				result.add(new Subject.Builder().setId(rs.getLong("id_subject")).setName(rs.getString("name")).build());
+				result.add( extractSubjectFromParameters(rs) );
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_GET_NECESSARY_ITEMS, id);
+            throw new DaoException(message, e);
 		}
 		return result;
+	}
+	
+	private Subject extractSubjectFromParameters(ResultSet rs) throws SQLException{
+		return new Subject.Builder()
+				.setId(rs.getLong("id_subject"))
+				.setName(rs.getString("name"))
+				.build();
 	}
 
 	@Override
 	public List<Department> findAll() {
 		List<Department> department = new ArrayList<>();
 
-		try (Statement st = connection.createStatement();) {
+		try (Statement st = connection.createStatement()) {
 
 			ResultSet rs = st.executeQuery(SELECT_ALL_DEPARTMENTS);
 			while (rs.next()) {
@@ -147,7 +175,8 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_ALL_DEPARTMENTS);
+            throw new DaoException(message, e);
 		}
 		return department;
 	}
@@ -162,7 +191,8 @@ public class JDBCDepartmentDao implements DepartmentDao {
 
 			st.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_UPDATE_DEPARTMENT, department);
+            throw new DaoException(message, e);
 		}
 
 		// if changed subject in this department
@@ -173,11 +203,10 @@ public class JDBCDepartmentDao implements DepartmentDao {
 				st.setLong(1, department.getId());
 				st.executeUpdate();
 			} catch (SQLException e) {
-				logger.error(e.getStackTrace());
+				String message = String.format(EXCEPTION_MSG_UPDATE_DEPARTMENT_IN_SUBJECT, department);
+	            throw new DaoException(message, e);
 			}
-
 			saveSubjectsToDatabase(department);
-
 		}
 	}
 
@@ -188,16 +217,17 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			st.setLong(1, id);
 			st.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_DEPARTMENT, id);
+            throw new DaoException(message, e);
 		}
 
 		try (PreparedStatement st = connection.prepareStatement(DELETE_FROM_DEPARTMENT_SUBJECT)) {
 			st.setLong(1, id);
 			st.executeUpdate();
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_SUBJECTS_FROM_DEPARTMENT, id);
+            throw new DaoException(message, e);
 		}
-
 	}
 
 }

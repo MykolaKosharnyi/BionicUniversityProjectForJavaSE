@@ -73,4 +73,9 @@ public class Subject {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Subject [id=" + id + ", name=" + name + "]";
+	}
+
 }

@@ -24,4 +24,9 @@ public class Certificate {// аттестат
 	public void setItemsWithEstimates(Map<Subject, Integer> itemsWithEstimates) {
 		this.itemsWithEstimates = itemsWithEstimates;
 	}
+
+	@Override
+	public String toString() {
+		return "Certificate [itemsWithEstimates=" + itemsWithEstimates + "]";
+	}
 }

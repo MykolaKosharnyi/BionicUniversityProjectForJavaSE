@@ -11,21 +11,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 import model.dao.SheetDao;
+import model.dao.exception.DaoException;
 import model.entity.Department;
 import model.entity.User;
 
 public class JDBCSheetDao implements SheetDao {
-	static Logger logger = Logger.getLogger(JDBCSheetDao.class);
-
 	private static final String INSERT_INTO_SHEET = "INSERT INTO sheet (id_enrollee, id_department) values (?,?)";
 	private static final String SELECT_BY_ID = "SELECT id_department, id_enrollee FROM sheet; ";
 	private static final String DELETE_FROM_SHEET_BY_DEPARTMENT = "DELETE FROM sheet WHERE id_department = ?";
 	private static final String DELETE_FROM_SHEET_BY_ENROLLEE = "DELETE FROM sheet WHERE id_enrollee  = ?";
 	private static final String DELETE_FROM_SHEET_BY_ENROLLEE_AND_DEPARTMENT = "DELETE FROM sheet WHERE id_enrollee  = ? and id_department = ?";
-
+	private static final String EXCEPTION_MSG_ADD_USER_TO_SHEET =
+			"Exception during adding User with id=%d to sheet, idDepartment=%d";
+	private static final String EXCEPTION_MSG_GET_SHEET = 
+			"Exception during get sheet from database";
+	private static final String EXCEPTION_MSG_DELETE_DEPARTMENT_FROM_SHEET = 
+			"Exception during deleting DEPARTMENT from sheet with idDepartment = %d";
+	private static final String EXCEPTION_MSG_DELETE_ENROLLEE_FROM_SHEET = 
+			"Exception during deleting ENROLLEE frim sheet with idEnrollee = %d";
+	private static final String EXCEPTION_MSG_DELETE_ENROLLEE_FROM_DEPARTMENT = 
+			"Exception during deleting Enrollee with id=%d from Department wiht id=%d";
+	
 	private Connection connection;
 
 	public JDBCSheetDao(Connection connection) {
@@ -46,7 +53,8 @@ public class JDBCSheetDao implements SheetDao {
 					result = key.getInt(1);
 			}
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_ADD_USER_TO_SHEET, idEnrollee, idDepartment);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -58,7 +66,8 @@ public class JDBCSheetDao implements SheetDao {
 		try (PreparedStatement sheetStatement = connection.prepareStatement(SELECT_BY_ID)) {
 			result = getSheetMap(sheetStatement.executeQuery());
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_GET_SHEET);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -120,7 +129,8 @@ public class JDBCSheetDao implements SheetDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_DEPARTMENT_FROM_SHEET, idDepartment);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -132,7 +142,8 @@ public class JDBCSheetDao implements SheetDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_ENROLLEE_FROM_SHEET, idEnrollee);
+            throw new DaoException(message, e);
 		}
 
 	}
@@ -146,7 +157,8 @@ public class JDBCSheetDao implements SheetDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_ENROLLEE_FROM_DEPARTMENT, idEnrollee, idDepartment);
+            throw new DaoException(message, e);
 		}
 	}
 

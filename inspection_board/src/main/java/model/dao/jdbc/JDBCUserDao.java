@@ -9,16 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 import model.dao.UserDao;
+import model.dao.exception.DaoException;
 import model.entity.Certificate;
 import model.entity.User;
 
 public class JDBCUserDao implements UserDao {
-
-	static Logger logger = Logger.getLogger(JDBCUserDao.class);
-
 	private static final String INSERT_INTO_ENROLLEE = "INSERT INTO enrollee "
 			+ "(firstName, secondName, email, phone, password) values (?,?,?,?,?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM enrollee WHERE ID = ?";
@@ -28,6 +24,21 @@ public class JDBCUserDao implements UserDao {
 	private static final String DELETE_FROM_ENROLLEE = "DELETE FROM enrollee WHERE id = ?";
 	private static final String CHECK_LOGIN = "SELECT * FROM enrollee WHERE email = ? AND password = ?";
 	private static final String FIND_BY_EMAIL = "SELECT * FROM enrollee WHERE email = ?";
+	
+	private static final String EXCEPTION_MSG_CREATE_NEW_USER =
+            "Exception during writing new user to database, user = %s";
+	private static final String EXCEPTION_MSG_FIND_USER_BY_ID =
+			"Exception during finding user by id = %d";
+	private static final String EXCEPTION_MSG_FIND_ALL_USERS = 
+			"Exception during finding all users";
+	private static final String EXCEPTION_MSG_UPDATE_USER = 
+			"Exception during updating user in database, user = %s";
+	private static final String EXCEPTION_MSG_DELETE_USER = 
+			"Exception during deleting user from database, userId = %d";
+	private static final String EXCEPTION_MSG_CHECK_LOGIN_USER = 
+			"Exception during checking login of user, checked email = %s";
+	private static final String EXCEPTION_MSG_FIND_BY_EMAIL_USER = 
+			"Exception during finding user by email, checked email = %s";
 
 	private Connection connection;
 
@@ -36,28 +47,29 @@ public class JDBCUserDao implements UserDao {
 	}
 
 	@Override
-	public long create(User enrollee) {
+	public long create(User user) {
 		long result = 0;
 
 		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_ENROLLEE,
 				Statement.RETURN_GENERATED_KEYS)) {
 
-			st.setString(1, enrollee.getFirstName());
-			st.setString(2, enrollee.getSecondName());
-			st.setString(3, enrollee.getEmail());
-			st.setString(4, enrollee.getPhone());
-			st.setString(5, enrollee.getPassword());
+			st.setString(1, user.getFirstName());
+			st.setString(2, user.getSecondName());
+			st.setString(3, user.getEmail());
+			st.setString(4, user.getPhone());
+			st.setString(5, user.getPassword());
 			st.executeUpdate();
 
 			try (ResultSet key = st.getGeneratedKeys()) {
 				if (key.next()) {
 					result = key.getInt(1);
 				}
-				enrollee.setId(result);
+				user.setId(result);
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_CREATE_NEW_USER, user);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -77,16 +89,21 @@ public class JDBCUserDao implements UserDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_USER_BY_ID, id);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
 
 	private User getUserFromResultSet(ResultSet rs) throws SQLException {
 		long idUser = rs.getLong("id");
-		User user = new User.Builder().setId(idUser).setFirstName(rs.getString("firstName"))
-				.setSecondName(rs.getString("secondName")).setEmail(rs.getString("email"))
-				.setPhone(rs.getString("phone")).setPassword(rs.getString("password"))
+		User user = new User.Builder()
+				.setId(idUser)
+				.setFirstName(rs.getString("firstName"))
+				.setSecondName(rs.getString("secondName"))
+				.setEmail(rs.getString("email"))
+				.setPhone(rs.getString("phone"))
+				.setPassword(rs.getString("password"))
 				.setCertificate(getCertificate(idUser)).build();
 		return user;
 	}
@@ -107,27 +124,29 @@ public class JDBCUserDao implements UserDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_ALL_USERS);
+            throw new DaoException(message, e);
 		}
 
 		return enrollee;
 	}
 
 	@Override
-	public void update(User enrollee) {
+	public void update(User user) {
 		try (PreparedStatement st = connection.prepareStatement(UPDATE_ENROLLEE)) {
 
-			st.setString(1, enrollee.getFirstName());
-			st.setString(2, enrollee.getSecondName());
-			st.setString(3, enrollee.getEmail());
-			st.setString(4, enrollee.getPhone());
-			st.setString(5, enrollee.getPassword());
-			st.setLong(6, enrollee.getId());
+			st.setString(1, user.getFirstName());
+			st.setString(2, user.getSecondName());
+			st.setString(3, user.getEmail());
+			st.setString(4, user.getPhone());
+			st.setString(5, user.getPassword());
+			st.setLong(6, user.getId());
 
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_UPDATE_USER, user);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -139,7 +158,8 @@ public class JDBCUserDao implements UserDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_USER, id);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -153,8 +173,8 @@ public class JDBCUserDao implements UserDao {
 			return st.executeQuery().next();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
-			return false;
+			String message = String.format(EXCEPTION_MSG_CHECK_LOGIN_USER, email);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -173,9 +193,9 @@ public class JDBCUserDao implements UserDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_BY_EMAIL_USER, email);
+            throw new DaoException(message, e);
 		}
-
 		return result;
 	}
 

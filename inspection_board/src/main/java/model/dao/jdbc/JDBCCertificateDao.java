@@ -10,16 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 import model.dao.CertificateDao;
+import model.dao.exception.DaoException;
 import model.entity.Certificate;
 import model.entity.Subject;
 
 public class JDBCCertificateDao implements CertificateDao {
-
-	static Logger logger = Logger.getLogger(JDBCCertificateDao.class);
-
 	private static final String INSERT_CERTIFICATE = "INSERT INTO certificate (id_subject, scope, id_enrollee) values (?,?,?)";
 	private static final String SELECT_REPEAD_SUBJECT = "SELECT * FROM certificate WHERE id_enrollee = ? and id_subject = ?";
 	private static final String SELECT_BY_ID_ENROLLEE = "SELECT * FROM certificate WHERE id_enrollee = ?";
@@ -27,7 +23,19 @@ public class JDBCCertificateDao implements CertificateDao {
 	private static final String UPDATE_CERTIFICATE = "UPDATE certificate SET scope = ? WHERE id_enrollee = ? and id_subject = ? ";
 	private static final String DELETE_BY_ENROLLE = "DELETE FROM certificate WHERE id_enrollee = ?";
 	private static final String DELETE_BY_ENROLLE_AND_SYBJECT = "DELETE FROM certificate WHERE (id_enrollee = ? and id_subject = ?)";
-
+	private static final String EXCEPTION_MSG_ADD_SUBJECT_TO_CERTIFICATE =
+            "Exception during adding new subject to certicate, idEnrollee=%d, idSubject=%d, scope = %d";
+	private static final String EXCEPTION_MSG_REPEAD_SUBJECT = 
+			"Exception while finding repeated subject, idEnrollee=%d, idSubject=%d";
+	private static final String EXCEPTION_MSG_FIND_BY_ID_ENROLLEE = 
+			"Exception during finding certificate by id enrollee, idEnrollee=%d";
+	private static final String EXCEPTION_MSG_UPDATE_CERTIFICATE = 
+			"Exception during updating certifivate, idEnrollee=%d, idSubject=%d, valueOfSubject=%d";
+	private static final String EXCEPTION_MSG_DELETE_FROM_CERTIFICATE_BY_ENROLLE = 
+			"Exception during deleting all informaiton about enrolle from sertificate, idEnrollee=%d";
+	private static final String EXCEPTION_MSG_DELETE_FROM_CERTIFICATE_BY_ENROLLE_SUBJECT = 
+			"Exception during deleting subject from user certificate, idEnrollee=%d, inSubject=%d ";
+	
 	private Connection connection;
 
 	public JDBCCertificateDao(Connection connection) {
@@ -47,7 +55,8 @@ public class JDBCCertificateDao implements CertificateDao {
 				st.executeUpdate();
 
 			} catch (SQLException e) {
-				logger.error(e.getStackTrace());
+				String message = String.format(EXCEPTION_MSG_ADD_SUBJECT_TO_CERTIFICATE, idEnrollee, idSubject, scope);
+	            throw new DaoException(message, e);
 			}
 		}
 		return result;
@@ -66,7 +75,8 @@ public class JDBCCertificateDao implements CertificateDao {
 			}
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_REPEAD_SUBJECT, idEnrollee, idSubject);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -84,7 +94,8 @@ public class JDBCCertificateDao implements CertificateDao {
 				result = parseResultSets(rsCertificate, rsSubject);
 			}
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_FIND_BY_ID_ENROLLEE, idEnrollee);
+            throw new DaoException(message, e);
 		}
 		return result;
 	}
@@ -148,7 +159,8 @@ public class JDBCCertificateDao implements CertificateDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_UPDATE_CERTIFICATE, idEnrollee, subject.getId(), valueOfSubject);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -160,7 +172,8 @@ public class JDBCCertificateDao implements CertificateDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_FROM_CERTIFICATE_BY_ENROLLE, idEnrollee);
+            throw new DaoException(message, e);
 		}
 	}
 
@@ -173,7 +186,8 @@ public class JDBCCertificateDao implements CertificateDao {
 			st.executeUpdate();
 
 		} catch (SQLException e) {
-			logger.error(e.getStackTrace());
+			String message = String.format(EXCEPTION_MSG_DELETE_FROM_CERTIFICATE_BY_ENROLLE_SUBJECT, idEnrollee, idSubject);
+            throw new DaoException(message, e);
 		}
 	}
 
