@@ -16,7 +16,12 @@
 
 </head>
 <body>
-	<h3  class="text-center">At this page you can register your account</h3>
+	<c:if test="${!empty user}">
+		<jsp:include page="/WEB-INF/views/user_navigation.jsp" />
+	</c:if>
+
+	<h3 <c:if test="${!empty user}">style="padding-top: 70px;"</c:if>
+		class="text-center">At this page you can register your account</h3>
 
 	<c:if test="${empty user}">
 		<c:url var="addAction" value="./registration_post"></c:url>
@@ -31,14 +36,14 @@
 			<label for="firstName">First name</label> <input
 				<c:if test="${!empty user}">value="${user.firstName}"</c:if> required
 				type="text" class="form-control" name="firstname" id="firstName"
-				placeholder="..." autofocus="autofocus">
+				placeholder="First name" autofocus="autofocus">
 		</div>
 		
 		<div class="form-group">
 			<label for="secondName">Second name</label> <input
 				<c:if test="${!empty user}">value="${user.secondName}"</c:if> required
 				type="text" class="form-control" name="secondname" id="secondName"
-				placeholder="...">
+				placeholder="Second name">
 		</div>
 		
 		<div class="form-group">
@@ -52,7 +57,7 @@
 			<label for="inputPhone">Phone number</label> <input
 				<c:if test="${!empty user}">value="${user.phone}"</c:if> required
 				type="number" class="form-control" name="phone" id="inputPhone"
-				placeholder="Email">
+				placeholder="Phone number">
 		</div>
 	
 		<hr class="beauty_line">
@@ -68,11 +73,11 @@
 			<label for="inputPasswordRepeat">Repeat password</label> <input
 				<c:if test="${!empty user}">value="${user.password}"</c:if> required
 				type="password" class="form-control" name="repeat_password" id="inputPasswordRepeat"
-				placeholder="Password">
+				placeholder="Repeat password">
 		</div>
 		
 		<c:if test="${!empty errorMessage}">
-			<div style="color: red; border: 1px solid red; padding: 5px; margin: 10px 0px;">${errorMessage}</div>					
+			<div class="errorMessage">${errorMessage}</div>					
 		</c:if>
 
 		<c:if test="${empty user}">
@@ -84,12 +89,8 @@
 		</c:if>
 
 		<c:if test="${empty user}">
+			<a class="btn btn-primary" href="<c:url value='/inspection_board/login' />">Log in</a>
 			<a class="btn btn-primary" href="<c:url value='/' />">Go to welcome page</a>
-		</c:if>
-	
-		<c:if test="${!empty user}">
-			<a class="btn btn-primary" href="<c:url value='./home' />">Go to home page</a>
-			<a class="btn btn-primary" href="<c:url value='./logout' />">Log out</a>
 		</c:if>
 
 	</form>

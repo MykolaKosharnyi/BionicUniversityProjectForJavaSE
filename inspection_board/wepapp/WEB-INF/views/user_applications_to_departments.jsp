@@ -4,26 +4,11 @@
 <html>
 <head>
 
+<!-- INCLUDE HEAD OF PAGE -->
+<jsp:include page="/WEB-INF/views/head.jsp" />
 <title>Application to departments</title>
 
 <style>
-body {
-	width: 900px;
-	margin: 0 auto;
-}
-
-h3 {
-	margin: 50px auto;
-	text-align: center;
-}
-
-a {
-	background: greenyellow;
-	border-radius: 5px;
-	padding: 5px;
-	margin: 0 10px;
-	color: #872c1e;
-}
 
 .separate_line {
 	border: 0;
@@ -105,8 +90,11 @@ a {
 </style>
 </head>
 <body>
-	<h3>At this page you can add or delete your application to the
-		department</h3>
+
+	<jsp:include page="/WEB-INF/views/user_navigation.jsp" />
+
+	<h3 style="padding-top: 70px;" 
+	class="text-center">At this page you can add or delete your application to the department</h3>
 
 	<c:forEach items="${departments}" var="department" varStatus="loop">
 		<c:set var="containtUserSubjects"
@@ -161,12 +149,6 @@ a {
 		</div>
 
 	</c:forEach>
-
-
-	<hr class="separate_line">
-
-	<a href="<c:url value='./home' />">Go to home page</a>
-	<a href="<c:url value='./logout' />">Log out</a>
 
 </body>
 </html>

@@ -25,8 +25,7 @@
 
 		<c:if test="${!empty errorMessage}">
 			<div class="form-group">
-				<div style="color: red; border: 1px solid red; padding: 5px; 
-				margin: 10px 0px;">${errorMessage}</div>
+				<div class="errorMessage">${errorMessage}</div>
 			</div>
 		</c:if>
  
