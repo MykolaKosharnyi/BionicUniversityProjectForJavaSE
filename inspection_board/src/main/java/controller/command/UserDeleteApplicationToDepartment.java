@@ -27,7 +27,7 @@ public class UserDeleteApplicationToDepartment implements Command {
 	}
 	
 	private long getDepartmentId(HttpServletRequest request){
-		return HttpUtils.getDepartmentIdFromSession(request);
+		return HttpUtils.getDepartmentIdFromRequestParameter(request);
 	}
 
 }

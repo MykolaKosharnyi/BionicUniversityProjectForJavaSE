@@ -2,16 +2,16 @@ package controller.command;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import controller.ConfigurationManager;
+import controller.HttpUtils;
 import model.service.CertificateService;
 import model.service.DepartmentService;
 import model.service.SheetService;
@@ -33,8 +33,7 @@ public class ApplicationToDepartments implements Command {
 		// get all departments
 		request.setAttribute("departments", departmentService.findAll());
 
-		HttpSession session = request.getSession();
-		long id = (long) session.getAttribute("userId");
+		long id = HttpUtils.getUserIdFromSession(request);
 
 		// get certificate for this user
 		Certificate certificate = certificateService.find(id);
@@ -51,7 +50,7 @@ public class ApplicationToDepartments implements Command {
 			Department currentDepartment = departmentIterator.next();
 			boolean isNeededDepartment = false;
 
-			List<User> listEnrollee = sheet.getTable().get(currentDepartment);
+			SortedSet<User> listEnrollee = sheet.getTable().get(currentDepartment);
 			Optional<User> enrolleeOptional = listEnrollee.stream().filter(e -> e.getId() == id).findFirst();
 			if (enrolleeOptional.isPresent()) {
 				isNeededDepartment = true;

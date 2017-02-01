@@ -16,18 +16,9 @@ public class UserSendApplicationToDepartment implements Command {
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		sheetService.add( getUserId(request), getDepartmentId(request) );
+		sheetService.add( HttpUtils.getUserIdFromSession(request), HttpUtils.getDepartmentIdFromRequestParameter(request) );
 		
 		return REDIRECT + 
 			ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
-	}
-
-	private long getUserId(HttpServletRequest request){
-		return HttpUtils.getUserIdFromSession(request);
-	}
-	
-	private long getDepartmentId(HttpServletRequest request){
-		return HttpUtils.getDepartmentIdFromSession(request);
-	}
-	
+	}	
 }

@@ -52,7 +52,7 @@ public class RegistrationPOSTCommand implements Command {
 
 		session.setAttribute("userId", idUser);
 
-		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
+		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}
 
 }

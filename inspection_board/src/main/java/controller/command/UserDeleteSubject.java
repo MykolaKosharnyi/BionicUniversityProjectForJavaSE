@@ -26,7 +26,7 @@ public class UserDeleteSubject implements Command {
 	}
 	
 	private long getSubjectId(HttpServletRequest request){
-		return HttpUtils.getSubjectIdFromSession(request);
+		return HttpUtils.getSubjectIdFromRequestParameter(request);
 	}
 
 }

@@ -103,8 +103,9 @@ public class Controller extends HttpServlet implements javax.servlet.Servlet {
 	
 	private void performForward(String viewName, HttpServletRequest request, HttpServletResponse response) {
         try {
+       	
             RequestDispatcher dispatcher = request.getRequestDispatcher(viewName);
-            dispatcher.forward(request, response);
+            dispatcher.forward(request, response);        
 
         } catch (ServletException | IOException e) {
             throw new DispatchException(String.format(DISPATCHING_TO_THE_VIEW_NAME, viewName), e);

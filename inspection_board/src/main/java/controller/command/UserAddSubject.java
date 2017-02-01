@@ -25,7 +25,7 @@ public class UserAddSubject implements Command {
 	}
 	
 	private long getSubjectId(HttpServletRequest request){
-		return HttpUtils.getSubjectIdFromSession(request);
+		return HttpUtils.getSubjectIdFromRequestParameter(request);
 	}
 	
 	private int getScopeId(HttpServletRequest request){
