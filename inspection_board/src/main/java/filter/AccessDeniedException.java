@@ -1,4 +1,4 @@
-package controller.security;
+package filter;
 
 public class AccessDeniedException extends RuntimeException {
 	private static final long serialVersionUID = 2587384739763809186L;
