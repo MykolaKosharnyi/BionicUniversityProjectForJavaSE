@@ -20,15 +20,15 @@ public class RequestHelper {
 		commands.put("/registration_post", new RegistrationPOSTCommand());
 		commands.put("/user_edit", new UserEditCommand());
 		commands.put("/user_edit_post", new UserEditPostCommand());
-		commands.put("/home", new HomeCommand());
 		commands.put("/logout", new LogoutCommand());
 		commands.put("/set_application_to_departments", new ApplicationToDepartments());
-		commands.put("/set_application_to_departments_post", new ApplicationToDepartmentsPostCommand());
-		commands.put("/delete_application_to_departments_post", new DeleteApplicationToDepartmentsPostCommand());
+		commands.put("/set_application_to_departments_post", new UserSendApplicationToDepartment());
+		commands.put("/delete_application_to_departments_post", new UserDeleteApplicationToDepartment());
+		commands.put("/position_in_ratings", new UserPositionInRating());
 
 		commands.put("/add_or_change_subject", new UserSubjectCommand());
-		commands.put("/add_or_change_post_subject", new UserSubjectPostCommand());
-		commands.put("/delete_user_subject", new DeleteUserSubjectCommand());
+		commands.put("/add_or_change_post_subject", new UserAddSubject());
+		commands.put("/delete_user_subject", new UserDeleteSubject());
 
 	}
 

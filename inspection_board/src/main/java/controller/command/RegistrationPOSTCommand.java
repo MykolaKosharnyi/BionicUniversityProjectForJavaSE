@@ -3,7 +3,6 @@ package controller.command;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -37,29 +36,23 @@ public class RegistrationPOSTCommand implements Command {
 			return ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 		}
 
-		User enrollee = new User();
-		enrollee.setFirstName(firstName);
-		enrollee.setSecondName(secondName);
-		enrollee.setEmail(email);
-		enrollee.setPhone(phone);
-		enrollee.setPassword(password);
+		User user = new User();
+		user.setFirstName(firstName);
+		user.setSecondName(secondName);
+		user.setEmail(email);
+		user.setPhone(phone);
+		user.setPassword(password);
 
 		// save in database
-		long idUser = enrolleeService.create(enrollee);
+		long idUser = enrolleeService.create(user);
 
 		// log in user
 		HttpSession session = request.getSession();
-		session.setAttribute("userName", email);
+		session.setAttribute("user", user);
 
 		session.setAttribute("userId", idUser);
-		// setting session to expiry in 30 mins
-		session.setMaxInactiveInterval(30 * 60);
 
-		Cookie userName = new Cookie("user", email);
-		userName.setMaxAge(30 * 60);
-		response.addCookie(userName);
-
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
+		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
 	}
 
 }

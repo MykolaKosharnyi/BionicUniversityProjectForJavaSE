@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,15 +52,10 @@ public class LoginPOSTCommand implements Command {
 
 				logger.info("user's id is" + idUser);
 				session.setAttribute("userId", idUser);
-				// setting session to expiry in 30 mins
-				session.setMaxInactiveInterval(30 * 60);
-
-				Cookie userName = new Cookie("user", login);
-				userName.setMaxAge(30 * 60);
-				response.addCookie(userName);
+				session.setAttribute("user", optionalUser.get());
 
 				try {
-					page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
+					page = REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PATH);
 				} catch (Exception ex) {
 					request.setAttribute("errorMessage",
 							MessageManager.getInstance().getProperty(MessageManager.LOGIN_ERROR_MESSAGE));
@@ -83,7 +77,7 @@ public class LoginPOSTCommand implements Command {
 			}
 		}
 
-		return FORWARD + page;
+		return page;
 	}
 
 }

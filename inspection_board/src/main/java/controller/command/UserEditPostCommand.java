@@ -47,7 +47,7 @@ public class UserEditPostCommand implements Command {
 		enrolleeService.update(new User.Builder().setId(id).setFirstName(firstName).setSecondName(secondName)
 				.setEmail(email).setPhone(phone).setPassword(password).build());
 
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.ENROLLEE_HOME_PAGE);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PATH);
 	}
 
 }
