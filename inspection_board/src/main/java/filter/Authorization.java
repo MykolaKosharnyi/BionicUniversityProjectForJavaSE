@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import controller.HttpUtils;
 import model.entity.User;
 
 import static controller.ApplicationResources.*;
@@ -20,13 +19,8 @@ final class Authorization {
 
     static {
         User.Role admin = User.Role.ADMIN;
-
-//        permissionMapping.put(GET_ALL_USERS_REQUEST_PATTERN, admin);
-//        permissionMapping.put(GET_CREATE_PERIODICAL_REQUEST_PATTERN, admin);
-//        permissionMapping.put(GET_UPDATE_PERIODICAL_REQUEST_PATTERN, admin);
-//        permissionMapping.put(POST_PERSIST_PERIODICAL_REQUEST_PATTERN, admin);
-//        permissionMapping.put(POST_DELETE_PERIODICALS_REQUEST_PATTERN, admin);
-//        permissionMapping.put(GET_ADMIN_PANEL_REQUEST_PATTERN, admin);
+        permissionMapping.put("/admin_subjects", admin);
+        permissionMapping.put("/admin_departments", admin);
     }
 
     private Authorization() {

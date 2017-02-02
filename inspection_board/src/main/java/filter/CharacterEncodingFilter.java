@@ -15,19 +15,9 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter("/*")
 public class CharacterEncodingFilter implements Filter {
 
-	/**
-	 * Default constructor.
-	 */
-	public CharacterEncodingFilter() {
+	public CharacterEncodingFilter() {}
 
-	}
-
-	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-
-	}
+	public void destroy() {}
 
 	/**
 	 * Main filter method for encoding actuation to UTF-8.
@@ -37,16 +27,10 @@ public class CharacterEncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
 		chain.doFilter(request, response);
 	}
 
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-
-	}
+	public void init(FilterConfig fConfig) throws ServletException {}
 
 }

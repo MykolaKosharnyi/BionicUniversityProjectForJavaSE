@@ -45,7 +45,7 @@ public class AuthenticationFilter implements Filter {
         }
 
         User currentUser = HttpUtils.getCurrentUserFromFromDb(request);
-
+//TODO not use HARDCODE
         if (isNull(currentUser)) {
             response.sendRedirect("login");
         } else {
