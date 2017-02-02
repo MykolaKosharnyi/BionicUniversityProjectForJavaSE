@@ -11,13 +11,13 @@ import org.apache.log4j.Logger;
 
 import controller.ConfigurationManager;
 import model.entity.User;
-import model.service.UserService;
+import model.service.impl.UserServiceImpl;
 
 public class RegistrationPOSTCommand implements Command {
 
 	static Logger logger = Logger.getLogger(RegistrationPOSTCommand.class);
 
-	UserService enrolleeService = UserService.getInstance();
+	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

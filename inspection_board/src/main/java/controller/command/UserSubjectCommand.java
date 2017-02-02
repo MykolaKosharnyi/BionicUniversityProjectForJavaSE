@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
-import model.service.CertificateService;
-import model.service.SubjectService;
+import model.service.impl.CertificateServiceImpl;
+import model.service.impl.SubjectServiceImpl;
 
 public class UserSubjectCommand implements Command {
 
-	CertificateService certificateService = CertificateService.getInstance();
-	SubjectService subjectService = SubjectService.getInstance();
+	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

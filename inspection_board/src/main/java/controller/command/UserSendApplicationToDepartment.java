@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
-import model.service.SheetService;
+import model.service.impl.SheetServiceImpl;
 
 public class UserSendApplicationToDepartment implements Command {
-	SheetService sheetService = SheetService.getInstance();
+	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException {	
 		sheetService.add( HttpUtils.getUserIdFromSession(request), HttpUtils.getDepartmentIdFromRequestParameter(request) );
 		
 		return REDIRECT + 

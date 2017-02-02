@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import controller.ConfigurationManager;
 import controller.HttpUtils;
 import model.entity.User;
-import model.service.UserService;
+import model.service.impl.UserServiceImpl;
 
 public class UserEditCommand implements Command {
 
-	UserService enrolleeService = UserService.getInstance();
+	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

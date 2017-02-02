@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
-import model.service.SheetService;
+import model.service.impl.SheetServiceImpl;
 
 public class UserDeleteApplicationToDepartment implements Command {
-	SheetService sheetService = SheetService.getInstance();
+	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import controller.command.admin.AdminDepartments;
+import controller.command.admin.AdminSubject;
+
 public class RequestHelper {
 
 	private static Logger logger = Logger.getLogger(RequestHelper.class);
@@ -29,6 +32,9 @@ public class RequestHelper {
 		commands.put("/add_or_change_subject", new UserSubjectCommand());
 		commands.put("/add_or_change_post_subject", new UserAddSubject());
 		commands.put("/delete_user_subject", new UserDeleteSubject());
+		
+		commands.put("/admin_subjects", new AdminSubject());
+		commands.put("/admin_departments", new AdminDepartments());
 
 	}
 
