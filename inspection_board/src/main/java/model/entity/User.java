@@ -2,7 +2,12 @@ package model.entity;
 
 import java.io.Serializable;
 
-public class User implements Serializable {// Вступник
+/**
+ * Entity of user  
+ * @author nikolay
+ *
+ */
+public class User implements Serializable, Comparable<User> {
 	private static final long serialVersionUID = 1482272761478193542L;
 	private long id;
 	private String firstName;
@@ -11,20 +16,12 @@ public class User implements Serializable {// Вступник
 	private String phone;
 	private String password;
 
-	private Certificate certificate;// аттестат
+	private Certificate certificate;
 	
-	/**
-     * Only {@code active} users can sign into the system.
-     */
-    private Status status;
     /**
      * Role define specific system functionality available to a user.
      */
     private Role role;
-
-    public enum Status {
-        ACTIVE, BLOCKED
-    }
 
     public enum Role {
         ADMIN, ENROLLEE;
@@ -55,6 +52,7 @@ public class User implements Serializable {// Вступник
 		private String phone;
 		private String password;
 		private Certificate certificate;
+		private Role role;
 
 		public Builder setId(long id) {
 			this.id = id;
@@ -90,6 +88,11 @@ public class User implements Serializable {// Вступник
 			this.certificate = certificate;
 			return this;
 		}
+		
+		public Builder setRole(Role role) {
+			this.role = role;
+			return this;
+		}
 
 		public User build() {
 			User user = new User();
@@ -100,6 +103,7 @@ public class User implements Serializable {// Вступник
 			user.setPhone(phone);
 			user.setPassword(password);
 			user.setCertificate(certificate);
+			user.setRole(role);
 			return user;
 		}
 	}
@@ -159,14 +163,6 @@ public class User implements Serializable {// Вступник
 	public void setCertificate(Certificate certificate) {
 		this.certificate = certificate;
 	}
-	
-	public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 
     public Role getRole() {
         return role;
@@ -187,7 +183,12 @@ public class User implements Serializable {// Вступник
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", secondName=" + secondName + ", email=" + email
-				+ ", phone=" + phone + ", certificate=" + certificate + ", status=" + status + ", role=" + role + "]";
+				+ ", phone=" + phone + ", certificate=" + certificate + ", role=" + role + "]";
+	}
+
+	@Override
+	public int compareTo(User user) {
+		return (int) (this.certificate.getAverageRating() - user.certificate.getAverageRating());
 	}
 
 }

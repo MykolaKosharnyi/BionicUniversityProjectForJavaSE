@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class Sheet {// Ведомость
+public class Sheet {
 	private Map<Department, List<User>> table;
 
 	public Sheet() {}
@@ -22,13 +22,14 @@ public class Sheet {// Ведомость
 		StringBuilder tableString = new StringBuilder();
 		Iterator<Department> iterator = table.keySet().iterator();
 		
+		//TODO
 		while( iterator.hasNext() ){
 			Department currectDepartment = iterator.next();
-			tableString.append("{");
-			tableString.append( currectDepartment.getNameDepartment() );
-			tableString.append(" : ");
-			tableString.append( table.get(currectDepartment).toString() );
-			tableString.append("}");
+			tableString.append("{")
+				.append( currectDepartment.getNameDepartment() )
+				.append(" : ")
+				.append( table.get(currectDepartment).toString() )
+				.append("}");
 			
 			if( iterator.hasNext() ){
 				tableString.append(", ");

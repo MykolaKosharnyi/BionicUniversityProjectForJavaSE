@@ -15,15 +15,24 @@ import model.entity.Certificate;
 import model.entity.User;
 
 public class JDBCUserDao implements UserDao {
+	private static final long ID_USER_ROLE = 1;
+	
+	private static final String SELECTED_ROWS = "enrollee.id as id, firstName, secondName, email, "
+			+ "phone, password, role.name as role";
+	private static final String JOIN_ROLE_TABLE = "LEFT JOIN role ON enrollee.id_role=role.id";
+	
 	private static final String INSERT_INTO_ENROLLEE = "INSERT INTO enrollee "
-			+ "(firstName, secondName, email, phone, password) values (?,?,?,?,?)";
-	private static final String SELECT_BY_ID = "SELECT * FROM enrollee WHERE ID = ?";
-	private static final String SELECT_ALL = "SELECT * FROM enrollee ";
+			+ "(firstName, secondName, email, phone, password, id_role) values (?,?,?,?,?," + ID_USER_ROLE + ")";
+	private static final String SELECT_BY_ID = "SELECT " + SELECTED_ROWS + " FROM enrollee " + JOIN_ROLE_TABLE 
+			+ " WHERE enrollee.id = ?";
+	private static final String SELECT_ALL = "SELECT " + SELECTED_ROWS + " FROM enrollee " + JOIN_ROLE_TABLE;
 	private static final String UPDATE_ENROLLEE = "UPDATE enrollee SET firstName = ?, "
 			+ "secondName = ?, email = ?, phone = ?, password = ? WHERE id = ? ";
 	private static final String DELETE_FROM_ENROLLEE = "DELETE FROM enrollee WHERE id = ?";
-	private static final String CHECK_LOGIN = "SELECT * FROM enrollee WHERE email = ? AND password = ?";
-	private static final String FIND_BY_EMAIL = "SELECT * FROM enrollee WHERE email = ?";
+	private static final String CHECK_LOGIN = "SELECT " + SELECTED_ROWS + " FROM enrollee " + JOIN_ROLE_TABLE + 
+			" WHERE email = ? AND password = ?";
+	private static final String FIND_BY_EMAIL = "SELECT " + SELECTED_ROWS + " FROM enrollee " + JOIN_ROLE_TABLE + 
+			" WHERE email = ?";
 	
 	private static final String EXCEPTION_MSG_CREATE_NEW_USER =
             "Exception during writing new user to database, user = %s";
@@ -104,7 +113,9 @@ public class JDBCUserDao implements UserDao {
 				.setEmail(rs.getString("email"))
 				.setPhone(rs.getString("phone"))
 				.setPassword(rs.getString("password"))
-				.setCertificate(getCertificate(idUser)).build();
+				.setCertificate(getCertificate(idUser))
+				.setRole(User.Role.valueOf(rs.getString("role").toUpperCase()))
+				.build();
 		return user;
 	}
 
@@ -117,7 +128,8 @@ public class JDBCUserDao implements UserDao {
 	public List<User> findAll() {
 		List<User> enrollee = new ArrayList<User>();
 
-		try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(SELECT_ALL);) {
+		try (Statement st = connection.createStatement(); 
+				ResultSet rs = st.executeQuery(SELECT_ALL)) {
 
 			while (rs.next()) {
 				enrollee.add(getUserFromResultSet(rs));

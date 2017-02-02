@@ -1,8 +1,10 @@
 package model.entity;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Certificate {// аттестат
+public class Certificate implements Serializable{
+	private static final long serialVersionUID = 1L;	
 	private Map<Subject, Integer> itemsWithEstimates;
 
 	public double getAverageRating() {
@@ -11,7 +13,7 @@ public class Certificate {// аттестат
 		for (Map.Entry<Subject, Integer> entry : itemsWithEstimates.entrySet())
 			sumOfAllSubjects += entry.getValue();
 
-		return itemsWithEstimates.size() > 0 ? (double) sumOfAllSubjects / itemsWithEstimates.size() : 0;
+		return itemsWithEstimates.size() > 0 ?  sumOfAllSubjects / itemsWithEstimates.size() : 0;
 	}
 
 	/**

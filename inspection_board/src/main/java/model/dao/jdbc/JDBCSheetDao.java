@@ -4,8 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,14 +16,15 @@ import model.dao.SheetDao;
 import model.dao.exception.DaoException;
 import model.entity.Department;
 import model.entity.Sheet;
+import model.entity.Subject;
 import model.entity.User;
 
 public class JDBCSheetDao implements SheetDao {
-	private static final String INSERT_INTO_SHEET = "INSERT INTO sheet (id_enrollee, id_department) values (?,?)";
-	private static final String SELECT_BY_ID = "SELECT id_department, id_enrollee FROM sheet; ";
-	private static final String DELETE_FROM_SHEET_BY_DEPARTMENT = "DELETE FROM sheet WHERE id_department = ?";
-	private static final String DELETE_FROM_SHEET_BY_ENROLLEE = "DELETE FROM sheet WHERE id_enrollee  = ?";
-	private static final String DELETE_FROM_SHEET_BY_ENROLLEE_AND_DEPARTMENT = "DELETE FROM sheet WHERE id_enrollee  = ? and id_department = ?";
+	private static final String INSERT_INTO_SHEET = "INSERT INTO sheet (id_enrollee, id_department) values (?,?);";
+	private static final String SELECT_BY_ID = "SELECT DISTINCT * FROM sheet;";
+	private static final String DELETE_FROM_SHEET_BY_DEPARTMENT = "DELETE FROM sheet WHERE id_department = ?;";
+	private static final String DELETE_FROM_SHEET_BY_ENROLLEE = "DELETE FROM sheet WHERE id_enrollee = ?;";
+	private static final String DELETE_FROM_SHEET_BY_ENROLLEE_AND_DEPARTMENT = "DELETE FROM sheet WHERE id_enrollee  = ? and id_department = ?;";
 	private static final String EXCEPTION_MSG_ADD_USER_TO_SHEET =
 			"Exception during adding User with id=%d to sheet, idDepartment=%d";
 	private static final String EXCEPTION_MSG_GET_SHEET = 
@@ -41,23 +43,18 @@ public class JDBCSheetDao implements SheetDao {
 	}
 
 	@Override
-	public long add(long idEnrollee, long idDepartment) {
-		long result = 0;
-		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_SHEET, Statement.RETURN_GENERATED_KEYS)) {
+	public void add(long idEnrollee, long idDepartment) {
+		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_SHEET)) {
 
 			st.setLong(1, idEnrollee);
 			st.setLong(2, idDepartment);
 			st.executeUpdate();
 
-			try (ResultSet key = st.getGeneratedKeys()) {
-				if (key.next())
-					result = key.getInt(1);
-			}
 		} catch (SQLException e) {
 			String message = String.format(EXCEPTION_MSG_ADD_USER_TO_SHEET, idEnrollee, idDepartment);
+			System.err.println(e);
             throw new DaoException(message, e);
 		}
-		return result;
 	}
 
 	@Override
@@ -71,6 +68,7 @@ public class JDBCSheetDao implements SheetDao {
 			String message = String.format(EXCEPTION_MSG_GET_SHEET);
             throw new DaoException(message, e);
 		}
+
 		result.setTable(table);
 		return result;
 	}
@@ -90,7 +88,8 @@ public class JDBCSheetDao implements SheetDao {
 			User enrollee = getUserFromListById(enrolleeList, sheetRS.getLong("id_enrollee"));
 
 			if (result.containsKey(department)) {
-				List<User> listConcreteEnrollee = result.get(department);
+				List<User> listConcreteEnrollee = result.get(department);				
+				//Collections.sort(listConcreteEnrollee);
 				listConcreteEnrollee.add(enrollee);
 			} else {
 				List<User> listConcreteEnrollee = new ArrayList<>();
@@ -98,7 +97,17 @@ public class JDBCSheetDao implements SheetDao {
 				result.put(department, listConcreteEnrollee);
 			}
 		}
-		return result;
+		return sortUsersByRating(result);
+	}
+	
+	private Map<Department, List<User>> sortUsersByRating(Map<Department, List<User>> needToSort){
+		
+		for( Map.Entry<Department, List<User>> entry : needToSort.entrySet() ){
+			List<User> listToSort = entry.getValue();
+			Collections.sort(listToSort);
+			needToSort.put(entry.getKey(), listToSort);			
+			}		
+		return needToSort;
 	}
 
 	private Department getDepartmentFromListById(List<Department> departmentList, long departmentId) {
