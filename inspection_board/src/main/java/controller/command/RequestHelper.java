@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import controller.command.admin.AdminAddDepartments;
+import controller.command.admin.AdminAddSubject;
+import controller.command.admin.AdminDeleteDepartments;
+import controller.command.admin.AdminDeleteSubject;
 import controller.command.admin.AdminDepartments;
 import controller.command.admin.AdminSubject;
 
@@ -35,6 +39,11 @@ public class RequestHelper {
 		
 		commands.put("/admin_subjects", new AdminSubject());
 		commands.put("/admin_departments", new AdminDepartments());
+		commands.put("/admin_add_department", new AdminAddDepartments());
+		commands.put("/admin_delete_department", new AdminDeleteDepartments());
+		commands.put("/admin_add_subject", new AdminAddSubject());
+		commands.put("/admin_delete_subject", new AdminDeleteSubject());
+
 
 	}
 

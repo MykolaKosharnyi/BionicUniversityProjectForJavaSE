@@ -5,7 +5,6 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      	<li><a href="<c:url value='./position_in_ratings' />">Show rating</a></li>
       	<li><a href="<c:url value='./admin_departments' />">Departments</a></li>
       	<li><a href="<c:url value='./admin_subjects' />">Subjects</a></li>
       </ul>

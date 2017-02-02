@@ -13,14 +13,6 @@ h3 {
 	margin: 30px 0;
 }
 
-/*a {
-	background: greenyellow;
-	border-radius: 5px;
-	padding: 5px;
-	margin: 0 10px;
-	color: #872c1e;
-}*/
-
 .navbar-default .navbar-nav > li > a{
 	max-width: 165px;
 }
@@ -36,4 +28,10 @@ h3 {
 
 .errorMessage{
 	color: red; border: 1px solid red; padding: 5px; margin: 10px 0px;
+}
+
+.explanationInTable{
+	padding: 10px; 
+	border-radius: 5px; 
+	width: 50%;
 }

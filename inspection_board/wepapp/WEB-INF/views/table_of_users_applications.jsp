@@ -16,6 +16,11 @@
 
 	<h3 style="padding-top: 70px;" 
 	class="text-center">At this page you can see all send users application to all departments</h3>
+	<h4 class="bg-warning" style="padding: 10px; border-radius: 5px;width: 50%;border: 1px solid black;">Available number of places at the Faculty</h4>
+	<c:if test="${!empty user}">
+		<h4 class="bg-success" style="padding: 10px; border-radius: 5px;width: 50%;border: 1px solid black;margin-bottom: 50px;">Your position in the rating</h4>
+	</c:if>
+	
 
 	<c:forEach items="${sheet.table}" var="item_departmnet" varStatus="loop">
 	
@@ -29,10 +34,11 @@
 			</tr>
 			
 			<c:forEach items="${item_departmnet.value}" var="item" varStatus="loop">
-				<tr <c:if test="${user.id == item.id}">class="success"</c:if>>
+				<tr class="<c:if test="${user.id == item.id}">success</c:if>
+				<c:if test="${((item_departmnet.key.maxAmountStudent-(loop.index+1)) > 0)&&(user.id != item.id)}">warning</c:if>">
 					<td class="text-center">${loop.index + 1}</td>
-					<td class="text-center">${item.firstName}</td>
-					<td class="text-center">${item.secondName}</td>
+					<td class="text-center"><c:out value="${item.firstName}" /></td>
+					<td class="text-center"><c:out value="${item.secondName}" /></td>
 					<td class="text-center"><fmt:formatNumber type="number" maxFractionDigits="2"
 					 minFractionDigits="2" value="${item.certificate.getAverageRating()}" />
 					</td>

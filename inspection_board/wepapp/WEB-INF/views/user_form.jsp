@@ -17,13 +17,12 @@
 
 </head>
 <body>
-	<c:if test="${user.id!=0}">
+	<c:if test="${!empty user && user.id!=0}">
 		<jsp:include page="/WEB-INF/views/user_navigation.jsp" />
 	</c:if>
 
 <c:if test="${empty user || user.id==0}">
-	<h3 <c:if test="${empty user || user.id==0}">style="padding-top: 70px;"</c:if>
-		class="text-center">At this page you can register your account</h3>
+	<h3 class="text-center">At this page you can register your account</h3>
 </c:if>
 	
 <c:if test="${!empty user && user.id!=0}">	
