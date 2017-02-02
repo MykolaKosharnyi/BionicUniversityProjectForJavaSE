@@ -32,7 +32,5 @@ public class UserEditPostCommand implements Command {
 
 		return FORWARD + configurationManger.getProperty(ConfigurationManager.USER_EDIT_PATH);
 	}
-	
-	
 
 }

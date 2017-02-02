@@ -14,6 +14,7 @@ import model.service.impl.UserServiceImpl;
 
 public class RegistrationPOSTCommand implements Command {
 	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 	UserValidation validation;
 
 	@Override
@@ -26,7 +27,7 @@ public class RegistrationPOSTCommand implements Command {
 		if (!validation.validate(request)) {
 			request.setAttribute("user", validation.getUser());
 			return FORWARD + "/WEB-INF/views/user_form.jsp"
-					/*ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE)*/;
+					/*configurationManger.getProperty(ConfigurationManager.REGISTRATION_PAGE)*/;
 		}
 
 		long idUser = enrolleeService.create(user);
@@ -34,7 +35,7 @@ public class RegistrationPOSTCommand implements Command {
 		session.setAttribute("user", user);
 		session.setAttribute("userId", idUser);
 
-		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
+		return REDIRECT + configurationManger.getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}
 	
 }

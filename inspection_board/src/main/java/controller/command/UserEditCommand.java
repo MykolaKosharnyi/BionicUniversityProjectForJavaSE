@@ -13,8 +13,8 @@ import model.entity.User;
 import model.service.impl.UserServiceImpl;
 
 public class UserEditCommand implements Command {
-
 	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -23,6 +23,6 @@ public class UserEditCommand implements Command {
 		Optional<User> optionalUser = enrolleeService.find( HttpUtils.getUserIdFromSession(request) );
 		request.setAttribute("user", optionalUser.get());
 
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_EDIT_PAGE);
+		return FORWARD + configurationManger.getProperty(ConfigurationManager.USER_EDIT_PAGE);
 	}
 }

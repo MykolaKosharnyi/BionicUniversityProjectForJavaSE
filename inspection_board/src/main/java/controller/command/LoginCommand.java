@@ -9,10 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import controller.ConfigurationManager;
 
 public class LoginCommand implements Command {
-
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {		
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+		return FORWARD + configurationManger.getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 	}
 }

@@ -12,14 +12,14 @@ import model.service.impl.SheetServiceImpl;
 
 public class UserDeleteApplicationToDepartment implements Command {
 	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		sheetService.deleteEnrolleeFromDepartment(getUserId(request), getDepartmentId(request));
 		
-		return REDIRECT +
-		ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
+		return REDIRECT + configurationManger.getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}
 	
 	private long getUserId(HttpServletRequest request){

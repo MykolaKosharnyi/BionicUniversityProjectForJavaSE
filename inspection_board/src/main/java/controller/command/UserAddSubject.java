@@ -12,12 +12,13 @@ import model.service.impl.CertificateServiceImpl;
 
 public class UserAddSubject implements Command {
 	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		certificateService.addSubject( getUserId(request), getSubjectId(request), getScopeId(request) );
-		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_SUBJECTS_PATH);
+		return REDIRECT + configurationManger.getProperty(ConfigurationManager.USER_SUBJECTS_PATH);
 	}
 	
 	private long getUserId(HttpServletRequest request){

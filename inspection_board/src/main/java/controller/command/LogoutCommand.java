@@ -10,7 +10,8 @@ import javax.servlet.http.HttpSession;
 import controller.ConfigurationManager;
 
 public class LogoutCommand implements Command {
-
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -19,7 +20,7 @@ public class LogoutCommand implements Command {
 		if (session != null) {
 			session.invalidate();
 		}
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+		return FORWARD + configurationManger.getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
 	}
 
 }

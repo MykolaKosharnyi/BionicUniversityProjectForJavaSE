@@ -12,13 +12,13 @@ import model.service.impl.SheetServiceImpl;
 
 public class UserSendApplicationToDepartment implements Command {
 	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {	
 		sheetService.add( HttpUtils.getUserIdFromSession(request), HttpUtils.getDepartmentIdFromRequestParameter(request) );
 		
-		return REDIRECT + 
-			ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
+		return REDIRECT + configurationManger.getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}	
 }

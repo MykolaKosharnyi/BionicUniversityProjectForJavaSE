@@ -12,9 +12,9 @@ import model.service.impl.CertificateServiceImpl;
 import model.service.impl.SubjectServiceImpl;
 
 public class UserSubjectCommand implements Command {
-
 	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
 	SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -22,6 +22,6 @@ public class UserSubjectCommand implements Command {
 		request.setAttribute("subjects", subjectService.findAll());
 		request.setAttribute("user_subjects", certificateService.find( HttpUtils.getUserIdFromSession(request) ));
 
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
+		return FORWARD + configurationManger.getProperty(ConfigurationManager.CHANGE_SUBJECT_USER);
 	}
 }
