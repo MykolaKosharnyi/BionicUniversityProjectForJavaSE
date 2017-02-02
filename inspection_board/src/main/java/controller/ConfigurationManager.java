@@ -24,6 +24,7 @@ public class ConfigurationManager {
 	public static final String DEPARTMENTS_ADMIN = "DEPARTMENTS_ADMIN";
 	
 	public static final String DEPARTMENTS_ADMIN_PATH = "DEPARTMENTS_ADMIN_PATH";
+	public static final String SUBJECT_ADMIN_PATH = "SUBJECT_ADMIN_PATH";
 	
 	public static final String PAGE_404_VIEW_NAME = "PAGE_404_VIEW_NAME";
     public static final String STORAGE_EXCEPTION_PAGE_VIEW_NAME = "STORAGE_EXCEPTION_PAGE_VIEW_NAME";

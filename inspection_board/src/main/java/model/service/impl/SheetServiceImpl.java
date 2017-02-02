@@ -1,8 +1,11 @@
 package model.service.impl;
 
+import java.util.List;
+
 import model.dao.DaoConnection;
 import model.dao.DaoFactory;
 import model.dao.SheetDao;
+import model.entity.Department;
 import model.entity.Sheet;
 import model.service.SheetService;
 
@@ -60,6 +63,14 @@ public class SheetServiceImpl implements SheetService{
 			SheetDao dao = daoFactory.createSheetDao(connection);
 			dao.deleteEnrolleeFromDepartment(idEnrollee, idDepartment);
 			connection.commit();
+		}
+	}
+
+	@Override
+	public List<Department> findByEnrolleeId(long idEnrollee) {
+		try (DaoConnection connection = daoFactory.getConnection()) {
+			SheetDao dao = daoFactory.createSheetDao(connection);
+			return dao.findByEnrolleeId(idEnrollee);
 		}
 	}
 

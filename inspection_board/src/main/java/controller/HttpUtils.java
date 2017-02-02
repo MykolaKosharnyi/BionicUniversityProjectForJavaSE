@@ -60,8 +60,7 @@ public final class HttpUtils {
     /**
      * Sends a redirect on this response.
      */
-    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response,
-                                    String redirectUri) {
+    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUri) {
         try {
             response.sendRedirect(redirectUri);
 

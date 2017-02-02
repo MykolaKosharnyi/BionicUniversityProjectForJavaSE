@@ -16,8 +16,8 @@ import model.entity.Department;
 import model.entity.Subject;
 
 public class JDBCDepartmentDao implements DepartmentDao {
-	private static final String INSERT_INTO_DEPARTMENT = "INSERT INTO department (name, max_enrollee) values ";
-	private static final String INSERT_INTO_DEPARTMENT_SUBJECT = "INSERT INTO department_subject (id_department, id_subject) values (?,?)";
+	private static final String INSERT_INTO_DEPARTMENT = "INSERT INTO department (name, max_enrollee) values (?,?)";
+	private static final String INSERT_INTO_DEPARTMENT_SUBJECT = "INSERT INTO department_subject (id_department, id_subject) values";
 	private static final String SELECT_BY_ID = "SELECT * FROM department WHERE id_department = ?";
 	private static final String SELECT_SUBJECTS = "SELECT subject.id_subject AS id_subject, subject.name AS name"
 			+ " FROM department_subject" + " INNER JOIN subject "
@@ -69,7 +69,6 @@ public class JDBCDepartmentDao implements DepartmentDao {
 			String message = String.format(EXCEPTION_MSG_CREATE_NEW_DEPARTMENT, department);
             throw new DaoException(message, e);
 		}
-
 		saveSubjectsToDatabase(department);
 
 		return result;
@@ -88,19 +87,18 @@ public class JDBCDepartmentDao implements DepartmentDao {
 
 		while (iterator.hasNext()) {
 			Subject currentSubject = iterator.next();
-			valuesToInsert.append("(");
-			valuesToInsert.append(department.getId());
-			valuesToInsert.append(",");
-			valuesToInsert.append(currentSubject.getId());
-			valuesToInsert.append(")");
+			valuesToInsert.append("(")
+			.append(department.getId())
+			.append(",")
+			.append(currentSubject.getId())
+			.append(")");
 
 			if (iterator.hasNext()) {
 				valuesToInsert.append(", ");
 			}
 		}
 
-		try (PreparedStatement st = connection
-				.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT + valuesToInsert.toString())) {
+		try (PreparedStatement st = connection.prepareStatement(INSERT_INTO_DEPARTMENT_SUBJECT + valuesToInsert.toString())) {
 			st.executeUpdate();
 		} catch (SQLException e) {
 			String message = String.format(EXCEPTION_MSG_SAVE_SUBJECTS, department);

@@ -32,8 +32,7 @@ public class User implements Serializable, Comparable<User> {
         }
     }
 
-	public User() {
-	}
+	public User() {}
 
 	public User(long id, String firstName, String secondName, String email, String phone, String password) {
 		this.id = id;
@@ -188,7 +187,7 @@ public class User implements Serializable, Comparable<User> {
 
 	@Override
 	public int compareTo(User user) {
-		return (int) (this.certificate.getAverageRating() - user.certificate.getAverageRating());
+		return (int) -(int)(this.certificate.getAverageRating()*100 - user.certificate.getAverageRating()*100);
 	}
 
 }

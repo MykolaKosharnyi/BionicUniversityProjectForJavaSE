@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +15,12 @@ import model.dao.SheetDao;
 import model.dao.exception.DaoException;
 import model.entity.Department;
 import model.entity.Sheet;
-import model.entity.Subject;
 import model.entity.User;
 
 public class JDBCSheetDao implements SheetDao {
 	private static final String INSERT_INTO_SHEET = "INSERT INTO sheet (id_enrollee, id_department) values (?,?);";
 	private static final String SELECT_BY_ID = "SELECT DISTINCT * FROM sheet;";
+	private static final String SELECT_BY_ENROLLEE_ID = "SELECT DISTINCT id_department FROM sheet WHERE id_enrollee = ?;";
 	private static final String DELETE_FROM_SHEET_BY_DEPARTMENT = "DELETE FROM sheet WHERE id_department = ?;";
 	private static final String DELETE_FROM_SHEET_BY_ENROLLEE = "DELETE FROM sheet WHERE id_enrollee = ?;";
 	private static final String DELETE_FROM_SHEET_BY_ENROLLEE_AND_DEPARTMENT = "DELETE FROM sheet WHERE id_enrollee  = ? and id_department = ?;";
@@ -35,6 +34,8 @@ public class JDBCSheetDao implements SheetDao {
 			"Exception during deleting ENROLLEE frim sheet with idEnrollee = %d";
 	private static final String EXCEPTION_MSG_DELETE_ENROLLEE_FROM_DEPARTMENT = 
 			"Exception during deleting Enrollee with id=%d from Department wiht id=%d";
+	private static final String EXCEPTION_MSG_SELECT_BY_ENROLLEE_ID = 
+			"Exception during selecting by enrollee id=%d.";
 	
 	private Connection connection;
 
@@ -52,7 +53,6 @@ public class JDBCSheetDao implements SheetDao {
 
 		} catch (SQLException e) {
 			String message = String.format(EXCEPTION_MSG_ADD_USER_TO_SHEET, idEnrollee, idDepartment);
-			System.err.println(e);
             throw new DaoException(message, e);
 		}
 	}
@@ -89,7 +89,6 @@ public class JDBCSheetDao implements SheetDao {
 
 			if (result.containsKey(department)) {
 				List<User> listConcreteEnrollee = result.get(department);				
-				//Collections.sort(listConcreteEnrollee);
 				listConcreteEnrollee.add(enrollee);
 			} else {
 				List<User> listConcreteEnrollee = new ArrayList<>();
@@ -100,13 +99,12 @@ public class JDBCSheetDao implements SheetDao {
 		return sortUsersByRating(result);
 	}
 	
-	private Map<Department, List<User>> sortUsersByRating(Map<Department, List<User>> needToSort){
-		
+	private Map<Department, List<User>> sortUsersByRating(Map<Department, List<User>> needToSort){		
 		for( Map.Entry<Department, List<User>> entry : needToSort.entrySet() ){
 			List<User> listToSort = entry.getValue();
 			Collections.sort(listToSort);
 			needToSort.put(entry.getKey(), listToSort);			
-			}		
+		}		
 		return needToSort;
 	}
 
@@ -157,7 +155,6 @@ public class JDBCSheetDao implements SheetDao {
 			String message = String.format(EXCEPTION_MSG_DELETE_ENROLLEE_FROM_SHEET, idEnrollee);
             throw new DaoException(message, e);
 		}
-
 	}
 
 	@Override
@@ -172,6 +169,29 @@ public class JDBCSheetDao implements SheetDao {
 			String message = String.format(EXCEPTION_MSG_DELETE_ENROLLEE_FROM_DEPARTMENT, idEnrollee, idDepartment);
             throw new DaoException(message, e);
 		}
+	}
+
+	@Override
+	public List<Department> findByEnrolleeId(long idEnrollee) {
+		try (PreparedStatement st = connection.prepareStatement(SELECT_BY_ENROLLEE_ID)) {
+
+			st.setLong(1, idEnrollee);
+			return getDepartmnetFromResultSet( st.executeQuery() );
+
+		} catch (SQLException e) {
+			String message = String.format(EXCEPTION_MSG_SELECT_BY_ENROLLEE_ID, idEnrollee);
+            throw new DaoException(message, e);
+		}
+	}
+	
+	private List<Department> getDepartmnetFromResultSet(ResultSet departmentsResult) throws SQLException{
+		List<Department> result = new ArrayList<Department>();
+		JDBCDepartmentDao departmentDAO = new JDBCDepartmentDao(connection);
+		
+		while (departmentsResult.next()) {
+			result.add(departmentDAO.find(departmentsResult.getLong("id_department")).get());
+		}		
+		return result;
 	}
 
 }
