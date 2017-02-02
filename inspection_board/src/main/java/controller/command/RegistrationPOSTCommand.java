@@ -7,50 +7,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
-
 import controller.ConfigurationManager;
+import controller.validation.UserValidation;
 import model.entity.User;
 import model.service.impl.UserServiceImpl;
 
 public class RegistrationPOSTCommand implements Command {
-
-	static Logger logger = Logger.getLogger(RegistrationPOSTCommand.class);
-
 	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	UserValidation validation;
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String firstName = request.getParameter(ParameterContants.PARAM_FIRSTNAME);
-		String secondName = request.getParameter(ParameterContants.PARAM_SECONDNAME);
-		String email = request.getParameter(ParameterContants.PARAM_EMAIL);
-		String phone = request.getParameter(ParameterContants.PARAM_PHONE);
-		String password = request.getParameter(ParameterContants.PARAM_PASSWORD);
-		String repeatPassword = request.getParameter(ParameterContants.PARAM_REPEAT_PASSWORD);
+		User user = new User();
+		validation = new UserValidation(user);
 
-		if (!password.equals(repeatPassword)) {
-			request.setAttribute("errorMessage", "Password and repeadPassword are different!!!");
-
-			return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE);
+		if (!validation.validate(request)) {
+			request.setAttribute("user", validation.getUser());
+			return FORWARD + "/WEB-INF/views/user_form.jsp"
+					/*ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE)*/;
 		}
 
-		User user = new User();
-		user.setFirstName(firstName);
-		user.setSecondName(secondName);
-		user.setEmail(email);
-		user.setPhone(phone);
-		user.setPassword(password);
-
 		long idUser = enrolleeService.create(user);
-
 		HttpSession session = request.getSession();
 		session.setAttribute("user", user);
-
 		session.setAttribute("userId", idUser);
 
 		return REDIRECT + ConfigurationManager.getInstance().getProperty(ConfigurationManager.USER_APPLICATION_DEPARTMENT_PATH);
 	}
-
+	
 }

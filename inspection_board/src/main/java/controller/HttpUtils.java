@@ -53,7 +53,8 @@ public final class HttpUtils {
      * Retrieves a user object from the db for the current user from the request.
      */
     public static User getCurrentUserFromFromDb(HttpServletRequest request) {
-        return userService.find(getUserIdFromSession(request)).get();
+    	User user = (User) request.getSession().getAttribute(CURRENT_USER_ATTR_NAME);
+        return userService.find(user.getId()).get();
     }
     
     /**

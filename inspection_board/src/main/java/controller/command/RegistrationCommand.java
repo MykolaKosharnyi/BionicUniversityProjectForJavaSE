@@ -6,15 +6,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controller.ConfigurationManager;
-
 public class RegistrationCommand implements Command {
+	
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE);
+		return FORWARD + "/WEB-INF/views/user_form.jsp"
+				/*ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE)*/;
 	}
 
 }
