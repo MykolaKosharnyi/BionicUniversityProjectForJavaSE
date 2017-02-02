@@ -33,7 +33,7 @@ public class RegistrationPOSTCommand implements Command {
 		if (!password.equals(repeatPassword)) {
 			request.setAttribute("errorMessage", "Password and repeadPassword are different!!!");
 
-			return ConfigurationManager.getInstance().getProperty(ConfigurationManager.LOGIN_PAGE_PATH);
+			return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE);
 		}
 
 		User user = new User();
@@ -43,10 +43,8 @@ public class RegistrationPOSTCommand implements Command {
 		user.setPhone(phone);
 		user.setPassword(password);
 
-		// save in database
 		long idUser = enrolleeService.create(user);
 
-		// log in user
 		HttpSession session = request.getSession();
 		session.setAttribute("user", user);
 

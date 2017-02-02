@@ -21,7 +21,7 @@ import model.service.impl.SheetServiceImpl;
 import model.entity.Sheet;
 import model.entity.Subject;
 
-public class ApplicationToDepartments implements Command {
+public class SendApplicationToDepartments implements Command {
 	DepartmentServiceImpl departmentService = DepartmentServiceImpl.getInstance();
 	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
 	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();

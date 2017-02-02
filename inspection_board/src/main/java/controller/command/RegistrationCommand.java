@@ -14,7 +14,7 @@ public class RegistrationCommand implements Command {
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE_PATH);
+		return FORWARD + ConfigurationManager.getInstance().getProperty(ConfigurationManager.REGISTRATION_PAGE);
 	}
 
 }

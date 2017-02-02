@@ -10,6 +10,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +22,7 @@ import static java.util.Objects.isNull;
 /**
  * Makes sure that this request comes from a signed in user and the session has not expired.
  */
+@WebFilter("/*")
 public class AuthenticationFilter implements Filter {
     private List<String> unProtectedUris = Arrays.asList(
     		"/", 

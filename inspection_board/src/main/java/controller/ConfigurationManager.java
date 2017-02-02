@@ -10,7 +10,7 @@ public class ConfigurationManager {
 	// config.properties
 	private static final String BUNDLE_NAME = "config";
 	public static final String LOGIN_PAGE_PATH = "LOGIN_PAGE_PATH";
-	public static final String REGISTRATION_PAGE_PATH = "REGISTRATION_PAGE_PATH";
+	public static final String REGISTRATION_PAGE = "REGISTRATION_PAGE";
 	public static final String USER_EDIT_PAGE = "USER_EDIT_PAGE";
 	public static final String CHANGE_SUBJECT_USER = "CHANGE_SUBJECT_USER";
 	public static final String USER_APPLICATION_TO_DEPARTMENT_PAGE = "USER_APPLICATION_TO_DEPARTMENT_PAGE";

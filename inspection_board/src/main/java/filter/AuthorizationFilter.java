@@ -8,6 +8,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +24,7 @@ import static controller.ApplicationResources.*;
  * Checks whether a current user has enough permissions to get a requested resource or perform
  * an operation.
  */
+@WebFilter("/*")
 public class AuthorizationFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(AuthorizationFilter.class);
     private static final String ACCESS_DENIED_FOR_USER = "Access denied for user '%s' to '%s'!!!%n";
