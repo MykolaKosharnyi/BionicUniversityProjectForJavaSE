@@ -32,43 +32,6 @@ public class Controller extends HttpServlet implements javax.servlet.Servlet {
 			throws ServletException, IOException {
 		processRequest(request, response);
 	}
-
-//	private void processRequest(HttpServletRequest request, HttpServletResponse response)
-//			throws ServletException, IOException {
-//		String page = null;
-//		try {
-//			// request.getPathInfo();
-//			LOGGER.info("IN Controller, get path info:" + request.getPathInfo());
-//			Command command = requestHelper.getCommand(request);
-//
-//			page = command.execute(request, response);
-//			LOGGER.debug(page);
-//
-//		} catch (ServletException e) {
-//			e.printStackTrace();
-//			LOGGER.error(messageManager.getProperty(MessageManager.SERVLET_EXCEPTION_ERROR_MESSAGE));
-//
-//			request.setAttribute("errorMessage",
-//					messageManager.getProperty(MessageManager.SERVLET_EXCEPTION_ERROR_MESSAGE));
-//
-//			page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			LOGGER.error(messageManager.getProperty(MessageManager.IO_EXCEPTION_ERROR_MESSAGE));
-//			request.setAttribute("errorMessage",
-//					messageManager.getProperty(MessageManager.IO_EXCEPTION_ERROR_MESSAGE));
-//			page = ConfigurationManager.getInstance().getProperty(ConfigurationManager.ERROR_PAGE_PATH);
-//		}
-//
-//		if (!page.equals("/home")) {
-//			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-//			dispatcher.forward(request, response);
-//		} else {
-//			response.sendRedirect(request.getContextPath() + "/home");
-//		}
-//	}
-	
-	/*************************************************/
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

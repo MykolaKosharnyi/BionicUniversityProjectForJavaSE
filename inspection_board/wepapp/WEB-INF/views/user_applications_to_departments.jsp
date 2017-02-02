@@ -10,16 +10,6 @@
 
 <style>
 
-.separate_line {
-	border: 0;
-	height: 1px;
-	background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-	background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-	background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-	background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
-	margin: 10px 0px;
-}
-
 .department_block {
 	position: relative;
 	display: block;
@@ -141,7 +131,7 @@
 
 				<c:if test="${!containtUserSubjects}">
 					<p style="color: red;">You don't have required subject(s) or
-						your average scope in low.</p>
+						your average value in low.</p>
 				</c:if>
 
 			</div>

@@ -35,7 +35,7 @@
 		</div>
 		
 		<div class="form-group">
-			<label for="inputScope" class="col-sm-2 control-label">Scope</label> 
+			<label for="inputScope" class="col-sm-2 control-label">Value</label> 
 			<div class="col-sm-10">
 		      <input type="number" min="1" max="12" id="inputScope" required name="scope">
 		    </div>					
@@ -51,7 +51,7 @@
 			<div class="col-sm-offset-1 col-sm-11">
 				<blockquote>
 				  <footer><div style="color:red; float:left;">*&emsp;</div>
-				  If you already added subject with scope, you need first delete exist subject!</footer>
+				  If you already added subject with value, you need first delete exist subject!</footer>
 				</blockquote>
 			</div>
 		</div>
@@ -67,7 +67,7 @@
 			<tr>
 				<th class="text-center">#</th>
 				<th class="text-center">Name of subject</th>
-				<th class="text-center">Scope</th>
+				<th class="text-center">Value</th>
 				<th></th>
 			</tr>
 			<c:forEach items="${user_subjects.itemsWithEstimates}" var="entry"
@@ -88,10 +88,9 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<td colspan="4"><strong>Average scope: ${user_subjects.getAverageRating() }</strong></td>
+				<td colspan="4"><strong>Average value: ${user_subjects.getAverageRating() }</strong></td>
 			</tr>
 		</table>
-
 	</c:if>
 
 </body>
