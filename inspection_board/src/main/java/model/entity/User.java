@@ -187,7 +187,7 @@ public class User implements Serializable, Comparable<User> {
 
 	@Override
 	public int compareTo(User user) {
-		return (int) -(int)(this.certificate.getAverageRating()*100 - user.certificate.getAverageRating()*100);
+		return Double.compare(user.certificate.getAverageRating(),this.certificate.getAverageRating());
 	}
 
 }
