@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.command.Command;
+import model.service.SubjectService;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminSubject implements Command {
-	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	private SubjectService subjectService = SubjectServiceImpl.getInstance();
 	private ConfigurationManager configurationManager = ConfigurationManager.getInstance();
 	
 	@Override

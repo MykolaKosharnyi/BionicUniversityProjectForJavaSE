@@ -5,26 +5,26 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import controller.command.ParameterContants;
+import controller.ParameterContants;
 import model.entity.User;
 
 public class UserValidation {
+	private static final String EMAIL_PATTERN =
+			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
 	private User user;
 	
 	private Pattern pattern;
 	private Matcher matcher;
 
-	private static final String EMAIL_PATTERN =
-		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	
 	public UserValidation(){
-		this.user = new User();
+		this(new User());
 	}
 	
 	public UserValidation(User user){
 		this.user=user;
+		pattern = Pattern.compile(EMAIL_PATTERN);
 	}
 
 	public boolean validate(HttpServletRequest request){
@@ -92,11 +92,13 @@ public class UserValidation {
 	}
 	
 	private boolean validFirstName(String firstName){
-		return firstName.length()>=3 && firstName.length()<=50;
+		String result = firstName.trim();
+		return result.length()>=3 && result.length()<=50;
 	}
 	
 	private boolean validSecondName(String secondName){
-		return secondName.length()>=3 && secondName.length()<=50;
+		String result = secondName.trim();
+		return result.length()>=3 && result.length()<=50;
 	}
 	
 	/**
@@ -107,8 +109,8 @@ public class UserValidation {
 	 * @return true valid hex, false invalid hex
 	 */
 	public boolean validEmail(final String hex) {
-		pattern = Pattern.compile(EMAIL_PATTERN);
-		matcher = pattern.matcher(hex);
+		String result = hex.trim();
+		matcher = pattern.matcher(result);
 		return matcher.matches();
 
 	}
@@ -118,6 +120,9 @@ public class UserValidation {
 	}
 	
 	private boolean validPassword(String password, String repeatPassword){
-		return password.equals(repeatPassword);
+		String passwordT = password.trim();
+		String repeatPasswordT = password.trim();
+		return passwordT.equals(repeatPasswordT
+				);
 	}
 }

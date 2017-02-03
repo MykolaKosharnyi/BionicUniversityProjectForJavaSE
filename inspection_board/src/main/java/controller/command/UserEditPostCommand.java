@@ -9,10 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import controller.ConfigurationManager;
 import controller.validation.UserValidation;
 import model.entity.User;
+import model.service.UserService;
 import model.service.impl.UserServiceImpl;
 
 public class UserEditPostCommand implements Command {
-	private UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	private UserService enrolleeService = UserServiceImpl.getInstance();
 	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override

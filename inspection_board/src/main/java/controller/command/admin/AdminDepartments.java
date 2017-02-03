@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.command.Command;
+import model.service.DepartmentService;
+import model.service.SubjectService;
 import model.service.impl.DepartmentServiceImpl;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminDepartments implements Command {
-	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
-	private DepartmentServiceImpl departmentService = DepartmentServiceImpl.getInstance();
+	private SubjectService subjectService = SubjectServiceImpl.getInstance();
+	private DepartmentService departmentService = DepartmentServiceImpl.getInstance();
 	private ConfigurationManager configurationManager = ConfigurationManager.getInstance();
 	
 	@Override

@@ -10,9 +10,9 @@ public class Certificate implements Serializable{
 	public double getAverageRating() {
 		double sumOfAllSubjects = 0;
 
-		for (Map.Entry<Subject, Integer> entry : itemsWithEstimates.entrySet())
+		for (Map.Entry<Subject, Integer> entry : itemsWithEstimates.entrySet()){
 			sumOfAllSubjects += entry.getValue();
-
+		}
 		return itemsWithEstimates.size() > 0 ? sumOfAllSubjects / itemsWithEstimates.size() : 0;
 	}
 

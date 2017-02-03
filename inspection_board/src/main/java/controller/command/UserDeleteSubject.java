@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
+import model.service.CertificateService;
 import model.service.impl.CertificateServiceImpl;
 
 public class UserDeleteSubject implements Command {
-	private CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	private CertificateService certificateService = CertificateServiceImpl.getInstance();
 	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override

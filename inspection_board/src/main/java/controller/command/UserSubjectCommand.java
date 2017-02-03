@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
+import model.service.CertificateService;
+import model.service.SubjectService;
 import model.service.impl.CertificateServiceImpl;
 import model.service.impl.SubjectServiceImpl;
 
 public class UserSubjectCommand implements Command {
-	private CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
-	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	private CertificateService certificateService = CertificateServiceImpl.getInstance();
+	private SubjectService subjectService = SubjectServiceImpl.getInstance();
 	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override

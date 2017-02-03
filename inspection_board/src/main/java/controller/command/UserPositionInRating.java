@@ -10,10 +10,11 @@ import controller.ApplicationResources;
 import controller.ConfigurationManager;
 import controller.HttpUtils;
 import model.entity.User;
+import model.service.SheetService;
 import model.service.impl.SheetServiceImpl;
 
 public class UserPositionInRating implements Command {
-	private SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
+	private SheetService sheetService = SheetServiceImpl.getInstance();
 	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
