@@ -11,8 +11,8 @@ import controller.command.Command;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminSubject implements Command {
-	SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
-	ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	private ConfigurationManager configurationManager = ConfigurationManager.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

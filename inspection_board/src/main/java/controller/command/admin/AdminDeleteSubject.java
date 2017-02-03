@@ -7,13 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
+import controller.ParameterContants;
 import controller.command.Command;
 import model.service.SubjectService;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminDeleteSubject implements Command {
-	SubjectService subjectService = SubjectServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private SubjectService subjectService = SubjectServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +25,7 @@ public class AdminDeleteSubject implements Command {
 	}
 	
 	private long getSubjectIdFromRequest(HttpServletRequest request){
-		return Long.parseLong(request.getParameter("subjectId"));
+		return Long.parseLong(request.getParameter(ParameterContants.PARAM_SUBJECT_ID));
 	}
 
 }

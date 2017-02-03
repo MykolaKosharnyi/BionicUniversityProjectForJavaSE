@@ -12,9 +12,9 @@ import model.service.impl.CertificateServiceImpl;
 import model.service.impl.SubjectServiceImpl;
 
 public class UserSubjectCommand implements Command {
-	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
-	SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

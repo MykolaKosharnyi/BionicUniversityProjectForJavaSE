@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import controller.ConfigurationManager;
 
 public class RegistrationCommand implements Command {
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

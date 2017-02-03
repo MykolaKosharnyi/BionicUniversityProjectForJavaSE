@@ -12,8 +12,8 @@ import model.service.DepartmentService;
 import model.service.impl.DepartmentServiceImpl;
 
 public class AdminDeleteDepartments implements Command {
-	DepartmentService departmentService = DepartmentServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private DepartmentService departmentService = DepartmentServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

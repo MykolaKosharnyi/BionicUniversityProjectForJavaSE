@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.ConfigurationManager;
 import controller.HttpUtils;
+import controller.ParameterContants;
 import model.service.impl.CertificateServiceImpl;
 
 public class UserAddSubject implements Command {
-	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

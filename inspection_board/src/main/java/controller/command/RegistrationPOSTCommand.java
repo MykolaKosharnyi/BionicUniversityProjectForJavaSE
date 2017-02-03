@@ -13,16 +13,15 @@ import model.entity.User;
 import model.service.impl.UserServiceImpl;
 
 public class RegistrationPOSTCommand implements Command {
-	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
-	UserValidation validation;
+	private UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		User user = new User();
-		validation = new UserValidation(user);
+		UserValidation validation = new UserValidation(user);
 
 		if (!validation.validate(request)) {
 			request.setAttribute("user", validation.getUser());

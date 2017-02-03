@@ -11,8 +11,8 @@ import controller.HttpUtils;
 import model.service.impl.SheetServiceImpl;
 
 public class UserSendApplicationToDepartment implements Command {
-	SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private SheetServiceImpl sheetService = SheetServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -19,23 +19,25 @@ import model.service.impl.SheetServiceImpl;
 import model.entity.Subject;
 
 public class SendApplicationToDepartments implements Command {
-	DepartmentService departmentService = DepartmentServiceImpl.getInstance();
-	CertificateService certificateService = CertificateServiceImpl.getInstance();
-	SheetService sheetService = SheetServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private DepartmentService departmentService = DepartmentServiceImpl.getInstance();
+	private CertificateService certificateService = CertificateServiceImpl.getInstance();
+	private SheetService sheetService = SheetServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		long id = HttpUtils.getUserIdFromSession(request);
 		
-		Certificate certificate = certificateService.find(id);
-		Set<Subject> userSubjects = certificate.getItemsWithEstimates().keySet();
-		
-		request.setAttribute("userSubjects", userSubjects);
+		request.setAttribute("userSubjects", getUserSubjects(id));
 		request.setAttribute("userDepartments", sheetService.findByEnrolleeId(id));
 		request.setAttribute("departments", departmentService.findAll());
 
 		return FORWARD + configurationManger.getProperty(ConfigurationManager.USER_APPLICATION_TO_DEPARTMENT_PAGE);
+	}
+	
+	private Set<Subject> getUserSubjects(long id){
+		Certificate certificate = certificateService.find(id);
+		return certificate.getItemsWithEstimates().keySet();
 	}
 }

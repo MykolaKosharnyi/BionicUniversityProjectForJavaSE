@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import controller.ConfigurationManager;
+import controller.ParameterContants;
 import model.entity.User;
 import model.service.impl.UserServiceImpl;
 
 public class LoginPOSTCommand implements Command {
-	UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
-	ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+	private UserServiceImpl enrolleeService = UserServiceImpl.getInstance();
+	private ConfigurationManager configurationManager = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

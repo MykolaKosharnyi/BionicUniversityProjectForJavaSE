@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import controller.ConfigurationManager;
 
 public class NoCommand implements Command {
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 	
 	public String execute(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

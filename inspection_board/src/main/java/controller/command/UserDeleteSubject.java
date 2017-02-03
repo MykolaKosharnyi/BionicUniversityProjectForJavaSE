@@ -11,8 +11,8 @@ import controller.HttpUtils;
 import model.service.impl.CertificateServiceImpl;
 
 public class UserDeleteSubject implements Command {
-	CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private CertificateServiceImpl certificateService = CertificateServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

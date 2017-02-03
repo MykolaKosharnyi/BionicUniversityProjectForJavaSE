@@ -13,8 +13,8 @@ import model.service.SubjectService;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminAddSubject implements Command {
-	SubjectService subjectService = SubjectServiceImpl.getInstance();
-	ConfigurationManager configurationManger = ConfigurationManager.getInstance();
+	private SubjectService subjectService = SubjectServiceImpl.getInstance();
+	private ConfigurationManager configurationManger = ConfigurationManager.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)

@@ -12,9 +12,9 @@ import model.service.impl.DepartmentServiceImpl;
 import model.service.impl.SubjectServiceImpl;
 
 public class AdminDepartments implements Command {
-	SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
-	DepartmentServiceImpl departmentService = DepartmentServiceImpl.getInstance();
-	ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+	private SubjectServiceImpl subjectService = SubjectServiceImpl.getInstance();
+	private DepartmentServiceImpl departmentService = DepartmentServiceImpl.getInstance();
+	private ConfigurationManager configurationManager = ConfigurationManager.getInstance();
 	
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response)
